@@ -6,6 +6,6 @@ public class LeaderAbilityAlreadyUsedExcecption extends GameActionException {
 	}
 
 	public LeaderAbilityAlreadyUsedExcecption(String s) {
-		super();
+		super(s);
 	}
 }

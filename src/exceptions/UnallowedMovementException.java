@@ -6,6 +6,6 @@ public class UnallowedMovementException extends GameActionException {
 	}
 
 	public UnallowedMovementException(String s) {
-		super();
+		super(s);
 	}
 }

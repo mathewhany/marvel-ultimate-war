@@ -6,6 +6,6 @@ public class NotEnoughResourcesException extends GameActionException {
 	}
 
 	public NotEnoughResourcesException(String s) {
-		super();
+		super(s);
 	}
-} 
+}
