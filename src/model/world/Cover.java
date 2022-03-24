@@ -1,5 +1,7 @@
 package model.world;
 
+import utils.Utils;
+
 import java.awt.Point;
 
 public class Cover {
@@ -27,6 +29,6 @@ public class Cover {
     }
 
     private int generateRandomHP() {
-        return MIN_HP + (int) (Math.random() * (MAX_HP - MIN_HP + 1));
+        return Utils.randomNumber(MIN_HP, MAX_HP + 1);
     }
 }
