@@ -1,7 +1,9 @@
 package model.effects;
 
 public class Disarm extends Effect {
-    public Disarm(String name, int duration) {
-        super(name, duration, EffectType.DEBUFF);
+    public static final String EFFECT_NAME = "Disarm";
+
+    public Disarm(int duration) {
+        super(EFFECT_NAME, duration, EffectType.DEBUFF);
     }
 }

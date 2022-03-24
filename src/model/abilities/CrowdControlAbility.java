@@ -1,14 +1,16 @@
 package model.abilities;
 
-public class CrowdControlAbility extends Ability {
-    private AreaOfEffect effect;
+import model.effects.Effect;
 
-    public CrowdControlAbility(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required, AreaOfEffect effect) {
+public class CrowdControlAbility extends Ability {
+    private Effect effect;
+
+    public CrowdControlAbility(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required, Effect effect) {
         super(name, cost, baseCoolDown, castRange, area, required);
         this.effect = effect;
     }
 
-    public AreaOfEffect getEffect() {
+    public Effect getEffect() {
         return effect;
     }
 }

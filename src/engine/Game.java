@@ -88,8 +88,12 @@ public class Game {
         return new Point(x, y);
     }
 
-    public static void loadAbilities(String filePath) {
-        // TODO: Load abilities from CSV
+    public static void loadAbilities(String filePath) throws Exception {
+        ArrayList<String[]> fileRows = Utils.loadCsvFile(filePath);
+
+        for (String[] row : fileRows) {
+            availableAbilities.add(Ability.fromCsvRow(row));
+        }
     }
 
     public static void loadChampions(String filePath) {
