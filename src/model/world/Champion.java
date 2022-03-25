@@ -10,9 +10,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Champion {
-    private final String name;
-    private final int maxHP;
-    private final int attackRange;
+    private String name;
+    private int maxHP;
+    private int attackRange;
     private int currentHP;
     private int mana;
     private int maxActionPointsPerTurn;
@@ -24,71 +24,23 @@ public class Champion {
     private Condition condition;
     private Point location;
 
-    private static final int CSV_TYPE = 0;
-    private static final int CSV_NAME = 1;
-    private static final int CSV_MAX_HP = 2;
-    private static final int CSV_MANA = 3;
-    private static final int CSV_MAX_ACTION_POINTS = 4;
-    private static final int CSV_SPEED = 5;
-    private static final int CSV_ATTACK_RANGE = 6;
-    private static final int CSV_ATTACK_DAMAGE = 7;
-
-    private static final int[] CSV_ABILITY_NAMES = {8, 9, 10};
-
-    private static final String CSV_CHAMPION_TYPE_ANTIHERO = "A";
-    private static final String CSV_CHAMPION_TYPE_HERO = "H";
-    private static final String CSV_CHAMPION_TYPE_VILLAIN = "V";
-
     public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage) {
         this.name = name;
         this.maxHP = maxHP;
+        this.currentHP = maxHP;
         this.mana = mana;
         this.maxActionPointsPerTurn = maxActions;
+        this.currentActionPoints = maxActions;
         this.attackRange = attackRange;
         this.attackDamage = attackDamage;
         this.speed = speed;
         this.abilities = new ArrayList<>();
         this.appliedEffects = new ArrayList<>();
+        this.condition = Condition.ACTIVE;
     }
 
-    public static Champion fromCsvRow(String[] row) throws UnrecognizedChampionTypeException, UnrecognizedAbilityException {
-        String type = row[CSV_TYPE];
-        String name = row[CSV_NAME];
-        int maxHP = Integer.parseInt(row[CSV_MAX_HP]);
-        int mana = Integer.parseInt(row[CSV_MANA]);
-        int maxActionPoints = Integer.parseInt(row[CSV_MAX_ACTION_POINTS]);
-        int attackRange = Integer.parseInt(row[CSV_ATTACK_RANGE]);
-        int attackDamage = Integer.parseInt(row[CSV_ATTACK_DAMAGE]);
-        int speed = Integer.parseInt(row[CSV_SPEED]);
-
-        Champion champion;
-
-        switch (type) {
-            case CSV_CHAMPION_TYPE_ANTIHERO:
-                champion = new AntiHero(name, maxHP, mana, maxActionPoints, speed, attackRange, attackDamage);
-                break;
-            case CSV_CHAMPION_TYPE_HERO:
-                champion = new Hero(name, maxHP, mana, maxActionPoints, speed, attackRange, attackDamage);
-                break;
-            case CSV_CHAMPION_TYPE_VILLAIN:
-                champion = new Villain(name, maxHP, mana, maxActionPoints, speed, attackRange, attackDamage);
-                break;
-            default:
-                throw new UnrecognizedChampionTypeException(type);
-        }
-
-        for (int i = 0; i < CSV_ABILITY_NAMES.length; i++) {
-            String abilityName = row[CSV_ABILITY_NAMES[i]];
-            Ability ability = Game.getAbilityByName(abilityName);
-
-            if (ability == null) {
-                throw new UnrecognizedAbilityException(abilityName);
-            }
-
-            champion.getAbilities().add(ability);
-        }
-
-        return champion;
+    public ArrayList<Ability> getAbilities() {
+        return abilities;
     }
 
     public String getName() {
@@ -104,7 +56,7 @@ public class Champion {
     }
 
     public void setCurrentHP(int currentHP) {
-        this.currentHP = currentHP;
+        this.currentHP = Math.max(Math.min(currentHP, maxHP), 0);
     }
 
     public int getMana() {
@@ -128,7 +80,7 @@ public class Champion {
     }
 
     public void setCurrentActionPoints(int currentActionPoints) {
-        this.currentActionPoints = currentActionPoints;
+        this.currentActionPoints = Math.min(currentActionPoints, maxActionPointsPerTurn);
     }
 
     public int getAttackRange() {
@@ -151,10 +103,6 @@ public class Champion {
         this.speed = speed;
     }
 
-    public ArrayList<Ability> getAbilities() {
-        return abilities;
-    }
-
     public ArrayList<Effect> getAppliedEffects() {
         return appliedEffects;
     }
@@ -174,4 +122,13 @@ public class Champion {
     public void setLocation(Point location) {
         this.location = location;
     }
+
+//    public int compareTo(Object o) {
+//        if (o instanceof Champion) {
+//            Champion otherChampion = (Champion) o;
+//            return this.speed - otherChampion.speed;
+//        }
+//
+//        return 0;
+//    }
 }
