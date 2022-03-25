@@ -14,10 +14,10 @@ public class Ability {
     private static final int CSV_REQUIRED_ACTIONS_PER_TURN = 6;
     private static final int CSV_DAMAGE_AMOUNT = 7;
     private static final int CSV_HEAL_AMOUNT = 7;
-    private static final int CSV_EFFECT_NAME = 8;
+    private static final int CSV_EFFECT_NAME = 7;
     private static final int CSV_EFFECT_DURATION = 8;
-    private static final String ABILITY_TYPE_CROWD_CONTROL = "CC";
-    private static final String ABILITY_TYPE_DAMAGING = "DMG";
+    private static final String CSV_ABILITY_TYPE_CROWD_CONTROL = "CC";
+    private static final String CSV_ABILITY_TYPE_DAMAGING = "DMG";
     private static final String ABILITY_TYPE_HEALING = "HEL";
     private final String name;
     private final int manaCost;
@@ -49,10 +49,10 @@ public class Ability {
             case ABILITY_TYPE_HEALING:
                 int healAmount = Integer.parseInt(row[CSV_HEAL_AMOUNT]);
                 return new HealingAbility(name, manaCost, baseCooldown, castRange, areaOfEffect, requiredActionsPerTurn, healAmount);
-            case ABILITY_TYPE_DAMAGING:
+            case CSV_ABILITY_TYPE_DAMAGING:
                 int damageAmount = Integer.parseInt(row[CSV_DAMAGE_AMOUNT]);
                 return new DamagingAbility(name, manaCost, baseCooldown, castRange, areaOfEffect, requiredActionsPerTurn, damageAmount);
-            case ABILITY_TYPE_CROWD_CONTROL:
+            case CSV_ABILITY_TYPE_CROWD_CONTROL:
                 String effectName = row[CSV_EFFECT_NAME];
                 int effectDuration = Integer.parseInt(row[CSV_EFFECT_DURATION]);
                 Effect effect = Effect.fromName(effectName, effectDuration);

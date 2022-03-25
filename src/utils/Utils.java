@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -33,5 +34,9 @@ public class Utils {
         }
 
         return lines;
+    }
+
+    public static String getRootDirectory() {
+        return new File("").getAbsolutePath();
     }
 }

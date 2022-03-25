@@ -6,6 +6,7 @@ import model.world.Cover;
 import utils.Utils;
 
 import java.awt.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Game {
@@ -14,8 +15,8 @@ public class Game {
     private boolean firstLeaderAbilityUsed;
     private boolean secondLeaderAbilityUsed;
     private Object[][] board;
-    private static ArrayList<Champion> availableChampions;
-    private static ArrayList<Ability> availableAbilities;
+    private static ArrayList<Champion> availableChampions = new ArrayList<>();
+    private static ArrayList<Ability> availableAbilities = new ArrayList<>();
     private PriorityQueue turnOrder;
 
     private static final int BOARDHEIGHT = 5;
@@ -24,7 +25,12 @@ public class Game {
     private static final int NUM_CHAMPIONS_FOR_PLAYER = 3;
     private static final int NUM_COVERS = 5;
 
-    public Game(Player firstPlayer, Player secondPlayer) {
+
+    private static final String CSV_FOLDER = "csv";
+    private static final String CSV_FILE_ABILITIES = "Abilities.csv";
+    private static final String CSV_FILE_CHAMPIONS = "Champions.csv";
+
+    public Game(Player firstPlayer, Player secondPlayer) throws Exception {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.firstLeaderAbilityUsed = false;
@@ -32,6 +38,8 @@ public class Game {
         this.board = new Object[BOARDHEIGHT][BOARDWIDTH];
         this.placeChampions();
         this.placeCovers();
+        loadAbilities(getCsvFilePath(CSV_FILE_ABILITIES));
+        loadChampions(getCsvFilePath(CSV_FILE_CHAMPIONS));
         // this.turnOrder = new PriorityQueue();
     }
 
@@ -96,8 +104,26 @@ public class Game {
         }
     }
 
-    public static void loadChampions(String filePath) {
-        // TODO: Load champions from CSV
+    public static void loadChampions(String filePath) throws Exception {
+        ArrayList<String[]> fileRows = Utils.loadCsvFile(filePath);
+
+        for (String[] row : fileRows) {
+            availableChampions.add(Champion.fromCsvRow(row));
+        }
+    }
+
+    public static Ability getAbilityByName(String name) {
+        for (Ability ability : availableAbilities) {
+            if (ability.getName().equals(name)) {
+                return ability;
+            }
+        }
+
+        return null;
+    }
+
+    public String getCsvFilePath(String fileName) {
+        return Paths.get(Utils.getRootDirectory(), CSV_FOLDER, fileName).toString();
     }
 
     public Player getFirstPlayer() {
