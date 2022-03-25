@@ -7,13 +7,13 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Champion {
-    private String name;
-    private int maxHP;
+    private final String name;
+    private final int maxHP;
+    private final int attackRange;
     private int currentHP;
     private int mana;
     private int maxActionPointsPerTurn;
     private int currentActionPoints;
-    private int attackRange;
     private int attackDamage;
     private int speed;
     private ArrayList<Ability> abilities;
@@ -51,6 +51,10 @@ public class Champion {
         return mana;
     }
 
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
     public int getMaxActionPointsPerTurn() {
         return maxActionPointsPerTurn;
     }
@@ -61,6 +65,10 @@ public class Champion {
 
     public int getCurrentActionPoints() {
         return currentActionPoints;
+    }
+
+    public void setCurrentActionPoints(int currentActionPoints) {
+        this.currentActionPoints = currentActionPoints;
     }
 
     public int getAttackRange() {
