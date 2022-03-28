@@ -74,6 +74,8 @@ public class Game {
      * that the champions are centered in the row.
      */
     private static int getFirstChampionXPosition() {
+        // For example: for a board width of 5 and 3 champions per player,
+        // the champions will be placed starting from index (5 - 3) / 2 = 1.
         return (BOARDWIDTH - NUM_CHAMPIONS_FOR_PLAYER) / 2;
     }
 

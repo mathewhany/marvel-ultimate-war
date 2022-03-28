@@ -5,3 +5,5 @@ marvel-ultimate-war.iml
 .settings
 bin
 out
+test_abilities.csv
+test_champions.csv

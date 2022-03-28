@@ -1,8 +1,5 @@
 package model.world;
 
-import engine.Game;
-import exceptions.UnrecognizedAbilityException;
-import exceptions.UnrecognizedChampionTypeException;
 import model.abilities.Ability;
 import model.effects.Effect;
 
@@ -55,6 +52,10 @@ public class Champion {
         return currentHP;
     }
 
+    /**
+     * Sets the current HP of the champion.
+     * Note that the current HP can't be less than 0 or more than the max HP.
+     */
     public void setCurrentHP(int currentHP) {
         this.currentHP = Math.max(Math.min(currentHP, maxHP), 0);
     }
@@ -79,8 +80,12 @@ public class Champion {
         return currentActionPoints;
     }
 
+    /**
+     * Sets the current action points of the champion.
+     * Note that the current action points can't be less than 0 or more than the max action points.
+     */
     public void setCurrentActionPoints(int currentActionPoints) {
-        this.currentActionPoints = Math.min(currentActionPoints, maxActionPointsPerTurn);
+        this.currentActionPoints = Math.min(Math.max(currentActionPoints, 0), maxActionPointsPerTurn);
     }
 
     public int getAttackRange() {
