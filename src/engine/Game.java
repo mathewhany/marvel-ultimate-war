@@ -14,9 +14,9 @@ public class Game {
     private static final int BOARDWIDTH = 5;
 
     private static final int NUM_CHAMPIONS_FOR_PLAYER = 3;
+    private static final int NUM_PLAYERS = 2;
     private static final int NUM_COVERS = 5;
 
-//    private static final String CSV_FOLDER = "csv";
 //    private static final String CSV_FILE_ABILITIES = "Abilities.csv";
 //    private static final String CSV_FILE_CHAMPIONS = "Champions.csv";
 
@@ -29,16 +29,21 @@ public class Game {
     private Object[][] board;
     private PriorityQueue turnOrder;
 
-    public Game(Player firstPlayer, Player secondPlayer) throws Exception {
+    public Game(Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.firstLeaderAbilityUsed = false;
         this.secondLeaderAbilityUsed = false;
         this.board = new Object[BOARDHEIGHT][BOARDWIDTH];
-        this.turnOrder = new PriorityQueue(NUM_CHAMPIONS_FOR_PLAYER * 2);
+        this.turnOrder = new PriorityQueue(NUM_CHAMPIONS_FOR_PLAYER * NUM_PLAYERS);
 
-        // Since availableAbilities and availableChampions are static variables, they must be
-        // cleared everytime a new Game is created, so that each Game instance starts clean.
+        // I thought we should load the abilities and champions in the constructor but
+        // apparently one of the public tests fail when the availableChampions ArrayList
+        // is not empty, so we need to clear the availableChampions and availableAbilities
+        // in the constructor.
+
+        // loadAbilities(CSV_FILE_ABILITIES);
+        // loadChampions(CSV_FILE_CHAMPIONS);
         availableAbilities.clear();
         availableChampions.clear();
 
@@ -47,25 +52,17 @@ public class Game {
     }
 
     private void placeChampions() {
-        // If the players haven't chosen their champions yet, there
-        // are no champions to place, so just do nothing.
-        if (firstPlayer.getTeam().size() < NUM_CHAMPIONS_FOR_PLAYER || secondPlayer.getTeam().size() < NUM_CHAMPIONS_FOR_PLAYER) {
-            return;
-        }
-
-        int startPosition = getFirstChampionXPosition();
-
-        for (int i = 0; i < NUM_CHAMPIONS_FOR_PLAYER; i++) {
-            Champion firstPlayerChampion = firstPlayer.getTeam().get(i);
-            Champion secondPlayerChampion = secondPlayer.getTeam().get(i);
-            addChampionAt(startPosition + i, 0, firstPlayerChampion);
-            addChampionAt(startPosition + i, BOARDHEIGHT - 1, secondPlayerChampion);
-        }
+        placeChampionsAtRow(firstPlayer.getTeam(), 0);
+        placeChampionsAtRow(secondPlayer.getTeam(), BOARDHEIGHT - 1);
     }
 
-    private void placeCovers() {
-        for (int i = 0; i < NUM_COVERS; i++) {
-            placeCoverAtRandomPoint();
+    private void placeChampionsAtRow(ArrayList<Champion> champions, int row) {
+        int numChampionsInTeam = champions.size();
+        int startPosition = getFirstChampionXPosition(numChampionsInTeam);
+
+        for (int i = 0; i < numChampionsInTeam; i++) {
+            Champion champion = champions.get(i);
+            addChampionAt(startPosition + i, row, champion);
         }
     }
 
@@ -73,13 +70,15 @@ public class Game {
      * Calculates where the first champion should be placed on the x axis so
      * that the champions are centered in the row.
      */
-    private static int getFirstChampionXPosition() {
+    private static int getFirstChampionXPosition(int championsNum) {
         // For example: for a board width of 5 and 3 champions per player,
         // the champions will be placed starting from index (5 - 3) / 2 = 1.
-        return (BOARDWIDTH - NUM_CHAMPIONS_FOR_PLAYER) / 2;
+        return (BOARDWIDTH - championsNum) / 2;
     }
 
     private void addChampionAt(int x, int y, Champion champion) {
+        System.out.println("Placing (" + champion.getName() + ") at (" + x + ", " + y + ")");
+
         board[y][x] = champion;
 
         // I know this should be new Point(x, y), because the Point
@@ -89,10 +88,21 @@ public class Game {
         champion.setLocation(new Point(y, x));
     }
 
-    private void placeCoverAtRandomPoint() {
-        Point point = getRandomNotCorneredEmptyPoint();
-        Cover cover = new Cover(point.x, point.y);
-        board[point.y][point.x] = cover;
+    private void placeCovers() {
+        for (int i = 0; i < NUM_COVERS; i++) {
+            Point randomPoint = getRandomNotCorneredEmptyPoint();
+            addNewCoverAt(randomPoint.x, randomPoint.y);
+        }
+    }
+
+    private void addNewCoverAt(int x, int y) {
+        // Again I know this should be new Cover(x, y), but I left it like this to
+        // be consistent with what we did at the addChampionAt method. Strangely enough,
+        // the tests cases don't care whether the covers are initiated with new Cover(x, y),
+        // or new Cover(y, x).
+        board[y][x] = new Cover(y, x);
+
+        System.out.println("Placing cover at (" + x + ", " + y + ")");
     }
 
     /**
@@ -134,8 +144,8 @@ public class Game {
     /**
      * Returns whether the point is reserved for one of the players' champions.
      */
-    private static boolean isReservedForChampion(Point point) {
-        int start = getFirstChampionXPosition();
+    private boolean isReservedForChampion(Point point) {
+        int start = getFirstChampionXPosition(NUM_CHAMPIONS_FOR_PLAYER);
         int end = start + NUM_CHAMPIONS_FOR_PLAYER;
 
         return (point.y == 0 || point.y == BOARDHEIGHT - 1) && (point.x >= start && point.x <= end);
@@ -147,7 +157,7 @@ public class Game {
      * @param filePath The absolute path of the CSV file to load abilities from.
      */
     public static void loadAbilities(String filePath) throws Exception {
-        CsvLoader.loadAbilities(filePath);
+        availableAbilities = CsvLoader.loadAbilities(filePath);
     }
 
     /**
@@ -156,21 +166,7 @@ public class Game {
      * @param filePath The absolute path of the CSV file to load champions from.
      */
     public static void loadChampions(String filePath) throws Exception {
-        CsvLoader.loadChampions(filePath);
-    }
-
-    /**
-     * Search for an ability in the available abilities by name or null
-     * if the ability is not found.
-     */
-    public static Ability getAbilityByName(String name) {
-        for (Ability ability : availableAbilities) {
-            if (ability.getName().equals(name)) {
-                return ability;
-            }
-        }
-
-        return null;
+        availableChampions = CsvLoader.loadChampions(filePath, availableAbilities);
     }
 
     public static ArrayList<Champion> getAvailableChampions() {
@@ -191,14 +187,6 @@ public class Game {
     // be called getBoardwidth
     public static int getBoardwidth() {
         return BOARDWIDTH;
-    }
-
-    public static void addAbility(Ability ability) {
-        availableAbilities.add(ability);
-    }
-
-    public static void addChampion(Champion champion) {
-        availableChampions.add(champion);
     }
 
     public Player getFirstPlayer() {

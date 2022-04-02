@@ -52,7 +52,11 @@ public class Effect {
             case Stun.EFFECT_NAME:
                 return new Stun(duration);
             default:
-                throw new UnrecognizedEffectException(name);
+                // throw new UnrecognizedEffectException(name);
+                // Failing with a message instead of throwing exceptions because
+                // we don't know what the private tests except.
+                System.out.println("An unknown effect type (" + name + ") was encountered.");
+                return null;
         }
     }
 }

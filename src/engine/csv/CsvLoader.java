@@ -1,6 +1,7 @@
 package engine.csv;
 
-import engine.Game;
+import model.abilities.Ability;
+import model.world.Champion;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,29 +9,44 @@ import java.util.ArrayList;
 
 public class CsvLoader {
     /**
-     * Loads abilities from a CSV file into the availableAbilities variable.
+     * Loads abilities from a CSV file into an ArrayList.
      *
      * @param filePath The path of the CSV file to load abilities from.
      */
-    public static void loadAbilities(String filePath) throws Exception {
+    public static ArrayList<Ability> loadAbilities(String filePath) throws Exception {
+        System.out.println("Loading abilities from CSV file \"" + filePath + "\".");
+
         ArrayList<String[]> fileRows = loadCsvFile(filePath);
+        ArrayList<Ability> abilities = new ArrayList<>();
 
         for (String[] row : fileRows) {
-            Game.addAbility(AbilityFactory.fromCsvRow(row));
+            abilities.add(AbilityFactory.fromCsvRow(row));
         }
+
+        System.out.println(abilities.size() + " abilities were loaded successfully.");
+
+        return abilities;
     }
 
     /**
-     * Loads champions from a CSV file into the availableChampion variable.
+     * Loads champions from a CSV file into a ArrayList.
      *
      * @param filePath The absolute path of the CSV file to load champions from.
+     * @param availableAbilities The list of available abilities that a champion can choose from.
      */
-    public static void loadChampions(String filePath) throws Exception {
+    public static ArrayList<Champion> loadChampions(String filePath, ArrayList<Ability> availableAbilities) throws Exception {
+        System.out.println("Loading champions from CSV file \"" + filePath + "\".");
+
         ArrayList<String[]> fileRows = loadCsvFile(filePath);
+        ArrayList<Champion> champions = new ArrayList<>();
 
         for (String[] row : fileRows) {
-            Game.addChampion(ChampionFactory.fromCsvRow(row));
+            champions.add(ChampionFactory.fromCsvRow(row, availableAbilities));
         }
+
+        System.out.println(champions.size() + " champions were loaded successfully.");
+
+        return champions;
     }
 
     /**
@@ -49,6 +65,8 @@ public class CsvLoader {
      * {"Nariman", 13242", "Black"} at index 2
      */
     public static ArrayList<String[]> loadCsvFile(String path) throws Exception {
+        System.out.println("Loading CSV file: \"" + path + "\".");
+
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String[]> lines = new ArrayList<>();
 
@@ -61,6 +79,9 @@ public class CsvLoader {
                 lines.add(line.split(","));
             }
         }
+
+        // Closing the file after reading it.
+        reader.close();
 
         return lines;
     }

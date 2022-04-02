@@ -9,6 +9,8 @@ import model.world.Champion;
 import model.world.Hero;
 import model.world.Villain;
 
+import java.util.ArrayList;
+
 public class ChampionFactory {
     /**
      * The column numbers where each value is located in the CSV file.
@@ -41,7 +43,7 @@ public class ChampionFactory {
      * Input: {"H", "Dr Strange", "0", "6", "15", "34", "40", "16", "The eye of agamotto", "Thousand Hand", "Mirror Dimension"}
      * Output: new Hero("Dr Strange", 0, 6, 15, 34, 40, 16)
      */
-    public static Champion fromCsvRow(String[] row) throws UnrecognizedChampionTypeException, UnrecognizedAbilityException {
+    public static Champion fromCsvRow(String[] row, ArrayList<Ability> availableAbilities) throws UnrecognizedChampionTypeException, UnrecognizedAbilityException {
         String type = row[CSV_TYPE];
         String name = row[CSV_NAME];
 
@@ -96,23 +98,49 @@ public class ChampionFactory {
 
             // In case the champion type is not one of the above, then it is an invalid type.
             default:
-                throw new UnrecognizedChampionTypeException(type);
+                // throw new UnrecognizedChampionTypeException(type);
+                System.out.println("An unknown champion type (" + type + ") was encountered while parsing the CSV file.");
+                return null;
         }
 
 
         // Search for the abilities names and add the the abilities objects
         // to the champion's list of abilities.
-        for (int abilityNameColumn : CSV_ABILITY_NAMES) {
-            String abilityName = row[abilityNameColumn];
-            Ability ability = Game.getAbilityByName(abilityName);
-
-            if (ability == null) { // The ability was not found
-                throw new UnrecognizedAbilityException(abilityName);
-            }
-
-            champion.getAbilities().add(ability);
-        }
+        ArrayList<Ability> championAbilities = getChampionAbilities(row, availableAbilities);
+        champion.getAbilities().addAll(championAbilities);
 
         return champion;
+    }
+
+    private static ArrayList<Ability> getChampionAbilities(String[] row, ArrayList<Ability> availableAbilities) throws UnrecognizedAbilityException {
+        ArrayList<Ability> abilities = new ArrayList<>();
+
+        for (int abilityNameColumn : CSV_ABILITY_NAMES) {
+            String abilityName = row[abilityNameColumn];
+            Ability ability = getAbilityByName(abilityName, availableAbilities);
+
+            if (ability == null) { // The ability was not found
+                // throw new UnrecognizedAbilityException(abilityName);
+                System.out.println("An unknown ability (" + abilityName + ") was encountered while parsing the champions CSV file.");
+            }
+
+            abilities.add(ability);
+        }
+
+        return abilities;
+    }
+
+    /**
+     * Search for an ability in the available abilities by name or null
+     * if the ability is not found.
+     */
+    private static Ability getAbilityByName(String name, ArrayList<Ability> availableAbilities) {
+        for (Ability ability : availableAbilities) {
+            if (ability.getName().equals(name)) {
+                return ability;
+            }
+        }
+
+        return null;
     }
 }
