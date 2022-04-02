@@ -20,7 +20,12 @@ public class CsvLoader {
         ArrayList<Ability> abilities = new ArrayList<>();
 
         for (String[] row : fileRows) {
-            abilities.add(AbilityFactory.fromCsvRow(row));
+            Ability ability = AbilityFactory.fromCsvRow(row);
+
+            // If something wrong happened while parsing a CSV row the ability will be null.
+            if (ability != null) {
+                abilities.add(ability);
+            }
         }
 
         System.out.println(abilities.size() + " abilities were loaded successfully.");
@@ -41,7 +46,12 @@ public class CsvLoader {
         ArrayList<Champion> champions = new ArrayList<>();
 
         for (String[] row : fileRows) {
-            champions.add(ChampionFactory.fromCsvRow(row, availableAbilities));
+            Champion champion = ChampionFactory.fromCsvRow(row, availableAbilities);
+
+            // If something wrong happened while parsing the CSV row, the champion will be null.
+            if (champion != null) {
+                champions.add(champion);
+            }
         }
 
         System.out.println(champions.size() + " champions were loaded successfully.");

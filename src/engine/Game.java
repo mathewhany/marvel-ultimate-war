@@ -77,6 +77,14 @@ public class Game {
     }
 
     private void addChampionAt(int x, int y, Champion champion) {
+        if (x >= BOARDWIDTH || y >= BOARDHEIGHT) {
+            System.out.println(
+                "Cannot place (" + champion.getName() + ") at ("+ x + ", " + y + ") " +
+                "because it is outside the board bounds"
+            );
+            return;
+        }
+
         System.out.println("Placing (" + champion.getName() + ") at (" + x + ", " + y + ")");
 
         board[y][x] = champion;
