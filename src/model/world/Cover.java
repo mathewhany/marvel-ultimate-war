@@ -4,7 +4,7 @@ import utils.Utils;
 
 import java.awt.Point;
 
-public class Cover {
+public class Cover implements Damageable {
     private int currentHP;
     private Point location;
 

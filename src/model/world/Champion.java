@@ -7,7 +7,7 @@ import utils.Utils;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Champion {
+public class Champion implements Damageable {
     private String name;
     private int maxHP;
     private int attackRange;
