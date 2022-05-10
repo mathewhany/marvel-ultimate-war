@@ -21,7 +21,7 @@ public class Cover {
     }
 
     public void setCurrentHP(int currentHP) {
-        this.currentHP = currentHP;
+        this.currentHP = Utils.boundBetween(currentHP, 0, MAX_HP);
     }
 
     public Point getLocation() {

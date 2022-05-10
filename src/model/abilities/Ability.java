@@ -3,6 +3,7 @@ package model.abilities;
 import exceptions.UnrecognizedAbilityTypeException;
 import exceptions.UnrecognizedEffectException;
 import model.effects.Effect;
+import utils.Utils;
 
 public class Ability {
     private String name;
@@ -39,7 +40,7 @@ public class Ability {
     }
 
     public void setCurrentCooldown(int currentCooldown) {
-        this.currentCooldown = currentCooldown;
+        this.currentCooldown = Utils.boundBetween(currentCooldown, 0, baseCooldown);
     }
 
     public int getCastRange() {

@@ -2,6 +2,7 @@ package model.world;
 
 import model.abilities.Ability;
 import model.effects.Effect;
+import utils.Utils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class Champion {
      * Note that the current HP can't be less than 0 or more than the max HP.
      */
     public void setCurrentHP(int currentHP) {
-        this.currentHP = Math.max(Math.min(currentHP, maxHP), 0);
+        this.currentHP = Utils.boundBetween(currentHP, 0, maxHP);
     }
 
     public int getMana() {
@@ -85,7 +86,7 @@ public class Champion {
      * Note that the current action points can't be less than 0 or more than the max action points.
      */
     public void setCurrentActionPoints(int currentActionPoints) {
-        this.currentActionPoints = Math.min(Math.max(currentActionPoints, 0), maxActionPointsPerTurn);
+        this.currentActionPoints = Utils.boundBetween(currentActionPoints, 0, maxActionPointsPerTurn);
     }
 
     public int getAttackRange() {
