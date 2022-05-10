@@ -1,8 +1,9 @@
 package model.effects;
 
 import exceptions.UnrecognizedEffectException;
+import model.world.Champion;
 
-public class Effect {
+abstract public class Effect implements Cloneable {
     private String name;
     private int duration;
     private EffectType type;
@@ -59,4 +60,12 @@ public class Effect {
                 return null;
         }
     }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    abstract public void apply(Champion c);
+
+    abstract public void remove(Champion c);
 }
