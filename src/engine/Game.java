@@ -4,6 +4,7 @@ import engine.csv.CsvLoader;
 import model.abilities.Ability;
 import model.world.Champion;
 import model.world.Cover;
+import model.world.Direction;
 import utils.Utils;
 
 import java.awt.*;
@@ -36,6 +37,14 @@ public class Game {
         this.secondLeaderAbilityUsed = false;
         this.board = new Object[BOARDHEIGHT][BOARDWIDTH];
         this.turnOrder = new PriorityQueue(NUM_CHAMPIONS_FOR_PLAYER * NUM_PLAYERS);
+
+        for (Champion champion : firstPlayer.getTeam()) {
+            turnOrder.insert(champion);
+        }
+
+        for (Champion champion : secondPlayer.getTeam()) {
+            turnOrder.insert(champion);
+        }
 
         // I thought we should load the abilities and champions in the constructor but
         // apparently one of the public tests fail when the availableChampions ArrayList
@@ -220,4 +229,28 @@ public class Game {
     public PriorityQueue getTurnOrder() {
         return turnOrder;
     }
+
+    public Champion getCurrentChampion() {
+        return (Champion) turnOrder.remove();
+    }
+
+    public Player checkGameOver() {
+        return null;
+    }
+
+    public void move(Direction d) {}
+
+    public void attack(Direction d) {}
+
+    public void castAbility(Ability a) {}
+
+    public void castAbility(Ability a, Direction d) {}
+
+    public void castAbility(Ability a, int x, int y) {}
+
+    public void useLeaderAbility() {}
+
+    public void endTurn() {}
+
+    private void prepareChampionTurns() {}
 }

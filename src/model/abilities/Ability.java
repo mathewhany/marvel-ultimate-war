@@ -3,9 +3,12 @@ package model.abilities;
 import exceptions.UnrecognizedAbilityTypeException;
 import exceptions.UnrecognizedEffectException;
 import model.effects.Effect;
+import model.world.Damageable;
 import utils.Utils;
 
-public class Ability {
+import java.util.ArrayList;
+
+abstract public class Ability {
     private String name;
     private int manaCost;
     private int baseCooldown;
@@ -54,4 +57,6 @@ public class Ability {
     public AreaOfEffect getCastArea() {
         return castArea;
     }
+
+    abstract public void execute(ArrayList<Damageable> targets);
 }

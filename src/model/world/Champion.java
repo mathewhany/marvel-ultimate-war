@@ -7,7 +7,7 @@ import utils.Utils;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Champion implements Damageable {
+abstract public class Champion implements Damageable, Comparable {
     private String name;
     private int maxHP;
     private int attackRange;
@@ -129,12 +129,19 @@ public class Champion implements Damageable {
         this.location = location;
     }
 
-//    public int compareTo(Object o) {
-//        if (o instanceof Champion) {
-//            Champion otherChampion = (Champion) o;
-//            return this.speed - otherChampion.speed;
-//        }
-//
-//        return 0;
-//    }
+    abstract public void useLeaderAbility(ArrayList<Champion> targets);
+
+    public int compareTo(Object o) {
+        if (o instanceof Champion) {
+            Champion otherChampion = (Champion) o;
+
+            if (this.speed == otherChampion.speed) {
+                return name.compareTo(otherChampion.name);
+            }
+
+            return otherChampion.speed - this.speed;
+        }
+
+        return 0;
+    }
 }

@@ -65,7 +65,11 @@ abstract public class Effect implements Cloneable {
         return super.clone();
     }
 
-    abstract public void apply(Champion c);
+    public void apply(Champion c) {
+        c.getAppliedEffects().add(this);
+    }
 
-    abstract public void remove(Champion c);
+    public void remove(Champion c) {
+        c.getAppliedEffects().remove(this);
+    }
 }

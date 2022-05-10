@@ -13,6 +13,7 @@ public class Shock extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         // I called it gainedSpeed even though it should decrease
         // the speed, because in all other effects I called it gainedSpeed,
         // so to be consistent I will also call it gainedSpeed here.
@@ -26,6 +27,7 @@ public class Shock extends Effect {
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         c.setSpeed(c.getSpeed() - gainedSpeed);
         c.setAttackDamage(c.getAttackDamage() - gainedDamage);
         c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn() + 1);

@@ -10,10 +10,12 @@ public class PowerUp extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         // TODO: Apply PowerUp
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         // TODO: Remove PowerUp
     }
 }

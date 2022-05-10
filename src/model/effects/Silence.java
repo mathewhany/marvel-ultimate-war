@@ -10,11 +10,15 @@ public class Silence extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         // TODO: Target cannot use abilities
         c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn() + 2);
+        c.setCurrentActionPoints(c.getCurrentActionPoints() + 2);
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn() - 2);
+        c.setCurrentActionPoints(c.getCurrentActionPoints() - 2);
     }
 }

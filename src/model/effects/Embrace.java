@@ -13,6 +13,7 @@ public class Embrace extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         c.setCurrentHP(c.getCurrentHP() + (int) (c.getMaxHP() * 0.2));
         c.setMana((int) (c.getMana() * 1.2));
 
@@ -24,6 +25,7 @@ public class Embrace extends Effect {
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         c.setSpeed(c.getSpeed() - gainedSpeed);
         c.setAttackDamage(c.getAttackDamage() - gainedDamage);
     }

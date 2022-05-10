@@ -12,6 +12,7 @@ public class Shield extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         // TODO: Block the next attack or damaging ability cast on target.
         // TODO: Once an attack or ability is blocked, the effect should be removed.
         gainedSpeed = (int) (c.getSpeed() * 0.02);
@@ -19,6 +20,7 @@ public class Shield extends Effect {
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         c.setSpeed(c.getSpeed() - gainedSpeed);
     }
 }

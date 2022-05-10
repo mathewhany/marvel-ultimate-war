@@ -13,6 +13,7 @@ public class Stun extends Effect {
     }
 
     public void apply(Champion c) {
+        super.apply(c);
         previousCondition = c.getCondition();
         c.setCondition(Condition.INACTIVE);
 
@@ -20,6 +21,7 @@ public class Stun extends Effect {
     }
 
     public void remove(Champion c) {
+        super.apply(c);
         if (previousCondition != null) {
             c.setCondition(previousCondition);
         }
