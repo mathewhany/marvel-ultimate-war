@@ -14,8 +14,6 @@ public class CsvLoader {
      * @param filePath The path of the CSV file to load abilities from.
      */
     public static ArrayList<Ability> loadAbilities(String filePath) throws Exception {
-        System.out.println("Loading abilities from CSV file \"" + filePath + "\".");
-
         ArrayList<String[]> fileRows = loadCsvFile(filePath);
         ArrayList<Ability> abilities = new ArrayList<>();
 
@@ -28,8 +26,6 @@ public class CsvLoader {
             }
         }
 
-        System.out.println(abilities.size() + " abilities were loaded successfully.");
-
         return abilities;
     }
 
@@ -40,8 +36,6 @@ public class CsvLoader {
      * @param availableAbilities The list of available abilities that a champion can choose from.
      */
     public static ArrayList<Champion> loadChampions(String filePath, ArrayList<Ability> availableAbilities) throws Exception {
-        System.out.println("Loading champions from CSV file \"" + filePath + "\".");
-
         ArrayList<String[]> fileRows = loadCsvFile(filePath);
         ArrayList<Champion> champions = new ArrayList<>();
 
@@ -53,8 +47,6 @@ public class CsvLoader {
                 champions.add(champion);
             }
         }
-
-        System.out.println(champions.size() + " champions were loaded successfully.");
 
         return champions;
     }
@@ -75,8 +67,6 @@ public class CsvLoader {
      * {"Nariman", 13242", "Black"} at index 2
      */
     public static ArrayList<String[]> loadCsvFile(String path) throws Exception {
-        System.out.println("Loading CSV file: \"" + path + "\".");
-
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String[]> lines = new ArrayList<>();
 

@@ -25,6 +25,23 @@ public class PriorityQueue {
         return elements[nItems];
     }
 
+    public Comparable remove(Object obj) {
+        PriorityQueue temp = new PriorityQueue(size());
+
+        Comparable removedObj = null;
+        while (!isEmpty()) {
+            if (peekMin().equals(obj)) {
+                remove();
+            }  else {
+                temp.insert(remove());
+            }
+        }
+
+        while (!temp.isEmpty()) insert(temp.remove());
+
+        return removedObj;
+    }
+
     public boolean isEmpty() {
         return (nItems == 0);
     }

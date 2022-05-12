@@ -1,14 +1,9 @@
 package engine;
 
 import engine.csv.CsvLoader;
-import exceptions.ChampionDisarmedException;
-import exceptions.NotEnoughResourcesException;
-import exceptions.UnallowedMovementException;
-import model.abilities.Ability;
-import model.effects.Disarm;
-import model.effects.Dodge;
-import model.effects.Effect;
-import model.effects.Shield;
+import exceptions.*;
+import model.abilities.*;
+import model.effects.*;
 import model.world.*;
 import utils.Utils;
 
@@ -66,59 +61,54 @@ public class Game {
 
     private void placeChampionsAtRow(ArrayList<Champion> champions, int row) {
         int numChampionsInTeam = champions.size();
-        int startPosition = getFirstChampionXPosition(numChampionsInTeam);
+        int startPosition = getFirstChampionYPosition(numChampionsInTeam);
 
         for (int i = 0; i < numChampionsInTeam; i++) {
             Champion champion = champions.get(i);
-            addChampionAt(startPosition + i, row, champion);
+            addChampionAt(row, startPosition + i, champion);
         }
     }
 
     /**
-     * Calculates where the first champion should be placed on the x axis so
+     * Calculates where the first champion should be placed on the y axis so
      * that the champions are centered in the row.
      */
-    private static int getFirstChampionXPosition(int championsNum) {
+    private static int getFirstChampionYPosition(int championsNum) {
         // For example: for a board width of 5 and 3 champions per player,
         // the champions will be placed starting from index (5 - 3) / 2 = 1.
         return (BOARDWIDTH - championsNum) / 2;
     }
 
+    private void clearCellAt(int x, int y) {
+        board[x][y] = null;
+    }
+
+    private void clearCellAt(Point point) {
+        clearCellAt(point.x, point.y);
+    }
+
     private void addChampionAt(int x, int y, Champion champion) {
-        if (x >= BOARDWIDTH || y >= BOARDHEIGHT) {
-            System.out.println(
-                "Cannot place (" + champion.getName() + ") at ("+ x + ", " + y + ") " +
-                "because it is outside the board bounds"
-            );
-            return;
-        }
+        if (!isInsideBoard(x, y)) return;
+        board[x][y] = champion;
+        champion.setLocation(new Point(x, y));
+    }
 
-        System.out.println("Placing (" + champion.getName() + ") at (" + x + ", " + y + ")");
-
-        board[y][x] = champion;
-
-        // I know this should be new Point(x, y), because the Point
-        // constructor takes the horizontal coordinate first, and then the
-        // vertical coordinate. but for some reason the tests assume it to take
-        // the vertical coordinate first.
-        champion.setLocation(new Point(y, x));
+    private void addChampionAt(Point point, Champion champion) {
+        addChampionAt(point.x, point.y, champion);
     }
 
     private void placeCovers() {
         for (int i = 0; i < NUM_COVERS; i++) {
             Point randomPoint = getRandomNotCorneredEmptyPoint();
-            addNewCoverAt(randomPoint.x, randomPoint.y);
+            addNewCoverAt(randomPoint);
         }
     }
 
     private void addNewCoverAt(int x, int y) {
-        // Again I know this should be new Cover(x, y), but I left it like this to
-        // be consistent with what we did at the addChampionAt method. Strangely enough,
-        // the tests cases don't care whether the covers are initiated with new Cover(x, y),
-        // or new Cover(y, x).
-        board[y][x] = new Cover(y, x);
-
-        System.out.println("Placing cover at (" + x + ", " + y + ")");
+        board[x][y] = new Cover(x, y);
+    }
+    private void addNewCoverAt(Point point) {
+        addNewCoverAt(point.x, point.y);
     }
 
     /**
@@ -129,7 +119,7 @@ public class Game {
         Point point;
         do {
             point = getRandomPoint();
-        } while (isCornerPoint(point) || !isTileEmpty(point) || isReservedForChampion(point));
+        } while (isCornerPoint(point) || !isCellEmpty(point) || isReservedForChampion(point));
 
         return point;
     }
@@ -153,18 +143,18 @@ public class Game {
         return topLeftCorner || topRightCorner || bottomLeftCorner || bottomRightCorner;
     }
 
-    private boolean isTileEmpty(Point point) {
-        return board[point.y][point.x] == null;
+    private boolean isCellEmpty(Point point) {
+        return board[point.x][point.y] == null;
     }
 
     /**
      * Returns whether the point is reserved for one of the players' champions.
      */
     private boolean isReservedForChampion(Point point) {
-        int start = getFirstChampionXPosition(NUM_CHAMPIONS_FOR_PLAYER);
+        int start = getFirstChampionYPosition(NUM_CHAMPIONS_FOR_PLAYER);
         int end = start + NUM_CHAMPIONS_FOR_PLAYER;
 
-        return (point.y == 0 || point.y == BOARDHEIGHT - 1) && (point.x >= start && point.x <= end);
+        return (point.x == 0 || point.x == BOARDHEIGHT - 1) && (point.y >= start && point.y <= end);
     }
 
     /**
@@ -234,7 +224,13 @@ public class Game {
     }
 
     public Player checkGameOver() {
-        return null;
+        if (firstPlayer.getTeam().size() == 0) {
+            return secondPlayer;
+        } else if (secondPlayer.getTeam().size() == 0) {
+            return firstPlayer;
+        } else {
+            return null;
+        }
     }
 
     public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException {
@@ -244,26 +240,25 @@ public class Game {
             throw new NotEnoughResourcesException();
         }
 
-        if (champion.getCondition() == Condition.ACTIVE) {
-            champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 1);
-            Point oldLocation = champion.getLocation();
-            Point newLocation = null;
+        if (champion.getCondition() != Condition.ACTIVE) {
+            throw new UnallowedMovementException();
+        }
 
-            if (d == Direction.UP && oldLocation.y != BOARDHEIGHT - 1) {
-                newLocation = new Point(oldLocation.x, oldLocation.y + 1);
-            } else if (d == Direction.DOWN && oldLocation.y != 0) {
-                newLocation = new Point(oldLocation.x, oldLocation.y - 1);
-            } else if (d == Direction.RIGHT && oldLocation.x != BOARDWIDTH - 1) {
-                newLocation = new Point(oldLocation.x + 1, oldLocation.y);
-            } else if (d == Direction.LEFT && oldLocation.x != 0) {
-                newLocation = new Point(oldLocation.x - 1, oldLocation.y);
-            }
+        champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 1);
 
-            if (newLocation != null && isTileEmpty(newLocation)) {
-                champion.setLocation(newLocation);
-            } else {
-                throw new UnallowedMovementException();
-            }
+        Point directionVector = d.toVector();
+
+        int dx = directionVector.x;
+        int dy = directionVector.y;
+
+        Point oldLocation = champion.getLocation();
+        int x = oldLocation.x + dx;
+        int y = oldLocation.y + dy;
+        Point newLocation = new Point(x, y);
+
+        if (isInsideBoard(x, y) && isCellEmpty(newLocation)) {
+            clearCellAt(oldLocation);
+            addChampionAt(newLocation, champion);
         } else {
             throw new UnallowedMovementException();
         }
@@ -285,74 +280,60 @@ public class Game {
             // TODO: Handle Stun, maybe throw an exception
         }
 
+        champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 2);
+
         Point location = champion.getLocation();
         int range = champion.getAttackRange();
 
-        int dx = 0;
-        int dy = 0;
+        ArrayList<Damageable> possibleTargets = getTargetsInDirection(d, location, range);
+        ArrayList<Damageable> enemiesAndCovers = getEnemiesAndCovers(possibleTargets);
 
-        if (d == Direction.UP) {
-            dy = 1;
-        } else if (d == Direction.DOWN) {
-            dy = -1;
-        } else if (d == Direction.RIGHT) {
-            dx = 1;
-        } else if (d == Direction.LEFT) {
-            dx = -1;
-        }
+        if (!enemiesAndCovers.isEmpty()) {
+            Damageable damageable = enemiesAndCovers.get(0);
+            Point targetLocation = getLocationOf(damageable);
+            boolean shouldDamage = true;
 
-        int x = location.x + dx;
-        int y = location.y + dy;
-        int i = 1;
+            if (damageable instanceof Champion) {
+                Champion target = (Champion) damageable;
 
-        while (i <= range && isInsideBoard(x, y)) {
-            if (!isTileEmpty(new Point(x, y))) {
-                Damageable damageable = (Damageable) board[y][x];
-                boolean shouldDamage = true;
+                if (isInSameTeam(champion, target)) {
+                    shouldDamage = false;
+                } else {
+                    if (target.hasEffect(Dodge.EFFECT_NAME)) {
+                        shouldDamage = Utils.getRandomBoolean();
+                    }
 
-                if (damageable instanceof Champion) {
-                    Champion target = (Champion) damageable;
-
-                    if (isInSameTeam(champion, target)) {
+                    if (target.hasEffect(Shield.EFFECT_NAME)) {
                         shouldDamage = false;
-                        System.out.println("Same team");
-                    } else {
+                        Shield shield = (Shield) target.getLatestEffect(Shield.EFFECT_NAME);
+                        shield.remove(target);
+                        target.getAppliedEffects().remove(shield);
+                    }
 
-                        if (target.hasEffect(Dodge.EFFECT_NAME)) {
-                            shouldDamage = Utils.getRandomBoolean();
-                        }
-
-                        if (target.hasEffect(Shield.EFFECT_NAME)) {
-                            shouldDamage = false;
-                            Shield shield = (Shield) target.getLatestEffect(Shield.EFFECT_NAME);
-                            shield.remove(target);
-                            target.getAppliedEffects().remove(shield);
-                        }
-
-                        System.out.println("Outside");
-                        if (isExtraDamage(champion, target)) {
-                            System.out.println("Extra");
-                            damage = (int) (damage * 1.5);
-                        }
+                    if (isExtraDamage(champion, target)) {
+                        damage = (int) (damage * 1.5);
                     }
                 }
+            }
 
-                if (shouldDamage) {
-                    int currentHP = damageable.getCurrentHP();
-                    int newHP = currentHP - damage;
-                    damageable.setCurrentHP(newHP);
-                    champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 2);
-                    break;
+            if (shouldDamage) {
+                int currentHP = damageable.getCurrentHP();
+                int newHP = currentHP - damage;
+                damageable.setCurrentHP(newHP);
+                if (damageable.getCurrentHP() == 0) {
+                    clearCellAt(targetLocation);
+
+                    if (damageable instanceof Champion) {
+                        turnOrder.remove(damageable);
+                    }
                 }
             }
-            x += dx;
-            y += dy;
         }
     }
 
     private boolean isExtraDamage(Champion c1, Champion c2) {
-        boolean hero = c1 instanceof Hero && c2 instanceof Villain;
-        boolean villain = c1 instanceof Villain && c2 instanceof Hero;
+        boolean hero = c1 instanceof Hero && !(c2 instanceof Hero);
+        boolean villain = c1 instanceof Villain && !(c2 instanceof Villain);
         boolean antiHero = c1 instanceof AntiHero && !(c2 instanceof AntiHero);
 
         return hero || villain || antiHero;
@@ -369,13 +350,267 @@ public class Game {
         return x >= 0 && x < BOARDWIDTH && y >= 0 && y < BOARDHEIGHT;
     }
 
-    public void castAbility(Ability a) {
+    private ArrayList<Damageable> getTargetsInDirection(Direction d, Point location, int range) {
+        ArrayList<Damageable> targets = new ArrayList<>();
 
+        Point directionVector = d.toVector();
+
+        int dx = directionVector.x;
+        int dy = directionVector.y;
+
+        int x = location.x + dx;
+        int y = location.y + dy;
+        int i = 1;
+
+        while (i <= range && isInsideBoard(x, y)) {
+            if (!isCellEmpty(x, y)) {
+                Damageable target = (Damageable) board[x][y];
+                targets.add(target);
+            }
+            x += dx;
+            y += dy;
+            i++;
+        }
+
+        return targets;
     }
 
-    public void castAbility(Ability a, Direction d) {}
+    private boolean isCellEmpty(int x, int y) {
+        return isCellEmpty(new Point(x, y));
+    }
 
-    public void castAbility(Ability a, int x, int y) {}
+    private Point getLocationOf(Damageable damageable) {
+        if (damageable instanceof Cover) {
+            Cover cover = (Cover) damageable;
+            return cover.getLocation();
+        } else if (damageable instanceof Champion) {
+            Champion champion = (Champion) damageable;
+            return champion.getLocation();
+        } else {
+            return null;
+        }
+    }
+
+    private ArrayList<Damageable> getAllies(ArrayList<Damageable> targets) {
+        ArrayList<Damageable> allies = new ArrayList<>();
+        Champion currentChampion = getCurrentChampion();
+        for (Damageable target : targets) {
+            if (target instanceof Champion) {
+                Champion targetChampion = (Champion) target;
+
+                if (isInSameTeam(currentChampion, targetChampion)) {
+                    allies.add(targetChampion);
+                }
+            }
+        }
+
+        return allies;
+    }
+    private ArrayList<Damageable> getEnemies(ArrayList<Damageable> targets) {
+        ArrayList<Damageable> enemies = new ArrayList<>();
+        Champion currentChampion = getCurrentChampion();
+        for (Damageable target : targets) {
+            if (target instanceof Champion) {
+                Champion targetChampion = (Champion) target;
+
+                if (!isInSameTeam(currentChampion, targetChampion)) {
+                    enemies.add(targetChampion);
+                }
+            }
+        }
+
+        return enemies;
+    }
+    private ArrayList<Damageable> getEnemiesAndCovers(ArrayList<Damageable> targets) {
+        ArrayList<Damageable> enemiesAndCovers = new ArrayList<>();
+        Champion currentChampion = getCurrentChampion();
+        for (Damageable target : targets) {
+            if (target instanceof Champion) {
+                Champion targetChampion = (Champion) target;
+
+                if (!isInSameTeam(currentChampion, targetChampion)) {
+                    enemiesAndCovers.add(targetChampion);
+                }
+            } else if (target instanceof Cover) {
+                enemiesAndCovers.add(target);
+            }
+        }
+
+        return enemiesAndCovers;
+    }
+
+
+    public void castAbility(Ability a) throws CloneNotSupportedException, NotEnoughResourcesException, AbilityUseException {
+        ensureAbilityCanBeCasted(a);
+
+        Champion champion = getCurrentChampion();
+        Point championLocation = champion.getLocation();
+
+        ArrayList<Damageable> targets = new ArrayList<>();
+        ArrayList<Damageable> possibleTargets = new ArrayList<>();
+
+        switch (a.getCastArea()) {
+            case SELFTARGET:
+                targets.add(champion);
+                break;
+            case TEAMTARGET:
+                int range = a.getCastRange();
+                possibleTargets = getTargetsInCircle(championLocation, range);
+                break;
+            case SURROUND:
+                possibleTargets = getSurroundingTargets(championLocation);
+                break;
+        }
+
+        targets.addAll(getTargetsForAbility(a, possibleTargets));
+        a.execute(targets);
+
+        deductAbilityResources(a);
+    }
+
+    private ArrayList<Damageable> getSurroundingTargets(Point center) {
+        ArrayList<Damageable> targets = new ArrayList<>();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue;
+
+                int x = center.x + i;
+                int y = center.y + j;
+
+                if (isInsideBoard(x, y) && !isCellEmpty(x, y)) {
+                    Damageable target = (Damageable) board[x][y];
+                    targets.add(target);
+                }
+            }
+        }
+
+        return targets;
+    }
+
+    private ArrayList<Damageable> getTargetsInCircle(Point center, int radius) {
+        ArrayList<Damageable> targets = new ArrayList<>();
+
+        for (int i = 0; i < BOARDHEIGHT - 1; i++) {
+            for (int j = 0; j < BOARDWIDTH - 1; j++) {
+                int distance = getDistanceBetween(center, new Point(i, j));
+                if (distance <= radius && !isCellEmpty(i, j)) {
+                    Damageable target = (Damageable) board[i][j];
+                    targets.add(target);
+                }
+            }
+        }
+
+        return targets;
+    }
+
+    public void castAbility(Ability a, Direction d) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException {
+        if (a.getCastArea() != AreaOfEffect.DIRECTIONAL) {
+            // TODO: Throw exception
+            return;
+        }
+        ensureAbilityCanBeCasted(a);
+        Champion champion = getCurrentChampion();
+        Point location = champion.getLocation();
+
+        int range = a.getCastRange();
+        ArrayList<Damageable> possibleTargets = getTargetsInDirection(d, location, range);
+        ArrayList<Damageable> targets = getTargetsForAbility(a, possibleTargets);
+
+        a.execute(targets);
+
+        deductAbilityResources(a);
+    }
+
+    private ArrayList<Damageable> getTargetsForAbility(Ability a, ArrayList<Damageable> possibleTargets) {
+        ArrayList<Damageable> targets = new ArrayList<>();
+
+        if (a instanceof HealingAbility) {
+            targets = getAllies(possibleTargets);
+        } else if (a instanceof DamagingAbility) {
+            targets = getEnemiesAndCovers(possibleTargets);
+        } else if (a instanceof CrowdControlAbility) {
+            CrowdControlAbility ccAbility = (CrowdControlAbility) a;
+            EffectType type = ccAbility.getEffect().getType();
+
+            if (type == EffectType.BUFF) {
+                targets = getAllies(possibleTargets);
+            } else if (type == EffectType.DEBUFF) {
+                targets = getEnemies(possibleTargets);
+            }
+        }
+
+        return targets;
+    }
+
+    public void castAbility(Ability a, int x, int y) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException, InvalidTargetException {
+        if (a.getCastArea() != AreaOfEffect.SINGLETARGET) {
+            // TODO: Throw exception
+            return;
+        }
+
+        ensureAbilityCanBeCasted(a);
+        Champion champion = getCurrentChampion();
+        int range = a.getCastRange();
+        int distance = getDistanceBetween(champion.getLocation(), new Point(x, y));
+        ArrayList<Damageable> possibleTargets = new ArrayList<>();
+
+        if (isCellEmpty(x, y)) {
+            throw new InvalidTargetException();
+        }
+
+        if (distance <= range) {
+            Damageable target = (Damageable) board[x][y];
+            possibleTargets.add(target);
+        } else {
+            throw new AbilityUseException();
+        }
+
+        a.execute(getTargetsForAbility(a, possibleTargets));
+
+        deductAbilityResources(a);
+    }
+
+    private void deductAbilityResources(Ability a) {
+        Champion champion = getCurrentChampion();
+        int cost = a.getManaCost();
+        int mana = champion.getMana();
+        int currentActionsPoints = champion.getCurrentActionPoints();
+        int requiredActionPoints = a.getRequiredActionPoints();
+        int newActionPoints = currentActionsPoints - requiredActionPoints;
+
+        champion.setMana(mana - cost);
+        champion.setCurrentActionPoints(newActionPoints);
+    }
+
+    private void ensureAbilityCanBeCasted(Ability a) throws NotEnoughResourcesException, AbilityUseException {
+        Champion champion = getCurrentChampion();
+        int cost = a.getManaCost();
+        int mana = champion.getMana();
+        int coolDown = a.getCurrentCooldown();
+        int currentActionsPoints = champion.getCurrentActionPoints();
+        int requiredActionPoints = a.getRequiredActionPoints();
+
+        if (mana < cost) {
+            throw new NotEnoughResourcesException();
+        }
+
+        if (coolDown != 0) {
+            throw new AbilityUseException();
+        }
+
+        if (currentActionsPoints < requiredActionPoints) {
+            throw new NotEnoughResourcesException();
+        }
+
+        if (champion.hasEffect(Silence.EFFECT_NAME)) {
+            throw new AbilityUseException();
+        }
+    }
+
+    private int getDistanceBetween(Point p1, Point p2) {
+        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+    }
 
     public void useLeaderAbility() {}
 
@@ -385,15 +620,18 @@ public class Game {
 
     private void prepareChampionTurns() {
         // TODO: Clear turnOrder
-
-        ArrayList<Champion> allChampions = new ArrayList<>();
-        allChampions.addAll(firstPlayer.getTeam());
-        allChampions.addAll(secondPlayer.getTeam());
-
-        for (Champion c : allChampions) {
+        for (Champion c : getAllChampions()) {
             if (c.getCondition() != Condition.KNOCKEDOUT) {
                 turnOrder.insert(c);
             }
         }
+    }
+
+    private ArrayList<Champion> getAllChampions() {
+        ArrayList<Champion> allChampions = new ArrayList<>();
+        allChampions.addAll(firstPlayer.getTeam());
+        allChampions.addAll(secondPlayer.getTeam());
+
+        return allChampions;
     }
 }
