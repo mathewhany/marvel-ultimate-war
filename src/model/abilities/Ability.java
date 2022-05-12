@@ -58,5 +58,5 @@ abstract public class Ability {
         return castArea;
     }
 
-    abstract public void execute(ArrayList<Damageable> targets);
+    abstract public void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
 }

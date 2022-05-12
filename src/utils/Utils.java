@@ -2,7 +2,7 @@ package utils;
 
 public class Utils {
     /**
-     * Gets a random number between start inclusive and end exclusive.
+     * Gets a random integer between start inclusive and end exclusive.
      */
     public static int randomNumber(int start, int end) {
         int width = end - start;
@@ -28,6 +28,12 @@ public class Utils {
         } else {
             return value;
         }
+    }
+
+    public static boolean getRandomBoolean() {
+        int num = randomNumber(0, 2);
+
+        return num == 1;
     }
 
 //    public static String getRootDirectory() {

@@ -144,4 +144,19 @@ abstract public class Champion implements Damageable, Comparable {
 
         return 0;
     }
+
+    public Effect getLatestEffect(String effectName) {
+        for (int i = appliedEffects.size() - 1; i >= 0; i--) {
+            Effect effect = appliedEffects.get(i);
+            if (effect.getName().equals(effectName)) {
+                return effect;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean hasEffect(String effectName) {
+        return getLatestEffect(effectName) != null;
+    }
 }

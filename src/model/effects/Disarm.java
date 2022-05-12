@@ -13,7 +13,6 @@ public class Disarm extends Effect {
     }
 
     public void apply(Champion c) {
-        super.apply(c);
         // TODO: Target cannot use normal attacks
         c.getAbilities().add(new DamagingAbility(
                 "Punch",
@@ -27,7 +26,6 @@ public class Disarm extends Effect {
     }
 
     public void remove(Champion c) {
-        super.apply(c);
         // TODO: Target can use normal attacks
         for (int i = 0; i < c.getAbilities().size(); i++) {
             if (c.getAbilities().get(i).getName().equals("Punch")) {

@@ -12,7 +12,6 @@ public class Root extends Effect {
 
     @Override
     public void apply(Champion c) {
-        super.apply(c);
         // Note: INACTIVE has a priority over ROOTED.
         // For example, if a champion is INACTIVE then
         // a Root effect is applied to him,
@@ -24,7 +23,6 @@ public class Root extends Effect {
 
     @Override
     public void remove(Champion c) {
-        super.apply(c);
         // TODO: Remove Root Effect
     }
 }
