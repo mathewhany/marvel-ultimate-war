@@ -13,6 +13,7 @@ public class AntiHero extends Champion {
         for (Champion target : targets) {
             Stun stun = new Stun(2);
             stun.apply(target);
+            target.getAppliedEffects().add(stun);
         }
     }
 }

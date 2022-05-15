@@ -23,10 +23,12 @@ public class Hero extends Champion {
 
             for (Effect effect : temp) {
                 effect.remove(target);
+                target.getAppliedEffects().remove(effect);
             }
 
             Embrace embrace = new Embrace(2);
             embrace.apply(target);
+            target.getAppliedEffects().add(embrace);
         }
     }
 }

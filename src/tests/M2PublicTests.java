@@ -19713,10 +19713,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackAntiHeroLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ5 = secondTeam.get(1);
 
@@ -19832,9 +19833,10 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackAntiHeroDown() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
 
 		Object champ1 = firstTeam.get(0);
 
@@ -19951,10 +19953,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackAntiHeroUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ5 = secondTeam.get(1);
 
@@ -20071,10 +20074,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackVillainRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 
 		Object champ4 = secondTeam.get(0);
@@ -20192,10 +20196,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackVillainLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 
 		Object champ4 = secondTeam.get(0);
@@ -20313,9 +20318,10 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackVillainUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
 
 		Object champ1 = firstTeam.get(0);
 
@@ -20433,9 +20439,10 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackHeroRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ3 = firstTeam.get(2);
@@ -20555,10 +20562,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackHeroLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ3 = firstTeam.get(2);
 		Object champ6 = secondTeam.get(2);
@@ -20674,9 +20682,10 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackHeroUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
 
 		Object champ1 = firstTeam.get(0);
 		Object champ3 = firstTeam.get(2);
@@ -20795,10 +20804,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackVillainRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ3 = firstTeam.get(2);
 
@@ -20915,10 +20925,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackVillainLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21038,10 +21049,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackVillainUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21161,10 +21173,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackAntiHeroRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21285,10 +21298,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackAntiHeroLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21409,10 +21423,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testVillainAttackAntiHeroUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21533,10 +21548,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackHeroLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21657,10 +21673,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackHeroRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21781,10 +21798,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackHeroUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -21905,10 +21923,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackVillainLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22029,10 +22048,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackVillainRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22153,10 +22173,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackVillainUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22277,10 +22298,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackAntiHeroLeft() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22400,10 +22422,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackAntiHeroRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22523,10 +22546,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAntiHeroAttackAntiHeroUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22646,10 +22670,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testUpdateActionPointsAfterAttack() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22741,10 +22766,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void invalidAttackSameTeam() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -22976,10 +23002,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void invalidAttackNotEnoughActionPoints() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -23084,10 +23111,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAttackOutsideAttackRange() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -23181,10 +23209,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackCoverUp() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23279,10 +23308,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackCoverDown() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23376,10 +23406,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testHeroAttackCoverRight() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23473,10 +23504,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testRemoveCoverAfterAttack() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23575,10 +23607,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testRemoveChampionAfterAttack() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23703,10 +23736,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAttackedChampionRemovedFromQueue() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -23963,10 +23997,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test(timeout = 3000)
 	public void testAttackFirstTarget() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+	
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -24071,10 +24106,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked" })
 	@Test(timeout = 3000)
 	public void testEndTurnUpdatesTurnOrder() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		Object champ3 = firstTeam.get(2);
@@ -24146,10 +24182,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked" })
 	@Test(timeout = 3000)
 	public void testEndTurnPreparesChampion() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -24217,10 +24254,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked" })
 	@Test(timeout = 3000)
 	public void testEndTurnUpdatedCooldown() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		firstTeam.get(1);
 		firstTeam.get(2);
@@ -24389,10 +24427,11 @@ public class M2PublicTests {
 	@SuppressWarnings({ "unchecked" })
 	@Test(timeout = 3000)
 	public void testEndTurnUpdatedActionPoints() throws Exception {
-		Object createdGame = createGameAndTeams().get(0);
-		ArrayList<Object> firstTeam = (ArrayList<Object>) createGameAndTeams().get(1);
-		ArrayList<Object> secondTeam = (ArrayList<Object>) createGameAndTeams().get(2);
-
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+		
 		Object champ1 = firstTeam.get(0);
 		Object champ2 = firstTeam.get(1);
 		firstTeam.get(2);
@@ -24942,7 +24981,8 @@ public class M2PublicTests {
 							Constructor<?> constructor = Class.forName(stunPath).getConstructor(int.class);
 
 							Random r = new Random();
-							int durationOne = r.nextInt(10);
+							int durationOne = r.nextInt(10) + 2; 
+							System.out.println("duration" + durationOne);
 
 							Object stunEffect = constructor.newInstance(durationOne);
 
@@ -25459,6 +25499,743 @@ public class M2PublicTests {
 		}
 
 	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test(timeout = 3000)
+	public void testEndTurnRemovesStunnedChampionExpiredEffects() throws Exception {
+
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+
+		Object champ1 = firstTeam.get(0);
+		
+		Object champ4 = secondTeam.get(0);
+		Object champ5 = secondTeam.get(1);
+		Object champ6 = secondTeam.get(2);
+
+		try {
+			Method m = createdGame.getClass().getMethod("getTurnOrder");
+			Object turnOrder = m.invoke(createdGame);
+
+			try {
+				Method size = turnOrder.getClass().getMethod("size");
+
+				try {
+					int turnOrderSize = (int) size.invoke(turnOrder);
+					Method remove = turnOrder.getClass().getMethod("remove");
+
+					while (turnOrderSize != 0) {
+						remove.invoke(turnOrder);
+						turnOrderSize = (int) size.invoke(turnOrder);
+
+					}
+					
+					Method m2 = turnOrder.getClass().getMethod("insert", Comparable.class);
+					m2.invoke(turnOrder, champ4);
+
+					m2.invoke(turnOrder, champ5);
+					m2.invoke(turnOrder, champ6);
+
+
+					try {
+						Method setSpeed = champ5.getClass().getSuperclass().getMethod("setSpeed", int.class);
+						try {
+							Method getCurrentChampion = createdGame.getClass().getMethod("getCurrentChampion");
+							Object currentChamp = getCurrentChampion.invoke(createdGame);
+							if(currentChamp != champ6) {
+								setSpeed.invoke(champ6,2);
+								setSpeed.invoke(champ5,10);
+								setSpeed.invoke(champ4,50);
+
+
+								remove.invoke(turnOrder);
+								remove.invoke(turnOrder);
+								m2.invoke(turnOrder, champ5);
+								m2.invoke(turnOrder, champ6);
+
+
+
+
+							}
+
+						} catch (NoSuchMethodException e) {
+							fail("Game class should have getCurrentChampion method");
+
+						}
+
+					} catch(NoSuchMethodException e) {
+						fail("Champion class should have setSpeed method");
+
+					}
+
+					try {
+						Method setCondition = champ5.getClass().getMethod("setCondition", Class.forName(conditionPath));
+						setCondition.invoke(champ5,
+								Enum.valueOf((Class<Enum>) Class.forName(conditionPath), "INACTIVE"));
+
+						try {
+							Method getAppliedEffects = champ1.getClass().getMethod("getAppliedEffects");
+
+							ArrayList<Object> champEffects = (ArrayList<Object>) getAppliedEffects.invoke(champ5);
+
+							Constructor<?> constructor = Class.forName(embracePath).getConstructor( int.class);
+
+							Random r = new Random();
+							int durationOne = r.nextInt(10)+2;
+							int durationTwo = 1;
+							int durationThree = r.nextInt(10)+2;
+
+							Object embraceEffect = constructor.newInstance(durationOne);
+
+
+							constructor = Class.forName(powerUpPath).getConstructor( int.class);
+							Object powerUpEffect =  constructor.newInstance(durationTwo);
+
+							constructor = Class.forName(stunPath).getConstructor( int.class);
+							Object stunEffect =  constructor.newInstance(durationThree);
+
+							champEffects.add(powerUpEffect);
+							champEffects.add(embraceEffect);
+							champEffects.add(stunEffect);
+
+							try {
+								Field appliedEffects = champ5.getClass().getSuperclass().getDeclaredField("appliedEffects");
+								appliedEffects.setAccessible(true);
+								appliedEffects.set(champ5,champEffects);
+
+								try {
+
+									Method endTurn = createdGame.getClass().getMethod("endTurn");
+									endTurn.invoke(createdGame);
+
+									ArrayList<Object> champEffectsUpdated = (ArrayList<Object>) getAppliedEffects.invoke(champ5);
+
+									for(int i = 0; i < champEffectsUpdated.size(); i++) {
+										if(champEffectsUpdated.get(i) == powerUpEffect) {
+											fail("endTurn should remove any expired effects from any stunned champion's appliedEffects arraylist before skipping the stunned champion's turn.");
+										}
+									}
+
+
+
+								} catch(NoSuchMethodException e) {
+									fail("Game class should have endTurn method");
+
+								}
+
+							} catch(NoSuchFieldException e) {
+
+							}
+
+
+
+
+
+						} catch (NoSuchMethodException e) {
+							fail("Champion class should have getAppliedEffects method");
+
+						}
+
+					} catch (NoSuchMethodException e) {
+						fail("Champion class should have setCondition method");
+
+					}
+
+				} catch (NoSuchMethodException e) {
+					fail("Priority Queue class should have remove method");
+
+				}
+			} catch (NoSuchMethodException e) {
+				fail("Priority Queue class should have size method");
+
+			}
+		} catch (NoSuchMethodException e) {
+			fail("Game class should have getTurnOrder method");
+		}
+
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test(timeout = 100)
+	public void testEndTurnCallsRemoveEffectOnStunnedChampion() throws Exception {
+
+		ArrayList<Object> newGame = (ArrayList<Object>) createGameAndTeams();
+		Object createdGame = newGame.get(0);
+		ArrayList<Object> firstTeam = (ArrayList<Object>) newGame.get(1);
+		ArrayList<Object> secondTeam = (ArrayList<Object>) newGame.get(2);
+
+		Object champ1 = firstTeam.get(0);
+		Object champ2 = firstTeam.get(1);
+		Object champ4 = secondTeam.get(0);
+		Object champ5 = secondTeam.get(1);
+		Object champ6 = secondTeam.get(2);
+
+		try {
+			Method m= createdGame.getClass().getMethod("getTurnOrder");
+			Object turnOrder = m.invoke(createdGame);
+
+
+			try {
+				Method size = turnOrder.getClass().getMethod("size");
+
+				try {
+					int turnOrderSize = (int) size.invoke(turnOrder);
+					Method remove = turnOrder.getClass().getMethod("remove");
+
+
+					while(turnOrderSize != 0) {
+						remove.invoke(turnOrder);
+						turnOrderSize = (int) size.invoke(turnOrder);
+					} 
+
+
+					try {
+						Method setCondition = champ5.getClass().getMethod("setCondition", Class.forName(conditionPath));
+						setCondition.invoke(champ5,  Enum.valueOf((Class<Enum>) Class.forName(conditionPath),"INACTIVE"));
+						try {
+
+							Method getAppliedEffects = champ5.getClass().getMethod("getAppliedEffects");
+
+							ArrayList<Object> champEffects = (ArrayList<Object>) getAppliedEffects.invoke(champ5);
+
+							Constructor<?> constructor = Class.forName(speedUpPath).getConstructor( int.class);
+
+							int durationOne = 1;
+
+							Object speedUpEffect = constructor.newInstance(durationOne);
+							
+							
+							constructor = Class.forName(stunPath).getConstructor( int.class);
+							Object stunEffect =  constructor.newInstance(5);
+
+
+							champEffects.add(speedUpEffect);
+							champEffects.add(stunEffect);
+
+
+
+
+							try {
+								Field appliedEffects = champ2.getClass().getSuperclass().getDeclaredField("appliedEffects");
+								appliedEffects.setAccessible(true);
+								appliedEffects.set(champ5,champEffects);
+
+								try {
+
+									Method m2 = turnOrder.getClass().getMethod("insert", Comparable.class);
+									m2.invoke(turnOrder, champ4);
+
+									m2.invoke(turnOrder, champ5);
+									m2.invoke(turnOrder, champ6);
+
+									try {
+
+										Method getCurrentChampion = createdGame.getClass().getMethod("getCurrentChampion");
+										Object currentChamp = getCurrentChampion.invoke(createdGame);
+										if(currentChamp != champ6) {
+
+											try {
+												Method setSpeed = champ1.getClass().getMethod("setSpeed", int.class);
+												setSpeed.invoke(champ6,2);
+												setSpeed.invoke(champ5,10);
+												setSpeed.invoke(champ4,50);
+
+
+											}catch (NoSuchMethodException e) {
+												fail("Champion class should have setSpeed method");
+
+											}
+
+											remove.invoke(turnOrder);
+											remove.invoke(turnOrder);
+											m2.invoke(turnOrder, champ5);
+											m2.invoke(turnOrder, champ6);
+
+
+
+
+
+										}
+
+									} catch (NoSuchMethodException e) {
+										fail("Game class should have getCurrentChampion method");
+
+									}
+
+
+
+
+									try {
+										Method getSpeed = champ5.getClass().getMethod("getSpeed");
+										int speed = (int) getSpeed.invoke(champ5);
+
+										try {
+											Method getCurrentActionPoint = champ5.getClass().getMethod("getCurrentActionPoints");
+											int currentActionPoint = (int) getCurrentActionPoint.invoke(champ5);
+
+
+
+											try {
+
+												int newActionPoints = currentActionPoint +1;
+
+
+
+												Field currentActionPointsField = champ2.getClass().getSuperclass().getDeclaredField("currentActionPoints");
+												currentActionPointsField.setAccessible(true);
+												currentActionPointsField.set(champ5,newActionPoints);
+
+
+
+												try {
+													Method setSpeed = champ1.getClass().getMethod("setSpeed", int.class);
+													int newSpeed = (int) (speed * 1.15);
+													setSpeed.invoke(champ5,newSpeed);
+
+													Field speedField = champ2.getClass().getSuperclass().getDeclaredField("speed");
+													speedField.setAccessible(true);
+													speedField.set(champ5,newSpeed);
+
+
+
+
+
+													try {
+
+														Method endTurn = createdGame.getClass().getMethod("endTurn");
+														endTurn.invoke(createdGame);
+
+
+
+
+														int updatedSpeed = (int) getSpeed.invoke(champ5);	
+														
+														assertTrue("endTurn should call the remove method on any expired effects of the stunned champion before skipping the stunned champion's turn. If it's already called, check the logic of the remove methods of the effects.",
+																updatedSpeed == (int)(newSpeed/1.15));
+
+
+
+
+
+													} catch (NoSuchMethodException e) {
+														fail("Game class should have endTurn method");
+													}
+
+												}catch (NoSuchMethodException e) {
+													fail("Champion class should have setSpeed method");
+
+												}
+
+
+											} catch (NoSuchFieldException e) {
+												fail("Champion class should have currentActionPoints field.");
+
+											}
+
+										}	catch(NoSuchMethodException e) {
+											fail("Champion class should have getCurrentActionPoints Method");
+
+										}
+
+
+
+
+									} catch(NoSuchMethodException e) {
+										fail("Champion class should have getSpeed Method");
+
+									}
+
+
+
+								} catch (NoSuchMethodException e) {
+									fail("Priority Queue class should have insert method");
+								}	
+							} catch (NoSuchFieldException e) {
+								fail("Champion class should have appliedEffects attribute");
+
+							}
+						} catch (NoSuchMethodException e) {
+							fail("Champion class should have getAppliedEffects method");
+
+						} 
+					}catch (NoSuchMethodException e) {
+						fail("Champion class should have setCondition method");
+
+					} 
+
+
+				} catch (NoSuchMethodException e) {
+					fail("Priority Queue class should have remove method");
+
+				}
+			} catch (NoSuchMethodException e) {
+				fail("Priority Queue class should have size method");
+
+
+			}
+		}	catch (NoSuchMethodException e) {
+			fail("Game class should have getTurnOrder method");
+		}
+
+
+
+
+
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test(timeout = 3000)
+	public void applyLogicDodgeAttackResources() {
+		String champInstance;
+		try {
+
+			Constructor<?> constructorFirstPlayer = Class.forName(playerPath)
+					.getConstructor(String.class);
+			Constructor<?> constructorSecondPlayer = Class.forName(playerPath)
+					.getConstructor(String.class);
+			int randomName1 = (int) (Math.random() * 10) + 1;
+			int randomName2 = (int) (Math.random() * 10) + 1;
+			Object firstPlayer = null;
+			Object secondPlayer = null;
+			try {
+				firstPlayer = constructorFirstPlayer.newInstance("Name_"
+						+ randomName1);
+				secondPlayer = constructorSecondPlayer.newInstance("Name_"
+						+ randomName2);
+
+			} catch (InvocationTargetException e1) {
+				assertTrue("Objects of type \"Player\" can be instantiated.",
+						false);
+
+				e1.printStackTrace();
+			}
+			Constructor<?> gameConstructor = Class.forName(gamePath)
+					.getConstructor(Class.forName(playerPath),
+							Class.forName(playerPath));
+			Object createdGame = null;
+			try {
+				createdGame = gameConstructor.newInstance(firstPlayer,
+						secondPlayer);
+			} catch (InvocationTargetException e1) {
+				assertTrue(e1.getCause()
+						+ " occurred while creating an instance of \"Game\".",
+						false);
+
+				e1.printStackTrace();
+			}
+
+			ArrayList<Object> firstPlayerChamp1 = new ArrayList<>();
+			ArrayList<Object> secPlayerChamp1 = new ArrayList<>();
+
+			int randomChampion = (int) (Math.random() * (2 + 1));
+			if (randomChampion == 0)
+				champInstance = heroPath;
+			else if (randomChampion == 1)
+				champInstance = antiHeroPath;
+			else
+				champInstance = villainPath;
+			Constructor<?> constructorChampion = Class.forName(champInstance)
+					.getConstructor(String.class, int.class, int.class,
+							int.class, int.class, int.class, int.class);
+
+			Object champPlayer1 = null;
+
+			try {
+				champPlayer1 = constructorChampion.newInstance("ironman", 1, 5,
+						3, 5, 2, 6);
+			} catch (InstantiationException | InvocationTargetException e) {
+				assertTrue("Objects of type \""
+						+ Class.forName(champInstance).getSimpleName()
+						+ "\" can be instantiated.", false);
+			}
+
+			Object champPlayer2 = null;
+
+			try {
+				champPlayer2 = constructorChampion.newInstance("loki", 100, 5,
+						3, 4, 5, 6);
+			} catch (InstantiationException | InvocationTargetException e) {
+				assertTrue("Objects of type \""
+						+ Class.forName(champInstance).getSimpleName()
+						+ "\" can be instantiated.", false);
+			}
+
+			Class<?> cham1 = Class.forName(championPath);
+			Field location = cham1.getDeclaredField("location");
+			location.setAccessible(true);
+			Point p1 = new Point(2, 2);
+			location.set(champPlayer1, p1);
+			firstPlayerChamp1.add(champPlayer1);
+			Class<?> curr = firstPlayer.getClass();
+			Field f = curr.getDeclaredField("team");
+			f.setAccessible(true);
+			f.set(firstPlayer, firstPlayerChamp1);
+
+			Class<?> cham2 = Class.forName(championPath);
+			Field location2 = cham2.getDeclaredField("location");
+			location2.setAccessible(true);
+			Point p2 = new Point(2, 3);
+			location.set(champPlayer2, p2);
+			secPlayerChamp1.add(champPlayer2);
+
+			curr = secondPlayer.getClass();
+			f = curr.getDeclaredField("team");
+			f.setAccessible(true);
+			f.set(secondPlayer, secPlayerChamp1);
+			Method getBoardGame = createdGame.getClass().getMethod("getBoard");
+			Object[][] boardGame = null;
+			try {
+				boardGame = (Object[][]) getBoardGame.invoke(createdGame);
+			} catch (InvocationTargetException e1) {
+				assertTrue(
+						e1.getCause()
+								+ " occurred while invoking \"getBoard\" method on an instance of \"Game\".",
+						false);
+
+				e1.printStackTrace();
+			}
+
+			boardGame[2][2] = champPlayer1;
+
+			boardGame[2][3] = champPlayer2;
+
+			Field board = createdGame.getClass().getDeclaredField("board");
+			board.setAccessible(true);
+			board.set(createdGame, boardGame);
+			Constructor<?> constructorDodge = Class.forName(DodgePath)
+					.getConstructor(int.class);
+
+			Object dodge = null;
+			try {
+				dodge = constructorDodge
+						.newInstance((int) (Math.random() * 10) + 1);
+			} catch (InvocationTargetException e) {
+
+				assertTrue("Objects of type \"Dodge\" can be instantiated.",
+						false);
+
+				e.printStackTrace();
+			}
+
+			Field queue = Class.forName(gamePath).getDeclaredField("turnOrder");
+			queue.setAccessible(true);
+			Constructor<?> pQueueConst = Class.forName(priorityQueuePath)
+					.getConstructor(int.class);
+
+			Object pQueue = null;
+			try {
+				pQueue = pQueueConst.newInstance(6);
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						"Objects of type \"PriorityQueue\" can be instantiated.",
+						false);
+
+				e.printStackTrace();
+			}
+			Method insert = Class.forName(priorityQueuePath).getDeclaredMethod(
+					"insert", Comparable.class);
+			try {
+				insert.invoke(pQueue, champPlayer1);
+				insert.invoke(pQueue, champPlayer2);
+				queue.set(createdGame, pQueue);
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						e.getCause()
+								+ " occurred while invoking \"insert\" method on an instance of \"PriorityQueue\".",
+						false);
+
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				fail("\"insert\" in \"PriorityQueue\" class takes a \"Comparable\" object.");
+			}
+
+			Method peek = Class.forName(priorityQueuePath).getDeclaredMethod(
+					"peekMin");
+			Object target = null;
+			try {
+				target = peek.invoke(pQueue);
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						e.getCause()
+								+ " occurred while invoking \"peekMin\" method on an instance of \"PriorityQueue\".",
+						false);
+
+				e.printStackTrace();
+			}
+			Method remove = Class.forName(priorityQueuePath).getDeclaredMethod(
+					"remove");
+			Object enemy = null;
+			try {
+				remove.invoke(pQueue);
+				enemy = remove.invoke(pQueue);
+				if (enemy.getClass().equals(Class.forName(antiHeroPath))
+						|| (enemy.getClass().equals(Class.forName(heroPath)))
+						|| (enemy.getClass().equals(Class.forName(villainPath)))) {
+					Class<?> enemyEffect = Class.forName(championPath);
+					Field appliedEffects = enemyEffect
+							.getDeclaredField("appliedEffects");
+					appliedEffects.setAccessible(true);
+					((ArrayList<Object>) appliedEffects.get(enemy)).add(dodge);
+
+				}
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						e.getCause()
+								+ " occurred while invoking \"remove\" method on an instance of \"PriorityQueue\".",
+						false);
+
+				e.printStackTrace();
+			}
+
+			Method m3 = createdGame.getClass().getMethod("attack",
+					Class.forName(directionPath));
+
+			target.getClass().getSimpleName();
+			Field locationTarget = Class.forName(championPath)
+					.getDeclaredField("location");
+			locationTarget.setAccessible(true);
+			Point locationT = (Point) locationTarget.get(target);
+
+			target.getClass().getMethod("getCurrentHP");
+			Method m6 = enemy.getClass().getMethod("getCurrentHP");
+
+			int before = 0;
+			int actions = 0;
+			try {
+				before = (Integer) m6.invoke(enemy);
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						e.getCause()
+								+ " occurred while invoking \"getCurrentHP\" method on an instance of \""
+								+ enemy.getClass().getSimpleName() + "\".",
+						false);
+
+				e.printStackTrace();
+			}
+			try {
+				insert.invoke(pQueue, target);
+				insert.invoke(pQueue, enemy);
+			} catch (InvocationTargetException e) {
+				assertTrue(
+						e.getCause()
+								+ " occurred while invoking \"insert\" method on an instance of \"PriorityQueue\".",
+						false);
+				e.printStackTrace();
+			}
+			int size = (int) (Math.random() * 100) + 10;
+			Field HP = Class.forName(championPath)
+					.getDeclaredField("currentHP");
+			Field damage = Class.forName(championPath).getDeclaredField(
+					"attackDamage");
+			Field action = Class.forName(championPath).getDeclaredField(
+					"currentActionPoints");
+			HP.setAccessible(true);
+			damage.setAccessible(true);
+			action.setAccessible(true);
+			actions = (int) action.get(target);
+			int expected = actions-2;
+			
+			for (int i = 0; i < size; i++) {
+				int after = 0;
+				damage.get(target);
+
+				HP.set(enemy, before);
+
+				action.set(target, actions);
+
+				if (locationT.y == 3) {
+					try {
+
+						m3.invoke(createdGame, Enum.valueOf(
+								(Class<Enum>) Class.forName(directionPath),
+								"LEFT"));
+					} catch (InvocationTargetException e) {
+						assertTrue(
+								e.getCause()
+										+ " occurred while invoking \"attack\" method on an instance of \"Game\".",
+								false);
+
+						e.printStackTrace();
+					}
+
+				} else {
+					try {
+						m3.invoke(createdGame, Enum.valueOf(
+								(Class<Enum>) Class.forName(directionPath),
+								"RIGHT"));
+					} catch (InvocationTargetException e) {
+						assertTrue(
+								e.getCause()
+										+ " occurred while invoking \"attack\" method on an instance of \"Game\".",
+								false);
+
+						e.printStackTrace();
+					}
+				}
+
+				try {
+					after = (Integer) m6.invoke(enemy);
+				} catch (InvocationTargetException e) {
+					assertTrue(
+							e.getCause()
+									+ " occurred while invoking \"getCurrentHP\" method on an instance of \""
+									+ enemy.getClass().getSimpleName() + "\".",
+							false);
+
+					e.printStackTrace();
+				}
+				if (after != before) {
+					int actual = (int) action.get(target);
+					assertEquals("The method \"" + "attack" + "\" in class "
+						+ createdGame.getClass().getSimpleName()
+						+ " should set the correct value of variable \""
+						+ "currentActionPoints" + "\". If a champion attacks a target with a dodge effect that is successfully applied to the attack and the attack is blocked, all required resources for this attack should be deducted from the champion.", expected,actual);
+				}
+				else {
+					int actual = (int) action.get(target);
+					assertEquals("The method \"" + "attack" + "\" in class "
+						+ createdGame.getClass().getSimpleName()
+						+ " should set the correct value of variable \""
+						+ "currentActionPoints\" after a successful attack performed on a target with a dodge effect that is not successfully applied to the attack.", expected,actual);
+			
+					
+				}
+
+			}
+
+		} catch (InstantiationException e) {
+			assertTrue(e.getClass().getName() + " occurred.", false);
+		}
+
+		catch (NoSuchMethodException e) {
+
+			assertTrue(e.getClass().getName() + " occurred: " + e.getMessage(),
+					false);
+		}
+
+		catch (ClassNotFoundException e) {
+
+			assertTrue(e.getClass().getName() + " occurred: " + e.getMessage(),
+					false);
+
+		} catch (SecurityException e) {
+			assertTrue(e.getClass().getName() + " occurred: " + e.getMessage(),
+					false);
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			assertTrue(e.getClass().getName() + " occurred: " + e.getMessage(),
+					false);
+
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			assertTrue(e.getClass().getName() + " occurred: " + e.getMessage(),
+					false);
+
+		}
+
+	}
+
 
 	///////////////////////////// Helpers/////////////////////////////////////////////////////////////
 

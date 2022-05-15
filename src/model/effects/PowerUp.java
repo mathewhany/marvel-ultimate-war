@@ -21,7 +21,6 @@ public class PowerUp extends Effect {
                 DamagingAbility damagingAbility = (DamagingAbility) ability;
                 int damage = damagingAbility.getDamageAmount();
                 int gainedDamage = (int) (damage * 0.2);
-                System.out.println(ability.getName());
                 damagingAbility.setDamageAmount(damage + gainedDamage);
             } else if (ability instanceof HealingAbility) {
                 HealingAbility healingAbility = (HealingAbility) ability;
