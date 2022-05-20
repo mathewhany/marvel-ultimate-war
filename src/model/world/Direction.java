@@ -1,5 +1,7 @@
 package model.world;
 
+import utils.Utils;
+
 import java.awt.*;
 
 public enum Direction {
@@ -17,6 +19,14 @@ public enum Direction {
                 return new Point(0, -1);
         }
 
-        return null;
+        throw new IllegalArgumentException("Direction not supported");
+    }
+
+    /**
+     * Takes a point and returns the a new point after translating
+     * the given point in this direction.
+     */
+    public Point translatePoint(Point point) {
+        return Utils.addPoints(point, toVector());
     }
 }

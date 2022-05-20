@@ -12,4 +12,8 @@ public class Villain extends Champion {
             target.setCondition(Condition.KNOCKEDOUT);
         }
     }
+
+    public boolean isExtraDamage(Champion target) {
+        return !(target instanceof Villain);
+    }
 }

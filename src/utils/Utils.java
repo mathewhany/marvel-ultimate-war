@@ -1,5 +1,7 @@
 package utils;
 
+import java.awt.*;
+
 public class Utils {
     /**
      * Gets a random integer between start inclusive and end exclusive.
@@ -28,6 +30,14 @@ public class Utils {
         } else {
             return value;
         }
+    }
+
+    public static int aboveZero(int value) {
+        return Math.max(0, value);
+    }
+
+    public static Point addPoints(Point p1, Point p2) {
+        return new Point(p1.x + p2.x, p1.y + p2.y);
     }
 
     public static boolean getRandomBoolean() {

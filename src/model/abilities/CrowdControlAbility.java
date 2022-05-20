@@ -1,6 +1,7 @@
 package model.abilities;
 
 import model.effects.Effect;
+import model.effects.EffectType;
 import model.world.Champion;
 import model.world.Damageable;
 
@@ -19,14 +20,15 @@ public class CrowdControlAbility extends Ability {
     }
 
     public void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException {
-        Effect clone = (Effect) effect.clone();
-
         for (Damageable target : targets) {
             Champion champion = (Champion) target;
 
-            clone.apply(champion);
-            champion.getAppliedEffects().add(clone);
+            champion.addEffect((Effect) effect.clone());
         }
+    }
+
+    public boolean isBuff() {
+        return getEffect().getType() == EffectType.BUFF;
     }
 }
 

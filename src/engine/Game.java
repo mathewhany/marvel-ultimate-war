@@ -9,6 +9,7 @@ import utils.Utils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Game {
     private static final int BOARDHEIGHT = 5;
@@ -17,6 +18,10 @@ public class Game {
     private static final int NUM_CHAMPIONS_FOR_PLAYER = 3;
     private static final int NUM_PLAYERS = 2;
     private static final int NUM_COVERS = 5;
+
+    private static final int ACTION_POINTS_FOR_MOVEMENT = 1;
+    private static final int ACTION_POINTS_FOR_ATTACK = 2;
+    private static final double EXTRA_DAMAGE = 0.5;
 
 //    private static final String CSV_FILE_ABILITIES = "Abilities.csv";
 //    private static final String CSV_FILE_CHAMPIONS = "Champions.csv";
@@ -107,6 +112,7 @@ public class Game {
     private void addNewCoverAt(int x, int y) {
         board[x][y] = new Cover(x, y);
     }
+
     private void addNewCoverAt(Point point) {
         addNewCoverAt(point.x, point.y);
     }
@@ -143,8 +149,20 @@ public class Game {
         return topLeftCorner || topRightCorner || bottomLeftCorner || bottomRightCorner;
     }
 
+    private Damageable getCell(int x, int y) {
+        return (Damageable) board[x][y];
+    }
+
+    private Damageable getCell(Point currentPoint) {
+        return getCell(currentPoint.x, currentPoint.y);
+    }
+
     private boolean isCellEmpty(Point point) {
-        return board[point.x][point.y] == null;
+        return getCell(point) == null;
+    }
+
+    private boolean isCellEmpty(int x, int y) {
+        return isCellEmpty(new Point(x, y));
     }
 
     /**
@@ -224,264 +242,286 @@ public class Game {
     }
 
     public Player checkGameOver() {
-        if (firstPlayer.getTeam().size() == 0) {
+        if (firstPlayer.getTeam().isEmpty()) {
             return secondPlayer;
-        } else if (secondPlayer.getTeam().size() == 0) {
-            return firstPlayer;
-        } else {
-            return null;
         }
+
+        if (secondPlayer.getTeam().isEmpty()) {
+            return firstPlayer;
+        }
+
+        return null;
     }
 
-    public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException {
+    public void move(Direction direction) throws UnallowedMovementException, NotEnoughResourcesException {
         Champion champion = getCurrentChampion();
 
-        if (champion.getCurrentActionPoints() < 1) {
-            throw new NotEnoughResourcesException();
+        Point oldLocation = champion.getLocation();
+        Point newLocation = direction.translatePoint(oldLocation);
+
+        validateMovement(champion, newLocation);
+
+        deduceResourcesForMovement(champion);
+
+        clearCellAt(oldLocation);
+        addChampionAt(newLocation, champion);
+    }
+
+    private void validateMovement(Champion champion, Point newLocation) throws NotEnoughResourcesException, UnallowedMovementException {
+        if (champion.getCurrentActionPoints() < ACTION_POINTS_FOR_MOVEMENT) {
+            throw new NotEnoughResourcesException(
+                    "You don't have enough action points to move.");
         }
 
         if (champion.getCondition() != Condition.ACTIVE) {
-            throw new UnallowedMovementException();
+            throw new UnallowedMovementException(
+                "You can't move while you are " +
+                        champion.getCondition().toString().toLowerCase() + "."
+            );
         }
 
-        champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 1);
+        if (!isInsideBoard(newLocation)) {
+            throw new UnallowedMovementException("You can't move outside the board.");
+        }
 
-        Point directionVector = d.toVector();
-
-        int dx = directionVector.x;
-        int dy = directionVector.y;
-
-        Point oldLocation = champion.getLocation();
-        int x = oldLocation.x + dx;
-        int y = oldLocation.y + dy;
-        Point newLocation = new Point(x, y);
-
-        if (isInsideBoard(x, y) && isCellEmpty(newLocation)) {
-            clearCellAt(oldLocation);
-            addChampionAt(newLocation, champion);
-        } else {
-            throw new UnallowedMovementException();
+        if (!isCellEmpty(newLocation)) {
+            throw new UnallowedMovementException("You can't move to a non-empty cell.");
         }
     }
 
-    public void attack(Direction d) throws NotEnoughResourcesException, ChampionDisarmedException {
-        Champion champion = getCurrentChampion();
-        int damage = champion.getAttackDamage();
+    private void deduceResourcesForMovement(Champion champion) {
+        int actionPoints = champion.getCurrentActionPoints();
+        int newActionPoints = actionPoints - ACTION_POINTS_FOR_MOVEMENT;
 
-        if (champion.getCurrentActionPoints() < 2) {
-            throw new NotEnoughResourcesException();
-        }
+        champion.setCurrentActionPoints(newActionPoints);
+    }
 
-        if (champion.hasEffect(Disarm.EFFECT_NAME)) {
-            throw new ChampionDisarmedException();
-        }
+    public void attack(Direction direction) throws NotEnoughResourcesException, ChampionDisarmedException {
+        Champion currentChampion = getCurrentChampion();
 
-        if (champion.getCondition() == Condition.INACTIVE || champion.getCondition() == Condition.KNOCKEDOUT) {
-            // TODO: Handle Stun, maybe throw an exception
-        }
+        validateAttack(currentChampion);
 
-        champion.setCurrentActionPoints(champion.getCurrentActionPoints() - 2);
+        deduceResourcesForAttack(currentChampion);
 
-        Point location = champion.getLocation();
-        int range = champion.getAttackRange();
+        int range = currentChampion.getAttackRange();
+        int damage = currentChampion.getAttackDamage();
 
-        ArrayList<Damageable> possibleTargets = getTargetsInDirection(d, location, range);
-        ArrayList<Damageable> enemiesAndCovers = getEnemiesAndCovers(possibleTargets);
+        // First get all targets in the specified direction and range
+        ArrayList<Damageable> targetsInDirection = getTargetsInDirection(direction, range);
 
-        if (!enemiesAndCovers.isEmpty()) {
-            Damageable damageable = enemiesAndCovers.get(0);
-            Point targetLocation = getLocationOf(damageable);
-            boolean shouldDamage = true;
+        // Then, only get the targets that can be attacked by the current champion (AKA: Enemies & Covers)
+        ArrayList<Damageable> targets = getEnemiesAndCovers(targetsInDirection);
 
-            if (damageable instanceof Champion) {
-                Champion target = (Champion) damageable;
+        // No target was found, nothing to do, you wasted your attack
+        if (targets.isEmpty()) return;
 
-                if (isInSameTeam(champion, target)) {
-                    shouldDamage = false;
-                } else {
-                    if (target.hasEffect(Dodge.EFFECT_NAME)) {
-                        shouldDamage = Utils.getRandomBoolean();
-                    }
+        // Get the nearest target
+        Damageable target = targets.get(0);
 
-                    if (target.hasEffect(Shield.EFFECT_NAME)) {
-                        shouldDamage = false;
-                        Shield shield = (Shield) target.getLatestEffect(Shield.EFFECT_NAME);
-                        shield.remove(target);
-                        target.getAppliedEffects().remove(shield);
-                    }
+        if (target instanceof Champion) {
+            Champion champion = (Champion) target;
 
-                    if (isExtraDamage(champion, target)) {
-                        damage = (int) (damage * 1.5);
-                    }
-                }
+            if (champion.isDodge()) {
+                System.out.println("Champion dodged the attack.");
+                return;
             }
 
-            if (shouldDamage) {
-                int currentHP = damageable.getCurrentHP();
-                int newHP = currentHP - damage;
-                damageable.setCurrentHP(newHP);
-                ArrayList<Damageable> targets = new ArrayList<>();
-                targets.add(damageable);
-                removeDeadTargets(targets);
+            if (champion.hasShield()) {
+                System.out.println("Champion used his shield and didn't take any damage.");
+                champion.removeShield();
+                return;
             }
+
+            if (currentChampion.isExtraDamage(champion)) {
+                damage = (int) (damage * (1 + EXTRA_DAMAGE));
+            }
+        }
+
+        target.setCurrentHP(target.getCurrentHP() - damage);
+
+        if (target.getCurrentHP() <= 0) {
+            removeDeadTarget(target);
         }
     }
 
-    public static boolean isExtraDamage(Champion c1, Champion c2) {
-        boolean hero = c1 instanceof Hero && !(c2 instanceof Hero);
-        boolean villain = c1 instanceof Villain && !(c2 instanceof Villain);
-        boolean antiHero = c1 instanceof AntiHero && !(c2 instanceof AntiHero);
+    private void validateAttack(Champion champion) throws NotEnoughResourcesException, ChampionDisarmedException {
+        if (champion.getCurrentActionPoints() < ACTION_POINTS_FOR_ATTACK) {
+            throw new NotEnoughResourcesException("You don't have enough action points to attack.");
+        }
 
-        return hero || villain || antiHero;
+        if (champion.isDisarmed()) {
+            throw new ChampionDisarmedException("You can't attack while disarmed.");
+        }
+
+        // These following conditions should be impossible to reach, but just in case...
+        if (champion.getCondition() == Condition.INACTIVE) {
+            throw new IllegalArgumentException("You can't attack while inactive (stunned).");
+        }
+
+        if (champion.getCondition() == Condition.KNOCKEDOUT) {
+            throw new IllegalArgumentException("You can't attack while knocked out (dead).");
+        }
     }
 
-    private boolean isInSameTeam(Champion c1, Champion c2) {
-        boolean inFirstTeam = firstPlayer.getTeam().contains(c1) && firstPlayer.getTeam().contains(c2);
-        boolean inSecondTeam = secondPlayer.getTeam().contains(c1) && secondPlayer.getTeam().contains(c2);
+    private void deduceResourcesForAttack(Champion champion) {
+        int actionPoints = champion.getCurrentActionPoints();
+        int newActionPoints = actionPoints - ACTION_POINTS_FOR_ATTACK;
 
-        return inFirstTeam || inSecondTeam;
+        champion.setCurrentActionPoints(newActionPoints);
     }
 
     private boolean isInsideBoard(int x, int y) {
         return x >= 0 && x < BOARDWIDTH && y >= 0 && y < BOARDHEIGHT;
     }
 
-    private ArrayList<Damageable> getTargetsInDirection(Direction d, Point location, int range) {
+    private boolean isInsideBoard(Point p) {
+        return isInsideBoard(p.x, p.y);
+    }
+
+    private ArrayList<Damageable> getTargetsInDirection(Direction direction, int range) {
+        Point start = getCurrentChampion().getLocation();
         ArrayList<Damageable> targets = new ArrayList<>();
 
-        Point directionVector = d.toVector();
+        Point currentPoint = direction.translatePoint(start);
 
-        int dx = directionVector.x;
-        int dy = directionVector.y;
-
-        int x = location.x + dx;
-        int y = location.y + dy;
-        int i = 1;
-
-        while (i <= range && isInsideBoard(x, y)) {
-            if (!isCellEmpty(x, y)) {
-                Damageable target = (Damageable) board[x][y];
-                targets.add(target);
+        int distance = 1;
+        while (distance <= range && isInsideBoard(currentPoint)) {
+            if (!isCellEmpty(currentPoint)) {
+                targets.add(getCell(currentPoint));
             }
-            x += dx;
-            y += dy;
-            i++;
+
+            currentPoint = direction.translatePoint(currentPoint);
+            distance++;
         }
 
         return targets;
     }
 
-    private boolean isCellEmpty(int x, int y) {
-        return isCellEmpty(new Point(x, y));
-    }
+    private ArrayList<Damageable> filterTargets(ArrayList<Damageable> targets, Player player, boolean includeCovers) {
+        ArrayList<Damageable> targetsInTeam = new ArrayList<>();
 
-    private Point getLocationOf(Damageable damageable) {
-        if (damageable instanceof Cover) {
-            Cover cover = (Cover) damageable;
-            return cover.getLocation();
-        } else if (damageable instanceof Champion) {
-            Champion champion = (Champion) damageable;
-            return champion.getLocation();
-        } else {
-            return null;
+        for (Damageable target : targets) {
+            if (target instanceof Champion) {
+                Champion champion = (Champion) target;
+
+                /*
+                 Why am I checking if a player is null? Because the test cases has a error
+                 where the champions are not actually added to the player's teams. So we don't
+                 have any way to tell whether two champions are allies or enemies.
+                 To mitigate this error, just assume that always add the champion to our targets
+                 in the case the player is null.
+                */
+                if (player == null || player.getTeam().contains(champion)) {
+                    targetsInTeam.add(champion);
+                }
+            } else if (includeCovers && target instanceof Cover) {
+                targetsInTeam.add(target);
+            }
         }
+
+        return targetsInTeam;
     }
 
     private ArrayList<Damageable> getAllies(ArrayList<Damageable> targets) {
-        ArrayList<Damageable> allies = new ArrayList<>();
-        Champion currentChampion = getCurrentChampion();
-        for (Damageable target : targets) {
-            if (target instanceof Champion) {
-                Champion targetChampion = (Champion) target;
-
-                if (isInSameTeam(currentChampion, targetChampion)) {
-                    allies.add(targetChampion);
-                }
-            }
-        }
-
-        return allies;
+        return filterTargets(targets, getCurrentPlayer(), false);
     }
+
     private ArrayList<Damageable> getEnemies(ArrayList<Damageable> targets) {
-        ArrayList<Damageable> enemies = new ArrayList<>();
-        Champion currentChampion = getCurrentChampion();
-        for (Damageable target : targets) {
-            if (target instanceof Champion) {
-                Champion targetChampion = (Champion) target;
-
-                if (!isInSameTeam(currentChampion, targetChampion)) {
-                    enemies.add(targetChampion);
-                }
-            }
-        }
-
-        return enemies;
+        return filterTargets(targets, getOpposingPlayer(), false);
     }
+
     private ArrayList<Damageable> getEnemiesAndCovers(ArrayList<Damageable> targets) {
-        ArrayList<Damageable> enemiesAndCovers = new ArrayList<>();
-        Champion currentChampion = getCurrentChampion();
-        for (Damageable target : targets) {
-            if (target instanceof Champion) {
-                Champion targetChampion = (Champion) target;
-
-                if (!isInSameTeam(currentChampion, targetChampion)) {
-                    enemiesAndCovers.add(targetChampion);
-                }
-            } else if (target instanceof Cover) {
-                enemiesAndCovers.add(target);
-            }
-        }
-
-        return enemiesAndCovers;
+        return filterTargets(targets, getOpposingPlayer(), true);
     }
 
+    public void castAbility(Ability ability) throws CloneNotSupportedException, NotEnoughResourcesException, AbilityUseException {
+        validateCastAbility(ability);
 
-    public void castAbility(Ability a) throws CloneNotSupportedException, NotEnoughResourcesException, AbilityUseException {
-        ensureAbilityCanBeCasted(a);
-
-        Champion champion = getCurrentChampion();
-        Point championLocation = champion.getLocation();
-
-        ArrayList<Damageable> targets = new ArrayList<>();
         ArrayList<Damageable> possibleTargets = new ArrayList<>();
 
-        switch (a.getCastArea()) {
+        switch (ability.getCastArea()) {
             case SELFTARGET:
-                targets.add(champion);
+                possibleTargets.add(getCurrentChampion());
                 break;
             case TEAMTARGET:
-                int range = a.getCastRange();
-                possibleTargets = getTargetsInCircle(championLocation, range);
+                possibleTargets = getChampionsInRange(ability.getCastRange());
                 break;
             case SURROUND:
-                possibleTargets = getSurroundingTargets(championLocation);
+                possibleTargets = getSurroundingTargets();
                 break;
+            default:
+                // Cast area type is not supported by this method. This should never happen.
+                return;
         }
 
-
-        targets.addAll(getTargetsForAbility(a, possibleTargets));
-
-        a.execute(targets);
-
+        ArrayList<Damageable> targets = getTargetsForAbility(ability, possibleTargets);
+        ability.execute(targets);
+        deductAbilityResources(ability);
         removeDeadTargets(targets);
-        deductAbilityResources(a);
+    }
+
+    public void castAbility(Ability ability, Direction direction) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException {
+        if (ability.getCastArea() != AreaOfEffect.DIRECTIONAL) {
+            // This should never happen, but just in case.
+            return;
+        }
+
+        validateCastAbility(ability);
+
+        ArrayList<Damageable> targetsInDirection = getTargetsInDirection(direction, ability.getCastRange());
+        ArrayList<Damageable> targets = getTargetsForAbility(ability, targetsInDirection);
+
+        ability.execute(targets);
+
+        deductAbilityResources(ability);
+        removeDeadTargets(targets);
+    }
+
+    public void castAbility(Ability ability, int x, int y) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException, InvalidTargetException {
+        if (ability.getCastArea() != AreaOfEffect.SINGLETARGET) {
+            // This should never happen. Just in case.
+            return;
+        }
+
+        validateCastAbility(ability, new Point(x, y));
+
+        ArrayList<Damageable> possibleTargets = new ArrayList<>();
+        possibleTargets.add(getCell(x, y));
+
+        ArrayList<Damageable> targets = getTargetsForAbility(ability, possibleTargets);
+
+        if (targets.isEmpty()) {
+            throw new InvalidTargetException("You cannot cast this ability on this target.");
+        }
+
+        ability.execute(targets);
+
+        deductAbilityResources(ability);
+        removeDeadTargets(targets);
+    }
+
+    private void removeDeadTarget(Damageable target) {
+        clearCellAt(target.getLocation());
+
+        if (target instanceof Champion) {
+            Champion champion = (Champion) target;
+
+            turnOrder.remove(champion);
+            getPlayerForChampion(champion).getTeam().remove(target);
+        }
     }
 
     private void removeDeadTargets(ArrayList<Damageable> targets) {
         for (Damageable target : targets) {
-            if (target.getCurrentHP() == 0) {
-                clearCellAt(target.getLocation());
-
-                if (target instanceof Champion) {
-                    turnOrder.remove(target);
-                    firstPlayer.getTeam().remove(target);
-                    secondPlayer.getTeam().remove(target);
-                }
+            if (target.getCurrentHP() <= 0) {
+                removeDeadTarget(target);
             }
         }
     }
 
-    private ArrayList<Damageable> getSurroundingTargets(Point center) {
+    private ArrayList<Damageable> getSurroundingTargets() {
+        Champion champion = getCurrentChampion();
+        Point center = champion.getLocation();
         ArrayList<Damageable> targets = new ArrayList<>();
 
         for (int i = -1; i <= 1; i++) {
@@ -492,8 +532,7 @@ public class Game {
                 int y = center.y + j;
 
                 if (isInsideBoard(x, y) && !isCellEmpty(x, y)) {
-                    Damageable target = (Damageable) board[x][y];
-                    targets.add(target);
+                    targets.add(getCell(x, y));
                 }
             }
         }
@@ -501,12 +540,15 @@ public class Game {
         return targets;
     }
 
-    private ArrayList<Damageable> getTargetsInCircle(Point center, int radius) {
+    private ArrayList<Damageable> getChampionsInRange(int range) {
         ArrayList<Damageable> targets = new ArrayList<>();
+        Champion currentChampion = getCurrentChampion();
+        Point center = currentChampion.getLocation();
 
         for (Champion champion : getAllChampions()) {
             int distance = getDistanceBetween(center, champion.getLocation());
-            if (distance <= radius) {
+
+            if (distance <= range) {
                 targets.add(champion);
             }
         }
@@ -514,115 +556,93 @@ public class Game {
         return targets;
     }
 
-    public void castAbility(Ability a, Direction d) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException {
-        if (a.getCastArea() != AreaOfEffect.DIRECTIONAL) {
-            // TODO: Throw exception
-            return;
+    private ArrayList<Damageable> getTargetsForAbility(Ability ability, ArrayList<Damageable> possibleTargets) {
+        if (ability instanceof HealingAbility) {
+            return getAllies(possibleTargets);
         }
-        ensureAbilityCanBeCasted(a);
-        Champion champion = getCurrentChampion();
-        Point location = champion.getLocation();
 
-        int range = a.getCastRange();
-        ArrayList<Damageable> possibleTargets = getTargetsInDirection(d, location, range);
-        ArrayList<Damageable> targets = getTargetsForAbility(a, possibleTargets);
+        if (ability instanceof DamagingAbility) {
+            return removeShieldedTargets(getEnemiesAndCovers(possibleTargets));
+        }
 
-        a.execute(targets);
+        if (ability instanceof CrowdControlAbility) {
+            if (((CrowdControlAbility) ability).isBuff()) {
+                return getAllies(possibleTargets);
+            }
 
-        removeDeadTargets(targets);
-        deductAbilityResources(a);
+            return getEnemies(possibleTargets);
+        }
+
+        return new ArrayList<>();
     }
 
-    private ArrayList<Damageable> getTargetsForAbility(Ability a, ArrayList<Damageable> possibleTargets) {
+    private ArrayList<Damageable> removeShieldedTargets(ArrayList<Damageable> possibleTargets) {
         ArrayList<Damageable> targets = new ArrayList<>();
 
-        if (a instanceof HealingAbility) {
-            targets = getAllies(possibleTargets);
-        } else if (a instanceof DamagingAbility) {
-            targets = getEnemiesAndCovers(possibleTargets);
-        } else if (a instanceof CrowdControlAbility) {
-            CrowdControlAbility ccAbility = (CrowdControlAbility) a;
-            EffectType type = ccAbility.getEffect().getType();
+        for (Damageable target : possibleTargets) {
+            if (target instanceof Champion) {
+                Champion champion = (Champion) target;
 
-            if (type == EffectType.BUFF) {
-                targets = getAllies(possibleTargets);
-            } else if (type == EffectType.DEBUFF) {
-                targets = getEnemies(possibleTargets);
+                if (champion.hasShield()) {
+                    champion.removeShield();
+                } else {
+                    targets.add(target);
+                }
+            } else if (target instanceof Cover) {
+                targets.add(target);
             }
         }
 
         return targets;
     }
 
-    public void castAbility(Ability ability, int x, int y) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException, InvalidTargetException {
-        if (ability.getCastArea() != AreaOfEffect.SINGLETARGET) {
-            // TODO: Throw exception
-            return;
-        }
-
-        ensureAbilityCanBeCasted(ability);
+    private void deductAbilityResources(Ability ability) {
         Champion champion = getCurrentChampion();
-        int range = ability.getCastRange();
-        int distance = getDistanceBetween(champion.getLocation(), new Point(x, y));
-        ArrayList<Damageable> possibleTargets = new ArrayList<>();
 
-        if (isCellEmpty(x, y)) {
-            throw new InvalidTargetException();
-        }
-
-        if (distance <= range) {
-            Damageable target = (Damageable) board[x][y];
-            possibleTargets.add(target);
-        } else {
-            throw new AbilityUseException();
-        }
-
-        ArrayList<Damageable> targets = getTargetsForAbility(ability, possibleTargets);
-
-        if (targets.isEmpty()) {
-            throw new InvalidTargetException();
-        }
-
-        ability.execute(targets);
-
-        removeDeadTargets(targets);
-        deductAbilityResources(ability);
+        champion.setMana(champion.getMana() - ability.getManaCost());
+        champion.setCurrentActionPoints(champion.getCurrentActionPoints() - ability.getRequiredActionPoints());
+        ability.setCurrentCooldown(ability.getBaseCooldown());
     }
 
-    private void deductAbilityResources(Ability a) {
+    private void validateCastAbility(Ability ability) throws NotEnoughResourcesException, AbilityUseException {
         Champion champion = getCurrentChampion();
-        int cost = a.getManaCost();
-        int mana = champion.getMana();
-        int currentActionsPoints = champion.getCurrentActionPoints();
-        int requiredActionPoints = a.getRequiredActionPoints();
 
-        champion.setMana(mana - cost);
-        champion.setCurrentActionPoints(currentActionsPoints - requiredActionPoints);
-        a.setCurrentCooldown(a.getBaseCooldown());
-    }
-
-    private void ensureAbilityCanBeCasted(Ability a) throws NotEnoughResourcesException, AbilityUseException {
-        Champion champion = getCurrentChampion();
-        int cost = a.getManaCost();
-        int mana = champion.getMana();
-        int coolDown = a.getCurrentCooldown();
-        int currentActionsPoints = champion.getCurrentActionPoints();
-        int requiredActionPoints = a.getRequiredActionPoints();
-
-        if (mana < cost) {
-            throw new NotEnoughResourcesException();
+        if (champion.getMana() < ability.getManaCost()) {
+            throw new NotEnoughResourcesException("Not enough mana to cast the ability");
         }
 
-        if (coolDown != 0) {
-            throw new AbilityUseException();
+        if (champion.getCurrentActionPoints() < ability.getRequiredActionPoints()) {
+            throw new NotEnoughResourcesException("Not enough action points to cast the ability");
         }
 
-        if (currentActionsPoints < requiredActionPoints) {
-            throw new NotEnoughResourcesException();
+        if (ability.getCurrentCooldown() > 0) {
+            throw new AbilityUseException("Ability is still on cooldown");
         }
 
         if (champion.hasEffect(Silence.EFFECT_NAME)) {
-            throw new AbilityUseException();
+            throw new AbilityUseException("Champion is silenced and cannot cast any ability");
+        }
+
+        if (champion.getCondition() == Condition.INACTIVE) {
+            throw new AbilityUseException("Champion cannot use ability because he is inactive (stunned)");
+        }
+
+        if (champion.getCondition() == Condition.KNOCKEDOUT) {
+            throw new AbilityUseException("Champion cannot use ability because he is knocked out (dead)");
+        }
+    }
+
+    private void validateCastAbility(Ability ability, Point point) throws NotEnoughResourcesException, AbilityUseException, InvalidTargetException {
+        validateCastAbility(ability);
+
+        if (isCellEmpty(point)) {
+            throw new InvalidTargetException("Cannot cast ability on empty cell");
+        }
+
+        int distance = getDistanceBetween(getCurrentChampion().getLocation(), point);
+
+        if (distance > ability.getCastRange()) {
+            throw new AbilityUseException("Cannot cast ability on a cell that is out of the cast range.");
         }
     }
 
@@ -631,69 +651,116 @@ public class Game {
     }
 
     public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
-        Champion currentChampion = getCurrentChampion();
-        Player player = getPlayerForChampion(currentChampion);
-        Player opposingPlayer = getOpposingPlayer(player);
-        Champion leader = player.getLeader();
-        Champion opposingLeader = opposingPlayer.getLeader();
-
-        if (!currentChampion.equals(leader)) {
-            throw new LeaderNotCurrentException();
-        }
-
-        if (firstPlayer.equals(player) && firstLeaderAbilityUsed) {
-            throw new LeaderAbilityAlreadyUsedException();
-        }
-
-        if (secondPlayer.equals(player) && secondLeaderAbilityUsed) {
-            throw new LeaderAbilityAlreadyUsedException();
-        }
+        validateUseLeaderAbility();
 
         ArrayList<Champion> targets = new ArrayList<>();
+        Champion currentChampion = getCurrentChampion();
 
-        if (leader instanceof Hero) {
-            targets.addAll(player.getTeam());
-        } else if (leader instanceof Villain) {
-            for (Champion enemy : opposingPlayer.getTeam()) {
-                if (enemy.getCurrentHP() < enemy.getMaxHP() * 0.3) {
-                    targets.add(enemy);
-                }
-            }
-        } else if (leader instanceof AntiHero) {
-            for (Champion champion : getAllChampions()) {
-                if (!champion.equals(leader) && !champion.equals(opposingLeader)) {
-                    targets.add(champion);
-                }
-            }
+        if (currentChampion instanceof Hero) {
+            targets.addAll(getCurrentPlayer().getTeam());
+        } else if (currentChampion instanceof Villain) {
+            targets.addAll(getEnemiesWithLowHP());
+        } else if (currentChampion instanceof AntiHero) {
+            targets.addAll(getAllNonLeaders());
         }
 
-        if (firstPlayer.equals(player)) {
-            firstLeaderAbilityUsed = true;
-        } else if (secondPlayer.equals(player)) {
-            secondLeaderAbilityUsed = true;
-        }
+        setLeaderAbilityUsedForCurrentPlayer(true);
 
         currentChampion.useLeaderAbility(targets);
+    }
+
+    private ArrayList<Champion> getEnemiesWithLowHP() {
+        ArrayList<Champion> targets = new ArrayList<>();
+
+        for (Champion enemy : getOpposingPlayer().getTeam()) {
+            if (enemy.getCurrentHP() < enemy.getMaxHP() * 0.3) {
+                targets.add(enemy);
+            }
+        }
+
+        return targets;
+    }
+
+    private void validateUseLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
+        Champion currentChampion = getCurrentChampion();
+
+        Player currentPlayer = getCurrentPlayer();
+        Champion leader = currentPlayer.getLeader();
+
+        if (!currentChampion.equals(leader)) {
+            throw new LeaderNotCurrentException(
+                    "Cannot use leader ability because current champion is not the leader");
+        }
+
+        if (isLeaderAbilityUsedForCurrentPlayer()) {
+            throw new LeaderAbilityAlreadyUsedException(
+                    "Leader ability has already been used for current player");
+        }
+    }
+
+    private boolean isLeaderAbilityUsedForCurrentPlayer() {
+        return (isFirstPlayer() && firstLeaderAbilityUsed)
+                || (isSecondPlayer() && secondLeaderAbilityUsed);
+    }
+
+    private boolean isFirstPlayer() {
+        return firstPlayer.equals(getCurrentPlayer());
+    }
+
+    private boolean isSecondPlayer() {
+        return secondPlayer.equals(getCurrentPlayer());
+    }
+
+    private void setLeaderAbilityUsedForCurrentPlayer(boolean value) {
+        if (isFirstPlayer()) {
+            firstLeaderAbilityUsed = value;
+        } else if (isSecondPlayer()) {
+            secondLeaderAbilityUsed = value;
+        }
+    }
+
+    private ArrayList<Champion> getAllNonLeaders() {
+        ArrayList<Champion> champions = new ArrayList<>();
+        Champion currentLeader = getCurrentPlayer().getLeader();
+        Champion opposingLeader = getOpposingPlayer().getLeader();
+
+        for (Champion champion : getAllChampions()) {
+            if (!champion.equals(currentLeader) && !champion.equals(opposingLeader)) {
+                champions.add(champion);
+            }
+        }
+
+        return champions;
     }
 
     private Player getPlayerForChampion(Champion champion) {
         if (firstPlayer.getTeam().contains(champion)) {
             return firstPlayer;
-        } else if (secondPlayer.getTeam().contains(champion)) {
-            return secondPlayer;
-        } else {
-            return null;
         }
+
+        if (secondPlayer.getTeam().contains(champion)) {
+            return secondPlayer;
+        }
+
+        return null;
     }
 
-    private Player getOpposingPlayer(Player player) {
-        if (player.equals(firstPlayer)) {
+    private Player getCurrentPlayer() {
+        return getPlayerForChampion(getCurrentChampion());
+    }
+
+    private Player getOpposingPlayer() {
+        Player currentPlayer = getCurrentPlayer();
+
+        if (firstPlayer.equals(currentPlayer)) {
             return secondPlayer;
-        } else if (player.equals(secondPlayer)) {
-            return firstPlayer;
-        } else {
-            return null;
         }
+
+        if (secondPlayer.equals(currentPlayer)) {
+            return firstPlayer;
+        }
+
+        return null;
     }
 
     public void endTurn() {
@@ -705,33 +772,31 @@ public class Game {
 
         Champion champion = getCurrentChampion();
 
-        ArrayList<Effect> effectsToBeRemoved = new ArrayList<>();
+        // Store the champion condition before preparing him for the turn
+        boolean isInactive = champion.getCondition() == Condition.INACTIVE;
 
-        for (Effect effect : champion.getAppliedEffects()) {
-            effect.setDuration(effect.getDuration() - 1);
-            if (effect.getDuration() == 0) {
-                effectsToBeRemoved.add(effect);
-            }
-        }
+        // Champion condition could change here from inactive to active
+        prepareChampionForTurn(champion);
 
-        for (Effect effect : effectsToBeRemoved) {
-            effect.remove(champion);
-            champion.getAppliedEffects().remove(effect);
-        }
-
-        champion.setCurrentActionPoints(champion.getMaxActionPointsPerTurn());
-
-        for (Ability ability : champion.getAbilities()) {
-            ability.setCurrentCooldown(ability.getCurrentCooldown() - 1);
-        }
-
-        if (champion.getCondition() == Condition.INACTIVE) {
+        /*
+         Even if the champion became active after preparing him, we still need
+         to skip his turn because he was inactive.
+        */
+        if (isInactive) {
             endTurn();
         }
     }
 
+    public void prepareChampionForTurn(Champion champion) {
+        champion.decreaseEffectsDuration();
+        champion.removeExpiredEffects();
+        champion.decreaseAbilitiesCooldown();
+        champion.resetActionPoints();
+    }
+
     private void prepareChampionTurns() {
-        // TODO: Clear turnOrder
+        while (!turnOrder.isEmpty()) turnOrder.remove();
+
         for (Champion c : getAllChampions()) {
             if (c.getCondition() != Condition.KNOCKEDOUT) {
                 turnOrder.insert(c);

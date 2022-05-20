@@ -16,13 +16,17 @@ public class Root extends Effect {
         // For example, if a champion is INACTIVE then
         // a Root effect is applied to him,
         // his condition will remain INACTIVE.
-        if (c.getCondition() != Condition.INACTIVE) {
+        if (c.getCondition() == Condition.ACTIVE) {
             c.setCondition(Condition.ROOTED);
         }
     }
 
     @Override
     public void remove(Champion c) {
-        // TODO: Remove Root Effect
+        if (c.getCondition() == Condition.INACTIVE) return;
+
+        if (c.hasEffect(Root.EFFECT_NAME)) return;
+
+        c.setCondition(Condition.ACTIVE);
     }
 }

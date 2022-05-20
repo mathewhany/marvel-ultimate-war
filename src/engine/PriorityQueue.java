@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.ArrayList;
+
 public class PriorityQueue {
     private Comparable[] elements;
     private int nItems;
@@ -25,19 +27,20 @@ public class PriorityQueue {
         return elements[nItems];
     }
 
-    public Comparable remove(Object obj) {
-        PriorityQueue temp = new PriorityQueue(size());
+    public Comparable remove(Comparable obj) {
+        ArrayList<Comparable> temp = new ArrayList<>();
 
         Comparable removedObj = null;
+
         while (!isEmpty()) {
             if (peekMin().equals(obj)) {
-                remove();
+                removedObj = remove();
             }  else {
-                temp.insert(remove());
+                temp.add(remove());
             }
         }
 
-        while (!temp.isEmpty()) insert(temp.remove());
+        for (Comparable o : temp) insert(o);
 
         return removedObj;
     }

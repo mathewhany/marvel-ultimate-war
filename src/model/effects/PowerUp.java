@@ -5,28 +5,32 @@ import model.abilities.DamagingAbility;
 import model.abilities.HealingAbility;
 import model.world.Champion;
 
-import java.util.HashMap;
-
 public class PowerUp extends Effect {
     public static final String EFFECT_NAME = "PowerUp";
+
+    public static double GAIN_HEAL_AMOUNT = 0.2;
+    public static double GAIN_DAMAGE_AMOUNT = 0.2;
 
     public PowerUp(int duration) {
         super(EFFECT_NAME, duration, EffectType.BUFF);
     }
 
     public void apply(Champion c) {
-        // TODO: Apply PowerUp
         for (Ability ability : c.getAbilities()) {
             if (ability instanceof DamagingAbility) {
                 DamagingAbility damagingAbility = (DamagingAbility) ability;
+
                 int damage = damagingAbility.getDamageAmount();
-                int gainedDamage = (int) (damage * 0.2);
-                damagingAbility.setDamageAmount(damage + gainedDamage);
+                int newDamage = (int) (damage * (1 + GAIN_DAMAGE_AMOUNT));
+
+                damagingAbility.setDamageAmount(newDamage);
             } else if (ability instanceof HealingAbility) {
                 HealingAbility healingAbility = (HealingAbility) ability;
+
                 int heal = healingAbility.getHealAmount();
-                int gainedHeal = (int) (heal * 0.2);
-                healingAbility.setHealAmount(heal + gainedHeal);
+                int newHeal = (int) (heal * (1 + GAIN_HEAL_AMOUNT));
+
+                healingAbility.setHealAmount(newHeal);
             }
         }
     }
@@ -35,12 +39,18 @@ public class PowerUp extends Effect {
         for (Ability ability : c.getAbilities()) {
             if (ability instanceof DamagingAbility) {
                 DamagingAbility damagingAbility = (DamagingAbility) ability;
+
                 int damage = damagingAbility.getDamageAmount();
-                damagingAbility.setDamageAmount((int) (damage / 1.2));
+                int newDamage = (int) (damage / (1 + GAIN_DAMAGE_AMOUNT));
+
+                damagingAbility.setDamageAmount(newDamage);
             } else {
                 HealingAbility healingAbility = (HealingAbility) ability;
+
                 int heal = healingAbility.getHealAmount();
-                healingAbility.setHealAmount((int) (heal / 1.2));
+                int newHeal = (int) (heal / (1 + GAIN_HEAL_AMOUNT));
+
+                healingAbility.setHealAmount(newHeal);
             }
         }
     }

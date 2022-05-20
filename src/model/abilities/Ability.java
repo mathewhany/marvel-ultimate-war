@@ -1,8 +1,5 @@
 package model.abilities;
 
-import exceptions.UnrecognizedAbilityTypeException;
-import exceptions.UnrecognizedEffectException;
-import model.effects.Effect;
 import model.world.Damageable;
 import utils.Utils;
 
@@ -59,4 +56,13 @@ abstract public class Ability {
     }
 
     abstract public void execute(ArrayList<Damageable> targets) throws CloneNotSupportedException;
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Ability)) return false;
+
+        if (this == o) return true;
+
+        Ability otherAbility = (Ability) o;
+        return name.equals(otherAbility.getName());
+    }
 }

@@ -1,6 +1,7 @@
 package model.abilities;
 
 import model.world.Damageable;
+import utils.Utils;
 
 import java.util.ArrayList;
 

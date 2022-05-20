@@ -11,14 +11,23 @@ public class Stun extends Effect {
     }
 
     public void apply(Champion c) {
-        c.setCondition(Condition.INACTIVE);
-
-        // TODO: Target is not allowed to play their turn for the duration.
+        if (c.getCondition() != Condition.KNOCKEDOUT) {
+            c.setCondition(Condition.INACTIVE);
+        }
     }
 
     public void remove(Champion c) {
-        if (c.getCondition() == Condition.INACTIVE) {
-            c.setCondition(Condition.ACTIVE);
+        // Champion has another stun effect, so we don't remove the condition.
+        if (c.hasEffect(Stun.EFFECT_NAME)) return;
+
+        // Champion doesn't have a stun effect, but has a root effect,
+        // so we remove the stun and apply root
+        if (c.hasEffect(Root.EFFECT_NAME)) {
+            c.setCondition(Condition.ROOTED);
+            return;
         }
+
+        /// Champion doesn't have neither stun or root effect, so we remove the condition.
+        c.setCondition(Condition.ACTIVE);
     }
 }

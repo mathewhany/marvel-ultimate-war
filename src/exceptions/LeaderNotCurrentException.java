@@ -1,7 +1,6 @@
 package exceptions;
 
 public class LeaderNotCurrentException extends GameActionException {
-
 	public LeaderNotCurrentException() {
 		super();
 	}
@@ -9,5 +8,4 @@ public class LeaderNotCurrentException extends GameActionException {
 	public LeaderNotCurrentException(String s) {
 		super(s);
 	}
-
 }

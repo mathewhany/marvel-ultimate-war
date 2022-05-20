@@ -8,29 +8,25 @@ import model.world.Champion;
 public class Disarm extends Effect {
     public static final String EFFECT_NAME = "Disarm";
 
+    public final Ability PUNCH = new DamagingAbility(
+            "Punch",
+            0,
+            1,
+            1,
+            AreaOfEffect.SINGLETARGET,
+            1,
+            50
+    );
+
     public Disarm(int duration) {
         super(EFFECT_NAME, duration, EffectType.DEBUFF);
     }
 
     public void apply(Champion c) {
-        // TODO: Target cannot use normal attacks
-        c.getAbilities().add(new DamagingAbility(
-                "Punch",
-                0,
-                1,
-                1,
-                AreaOfEffect.SINGLETARGET,
-                1,
-                50
-        ));
+        c.addAbility(PUNCH);
     }
 
     public void remove(Champion c) {
-        // TODO: Target can use normal attacks
-        for (int i = 0; i < c.getAbilities().size(); i++) {
-            if (c.getAbilities().get(i).getName().equals("Punch")) {
-                c.getAbilities().remove(i);
-            }
-        }
+        c.removeAbility(PUNCH);
     }
 }

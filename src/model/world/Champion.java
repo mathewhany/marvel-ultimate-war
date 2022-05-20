@@ -1,7 +1,7 @@
 package model.world;
 
 import model.abilities.Ability;
-import model.effects.Effect;
+import model.effects.*;
 import utils.Utils;
 
 import java.awt.*;
@@ -66,7 +66,7 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public void setMana(int mana) {
-        this.mana = mana;
+        this.mana = Utils.aboveZero(mana);
     }
 
     public int getMaxActionPointsPerTurn() {
@@ -74,7 +74,7 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
-        this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+        this.maxActionPointsPerTurn = Utils.aboveZero(maxActionPointsPerTurn);
     }
 
     public int getCurrentActionPoints() {
@@ -98,7 +98,7 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public void setAttackDamage(int attackDamage) {
-        this.attackDamage = attackDamage;
+        this.attackDamage = Utils.aboveZero(attackDamage);
     }
 
     public int getSpeed() {
@@ -106,7 +106,7 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public void setSpeed(int speed) {
-        this.speed = speed;
+        this.speed = Utils.aboveZero(speed);
     }
 
     public ArrayList<Effect> getAppliedEffects() {
@@ -131,23 +131,24 @@ abstract public class Champion implements Damageable, Comparable {
 
     abstract public void useLeaderAbility(ArrayList<Champion> targets);
 
+    abstract public boolean isExtraDamage(Champion target);
+
     public int compareTo(Object o) {
-        if (o instanceof Champion) {
-            Champion otherChampion = (Champion) o;
-
-            if (this.speed == otherChampion.speed) {
-                return name.compareTo(otherChampion.name);
-            }
-
-            return otherChampion.speed - this.speed;
+        if (!(o instanceof Champion)) {
+            throw new IllegalArgumentException("Cannot compare Champion with non-Champion");
         }
 
-        return 0;
+        Champion other = (Champion) o;
+
+        if (this.speed != other.speed) {
+            return other.speed - this.speed;
+        }
+
+        return name.compareTo(other.name);
     }
 
-    public Effect getLatestEffect(String effectName) {
-        for (int i = appliedEffects.size() - 1; i >= 0; i--) {
-            Effect effect = appliedEffects.get(i);
+    public Effect getEffect(String effectName) {
+        for (Effect effect : appliedEffects) {
             if (effect.getName().equals(effectName)) {
                 return effect;
             }
@@ -157,6 +158,70 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public boolean hasEffect(String effectName) {
-        return getLatestEffect(effectName) != null;
+        return getEffect(effectName) != null;
+    }
+
+    public void addAbility(Ability ability) {
+        this.abilities.add(ability);
+    }
+
+    public void removeAbility(Ability ability) {
+        this.abilities.remove(ability);
+    }
+
+    public void addEffect(Effect effect) {
+        appliedEffects.add(effect);
+        effect.apply(this);
+    }
+
+    public void removeEffect(Effect effect) {
+        appliedEffects.remove(effect);
+        effect.remove(this);
+    }
+
+    public boolean isDodge() {
+        return hasEffect(Dodge.EFFECT_NAME) && Utils.getRandomBoolean();
+    }
+
+    public boolean isDisarmed() {
+        return hasEffect(Disarm.EFFECT_NAME);
+    }
+
+    public boolean hasShield() {
+        return hasEffect(Shield.EFFECT_NAME);
+    }
+
+    public void removeShield() {
+        removeEffect(getEffect(Shield.EFFECT_NAME));
+    }
+
+    public void decreaseEffectsDuration() {
+        for (Effect effect : appliedEffects) {
+            effect.setDuration(effect.getDuration() - 1);
+        }
+    }
+
+    public void removeExpiredEffects() {
+        ArrayList<Effect> effectsToBeRemoved = new ArrayList<>();
+
+        for (Effect effect : appliedEffects) {
+            if (effect.getDuration() == 0) {
+                effectsToBeRemoved.add(effect);
+            }
+        }
+
+        for (Effect effect : effectsToBeRemoved) {
+            removeEffect(effect);
+        }
+    }
+
+    public void decreaseAbilitiesCooldown() {
+        for (Ability ability : abilities) {
+            ability.setCurrentCooldown(ability.getCurrentCooldown() - 1);
+        }
+    }
+
+    public void resetActionPoints() {
+        setCurrentActionPoints(getMaxActionPointsPerTurn());
     }
 }
