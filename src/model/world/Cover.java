@@ -21,7 +21,7 @@ public class Cover implements Damageable {
     }
 
     public void setCurrentHP(int currentHP) {
-        this.currentHP = Utils.boundBetween(currentHP, 0, MAX_HP);
+        this.currentHP = Utils.aboveZero(currentHP);
     }
 
     public Point getLocation() {

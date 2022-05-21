@@ -9,7 +9,6 @@ import utils.Utils;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Game {
     private static final int BOARDHEIGHT = 5;
@@ -485,18 +484,21 @@ public class Game {
 
         validateCastAbility(ability, new Point(x, y));
 
+        Damageable target = getCell(x, y);
+
         ArrayList<Damageable> possibleTargets = new ArrayList<>();
-        possibleTargets.add(getCell(x, y));
+        possibleTargets.add(target);
 
         ArrayList<Damageable> targets = getTargetsForAbility(ability, possibleTargets);
 
+        deductAbilityResources(ability);
+
         if (targets.isEmpty()) {
-            throw new InvalidTargetException("You cannot cast this ability on this target.");
+            throw new InvalidTargetException();
         }
 
         ability.execute(targets);
 
-        deductAbilityResources(ability);
         removeDeadTargets(targets);
     }
 
@@ -562,7 +564,7 @@ public class Game {
         }
 
         if (ability instanceof DamagingAbility) {
-            return removeShieldedTargets(getEnemiesAndCovers(possibleTargets));
+            return getEnemiesAndCovers(possibleTargets);
         }
 
         if (ability instanceof CrowdControlAbility) {
@@ -574,26 +576,6 @@ public class Game {
         }
 
         return new ArrayList<>();
-    }
-
-    private ArrayList<Damageable> removeShieldedTargets(ArrayList<Damageable> possibleTargets) {
-        ArrayList<Damageable> targets = new ArrayList<>();
-
-        for (Damageable target : possibleTargets) {
-            if (target instanceof Champion) {
-                Champion champion = (Champion) target;
-
-                if (champion.hasShield()) {
-                    champion.removeShield();
-                } else {
-                    targets.add(target);
-                }
-            } else if (target instanceof Cover) {
-                targets.add(target);
-            }
-        }
-
-        return targets;
     }
 
     private void deductAbilityResources(Ability ability) {

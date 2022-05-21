@@ -24,6 +24,15 @@ public class DamagingAbility extends Ability {
 
     public void execute(ArrayList<Damageable> targets) {
         for (Damageable target : targets) {
+            if (target instanceof Champion) {
+                Champion champion = (Champion) target;
+
+                if (champion.hasShield()) {
+                    champion.removeShield();
+                    continue;
+                }
+            }
+
             target.setCurrentHP(target.getCurrentHP() - getDamageAmount());
         }
     }
