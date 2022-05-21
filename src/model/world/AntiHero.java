@@ -1,6 +1,5 @@
 package model.world;
 
-import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 import model.effects.Stun;
 
 import java.util.ArrayList;
