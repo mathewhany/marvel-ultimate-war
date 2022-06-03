@@ -8,11 +8,12 @@ import model.world.*;
 import utils.Utils;
 
 import java.awt.*;
+import java.awt.datatransfer.FlavorListener;
 import java.util.ArrayList;
 
-public class Game {
-    private static final int BOARDHEIGHT = 5;
-    private static final int BOARDWIDTH = 5;
+public class Game implements Champion.Listener {
+    public static final int BOARDHEIGHT = 5;
+    public static final int BOARDWIDTH = 5;
 
     private static final int NUM_CHAMPIONS_FOR_PLAYER = 3;
     private static final int NUM_PLAYERS = 2;
@@ -22,8 +23,8 @@ public class Game {
     private static final int ACTION_POINTS_FOR_ATTACK = 2;
     private static final double EXTRA_DAMAGE = 0.5;
 
-//    private static final String CSV_FILE_ABILITIES = "Abilities.csv";
-//    private static final String CSV_FILE_CHAMPIONS = "Champions.csv";
+    public static final String CSV_FILE_ABILITIES = "Abilities.csv";
+    public static final String CSV_FILE_CHAMPIONS = "Champions.csv";
 
     private static ArrayList<Champion> availableChampions = new ArrayList<>();
     private static ArrayList<Ability> availableAbilities = new ArrayList<>();
@@ -33,6 +34,8 @@ public class Game {
     private boolean secondLeaderAbilityUsed;
     private Object[][] board;
     private PriorityQueue turnOrder;
+
+    private GameListener listener;
 
     public Game(Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -56,6 +59,10 @@ public class Game {
 
         this.placeChampions();
         this.placeCovers();
+
+        for (Champion champion : getAllChampions()) {
+            champion.setListener(this);
+        }
     }
 
     private void placeChampions() {
@@ -83,8 +90,16 @@ public class Game {
         return (BOARDWIDTH - championsNum) / 2;
     }
 
+    private void setCell(int x, int y, Damageable d) {
+        board[x][y] = d;
+
+        if (listener != null) {
+            listener.onGameChanged();
+        }
+    }
+
     private void clearCellAt(int x, int y) {
-        board[x][y] = null;
+        setCell(x, y, null);
     }
 
     private void clearCellAt(Point point) {
@@ -93,7 +108,7 @@ public class Game {
 
     private void addChampionAt(int x, int y, Champion champion) {
         if (!isInsideBoard(x, y)) return;
-        board[x][y] = champion;
+        setCell(x, y, champion);
         champion.setLocation(new Point(x, y));
     }
 
@@ -109,7 +124,7 @@ public class Game {
     }
 
     private void addNewCoverAt(int x, int y) {
-        board[x][y] = new Cover(x, y);
+        setCell(x, y, new Cover(x, y));
     }
 
     private void addNewCoverAt(Point point) {
@@ -148,11 +163,11 @@ public class Game {
         return topLeftCorner || topRightCorner || bottomLeftCorner || bottomRightCorner;
     }
 
-    private Damageable getCell(int x, int y) {
+    public Damageable getCell(int x, int y) {
         return (Damageable) board[x][y];
     }
 
-    private Damageable getCell(Point currentPoint) {
+    public Damageable getCell(Point currentPoint) {
         return getCell(currentPoint.x, currentPoint.y);
     }
 
@@ -264,6 +279,8 @@ public class Game {
 
         clearCellAt(oldLocation);
         addChampionAt(newLocation, champion);
+
+        listener.onMove(direction);
     }
 
     private void validateMovement(Champion champion, Point newLocation) throws NotEnoughResourcesException, UnallowedMovementException {
@@ -312,22 +329,27 @@ public class Game {
         ArrayList<Damageable> targets = getEnemiesAndCovers(targetsInDirection);
 
         // No target was found, nothing to do, you wasted your attack
-        if (targets.isEmpty()) return;
+        if (targets.isEmpty()) {
+            listener.onAttack(null);
+            return;
+        }
 
         // Get the nearest target
         Damageable target = targets.get(0);
+
+        listener.onAttack(target);
 
         if (target instanceof Champion) {
             Champion champion = (Champion) target;
 
             if (champion.isDodge()) {
-                System.out.println("Champion dodged the attack.");
+                listener.onDodge(champion);
                 return;
             }
 
             if (champion.hasShield()) {
-                System.out.println("Champion used his shield and didn't take any damage.");
                 champion.removeShield();
+                listener.onShieldUsed(champion);
                 return;
             }
 
@@ -341,6 +363,8 @@ public class Game {
         if (target.getCurrentHP() <= 0) {
             removeDeadTarget(target);
         }
+
+        listener.onGameChanged();
     }
 
     private void validateAttack(Champion champion) throws NotEnoughResourcesException, ChampionDisarmedException {
@@ -456,7 +480,10 @@ public class Game {
         ArrayList<Damageable> targets = getTargetsForAbility(ability, possibleTargets);
         ability.execute(targets);
         deductAbilityResources(ability);
+        listener.onCastAbility(ability, targets);
+
         removeDeadTargets(targets);
+        listener.onGameChanged();
     }
 
     public void castAbility(Ability ability, Direction direction) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException {
@@ -472,8 +499,10 @@ public class Game {
 
         ability.execute(targets);
 
+        listener.onCastAbility(ability, targets);
         deductAbilityResources(ability);
         removeDeadTargets(targets);
+        listener.onGameChanged();
     }
 
     public void castAbility(Ability ability, int x, int y) throws NotEnoughResourcesException, CloneNotSupportedException, AbilityUseException, InvalidTargetException {
@@ -499,7 +528,10 @@ public class Game {
 
         ability.execute(targets);
 
+        listener.onCastAbility(ability, targets);
+
         removeDeadTargets(targets);
+        listener.onGameChanged();
     }
 
     private void removeDeadTarget(Damageable target) {
@@ -509,8 +541,10 @@ public class Game {
             Champion champion = (Champion) target;
 
             turnOrder.remove(champion);
-            getPlayerForChampion(champion).getTeam().remove(target);
+            getPlayerForChampion(champion).removeChampion((Champion) target);
         }
+
+        listener.onTargetDead(target);
     }
 
     private void removeDeadTargets(ArrayList<Damageable> targets) {
@@ -589,6 +623,10 @@ public class Game {
     private void validateCastAbility(Ability ability) throws NotEnoughResourcesException, AbilityUseException {
         Champion champion = getCurrentChampion();
 
+        if (champion.hasEffect(Silence.EFFECT_NAME)) {
+            throw new AbilityUseException("Champion is silenced and cannot cast any ability");
+        }
+
         if (champion.getMana() < ability.getManaCost()) {
             throw new NotEnoughResourcesException("Not enough mana to cast the ability");
         }
@@ -599,10 +637,6 @@ public class Game {
 
         if (ability.getCurrentCooldown() > 0) {
             throw new AbilityUseException("Ability is still on cooldown");
-        }
-
-        if (champion.hasEffect(Silence.EFFECT_NAME)) {
-            throw new AbilityUseException("Champion is silenced and cannot cast any ability");
         }
 
         if (champion.getCondition() == Condition.INACTIVE) {
@@ -649,6 +683,8 @@ public class Game {
         setLeaderAbilityUsedForCurrentPlayer(true);
 
         currentChampion.useLeaderAbility(targets);
+
+        listener.onUseLeaderAbility(getCurrentPlayer(), targets);
     }
 
     private ArrayList<Champion> getEnemiesWithLowHP() {
@@ -715,7 +751,7 @@ public class Game {
         return champions;
     }
 
-    private Player getPlayerForChampion(Champion champion) {
+    public Player getPlayerForChampion(Champion champion) {
         if (firstPlayer.getTeam().contains(champion)) {
             return firstPlayer;
         }
@@ -727,7 +763,7 @@ public class Game {
         return null;
     }
 
-    private Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return getPlayerForChampion(getCurrentChampion());
     }
 
@@ -746,11 +782,13 @@ public class Game {
     }
 
     public void endTurn() {
-        turnOrder.remove();
+        Champion previousChampion = (Champion) turnOrder.remove();
 
         if (turnOrder.isEmpty()) {
             prepareChampionTurns();
         }
+
+        listener.onEndTurn(previousChampion);
 
         Champion champion = getCurrentChampion();
 
@@ -767,6 +805,8 @@ public class Game {
         if (isInactive) {
             endTurn();
         }
+
+        listener.onGameChanged();
     }
 
     public void prepareChampionForTurn(Champion champion) {
@@ -784,6 +824,8 @@ public class Game {
                 turnOrder.insert(c);
             }
         }
+
+        getCurrentChampion().setListener(this);
     }
 
     private ArrayList<Champion> getAllChampions() {
@@ -792,5 +834,18 @@ public class Game {
         allChampions.addAll(secondPlayer.getTeam());
 
         return allChampions;
+    }
+
+    public GameListener getListener() {
+        return listener;
+    }
+
+    public void setListener(GameListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void onChampionChange(Champion champion) {
+        listener.onGameChanged();
     }
 }

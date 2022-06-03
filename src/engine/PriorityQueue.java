@@ -1,6 +1,9 @@
 package engine;
 
+import model.world.Champion;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class PriorityQueue {
     private Comparable[] elements;
@@ -59,5 +62,19 @@ public class PriorityQueue {
 
     public int size() {
         return nItems;
+    }
+
+    public ArrayList<Champion> toArrayList() {
+        ArrayList<Champion> champions = new ArrayList<>();
+
+        while (!isEmpty()) {
+            champions.add((Champion) remove());
+        }
+
+        for (Champion c : champions) {
+            insert(c);
+        }
+
+        return champions;
     }
 }

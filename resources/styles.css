@@ -1,0 +1,416 @@
+@font-face {
+    src: url('fonts/rainyhearts.ttf');
+}
+
+.root {
+    -fx-font-size: 11px;
+    -fx-font-family: "rainyhearts";
+}
+
+.button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #a91e29;
+}
+
+.button:hover {
+    -fx-background-color: #ffb9b9;
+}
+
+.box-with-icon {
+    -fx-alignment: center;
+    -fx-spacing: 5px;
+    -fx-padding: 5px;
+    -fx-background-radius: 5px;
+}
+
+.box {
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
+}
+
+.box-title {
+    -fx-font-size: 15px;
+    -fx-padding: 10px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-background-radius: 5px 5px 0 0;
+}
+
+.box-title .label {
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+}
+
+.box-content {
+    -fx-padding: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 0 0 5px 5px;
+}
+
+.box-content .label {
+    -fx-text-fill: #000000;
+}
+
+.details-box-grid {
+    -fx-spacing: 5px;
+    -fx-hgap: 15px;
+    -fx-vgap: 5px;
+}
+
+.details-box-label {
+    -fx-text-fill: #2d2d2d;
+}
+
+
+/*******************************************************************************
+                                BACKGROUNDS
+*******************************************************************************/
+
+#welcome-view {
+    -fx-background-image: url("/images/welcome.png");
+    -fx-background-size: cover;
+}
+
+#choose-champions-view {
+    -fx-background-image: url("/images/choose-names.jpg");
+    -fx-background-size: cover;
+}
+
+#choose-names-view {
+    -fx-background-image: url("/images/choose-names.jpg");
+    -fx-background-size: cover;
+}
+
+#choose-leaders-view {
+    -fx-background-image: url("/images/choose-leaders.jpg");
+    -fx-background-size: cover;
+}
+
+#keyboard-shortcuts-guide-view {
+    -fx-background-image: url("/images/choose-leaders.jpg");
+    -fx-background-size: cover;
+}
+
+#game-view {
+    -fx-background-color: linear-gradient(to top, #ab0000, #a22626);
+}
+
+
+
+/*******************************************************************************
+                                WELCOME VIEW
+*******************************************************************************/
+
+#welcome-view {
+    -fx-alignment: bottom-left;
+    -fx-padding: 150px 150px;
+}
+
+#welcome-label {
+    -fx-font-size: 50px;
+    -fx-text-fill: #fff;
+}
+
+
+/*******************************************************************************
+                                CHOOSE NAMES VIEW
+*******************************************************************************/
+
+#choose-names-view .label {
+    -fx-font-size: 30px;
+    -fx-text-fill: #fff;
+}
+
+#choose-names-view {
+    -fx-alignment: center;
+    -fx-spacing: 60px;
+}
+
+#choose-names-view .label {
+    -fx-padding: 20px;
+}
+
+#choose-names-view #fields {
+    -fx-alignment: center;
+    -fx-spacing: 40px;
+}
+
+#choose-names-view .text-field {
+    -fx-padding: 25px;
+    -fx-min-width: 300px;
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-text-fill: #a91e29;
+    -fx-font-size: 24px;
+}
+
+#choose-names-view .text-field:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: #a91e29;
+}
+
+#choose-names-view .button {
+    -fx-font-size: 40px;
+}
+
+
+/*******************************************************************************
+                                CHOOSE CHAMPIONS VIEW
+*******************************************************************************/
+
+#choose-champions-view {
+    -fx-alignment: center;
+}
+
+#choose-champions-view #details-panel {
+    -fx-spacing: 5px;
+    -fx-padding: 5px 0 0 0;
+    -fx-min-width: 300px;
+}
+
+#choose-champions-view #details-panel .box-content {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+}
+
+#choose-champions-view #details-panel.no-champion-selected .label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #fff;
+}
+
+#choose-champions-view #grid {
+    -fx-padding: 10px;
+    -fx-vgap: 10px;
+    -fx-hgap: 10px;
+    -fx-alignment: center;
+}
+
+#choose-champions-view #grid .button {
+    -fx-padding: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-alignment: center;
+    -fx-min-width: 165px;
+    -fx-min-height: 165px;
+    -fx-max-width: 165px;
+    -fx-max-height: 165px;
+}
+
+#choose-champions-view #grid .button:disabled {
+    -fx-background-color: rgba(0, 0, 0, 0.37);
+}
+
+#choose-champions-view #grid .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.75);
+}
+
+#choose-champions-view #grid .selected-champion {
+    -fx-background-color: rgb(255, 255, 255);
+}
+
+#choose-champions-view #abilities-box {
+    -fx-spacing: 5px;
+}
+
+#choose-champions-view #abilities-box .box-title {
+    -fx-background-color: rgba(205, 94, 94, 0.65);
+}
+
+#choose-champions-view #select-champion-btn {
+    -fx-font-size: 20px;
+    -fx-min-width: 200px;
+    -fx-padding: 20px;
+}
+
+#choose-champions-view #players-info {
+    -fx-spacing: 20px;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-font-size: 20px;
+}
+
+#choose-champions-view #players-info .champions-container {
+    -fx-spacing: 10px;
+    -fx-min-width: 350px;
+    -fx-min-height: 100px;
+    -fx-alignment: center;
+}
+
+#choose-champions-view #players-info .champion-container {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+}
+
+#choose-champions-view #players-info .champion-container .label {
+    -fx-text-fill: #a91e29;
+}
+
+#choose-champions-view .current-player {
+    -fx-background-color: rgba(255, 255, 255, 0.76);
+}
+
+
+/*******************************************************************************
+                                CHOOSE LEADERS VIEW
+*******************************************************************************/
+
+#choose-leaders-view #container {
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+    -fx-max-width: 400px;
+    -fx-font-size: 40px;
+}
+
+#choose-leaders-view .button {
+    -fx-content-display: bottom;
+    -fx-text-fill: #13419d;
+    -fx-min-width: 250px;
+}
+
+#choose-leaders-view .button:hover {
+    -fx-background-color: #b4cdff;
+}
+
+
+/*******************************************************************************
+                                WELCOME VIEW
+*******************************************************************************/
+
+#keyboard-shortcuts-guide-view {
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+    -fx-font-size: 30px;
+}
+
+#keyboard-shortcuts-guide-view .button {
+    -fx-content-display: bottom;
+    -fx-text-fill: #13419d;
+    -fx-min-width: 250px;
+}
+
+#keyboard-shortcuts-guide-view .button:hover {
+    -fx-background-color: #b4cdff;
+}
+
+#keyboard-shortcuts-guide-view .box {
+    -fx-max-width: 750px;
+}
+
+#keyboard-shortcuts-guide-view .details-box-grid {
+    -fx-alignment: center;
+    -fx-hgap: 10px;
+}
+
+/*******************************************************************************
+                                GAME VIEW
+*******************************************************************************/
+
+#game-view {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+    -fx-padding: 5px;
+}
+
+#game-view #board {
+    -fx-padding: 10px;
+    -fx-vgap: 10px;
+    -fx-hgap: 10px;
+    -fx-alignment: center;
+}
+
+#game-view #board .cell {
+    -fx-alignment: center;
+    -fx-min-width: 125px;
+    -fx-min-height: 125px;
+    -fx-max-width: 120px;
+    -fx-max-height: 120px;
+    -fx-padding: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: rgba(255, 75, 202, 0.24);
+    -fx-border-radius: 5px;
+}
+
+#game-view #board .cell.current-champion {
+    -fx-border-color: rgba(239, 210, 56, 0.35);
+    -fx-border-width: 2px;
+}
+
+#game-view #board .cell.first-player {
+    -fx-background-color: rgba(169, 30, 41, 0.14);
+}
+
+#game-view #board .cell.second-player {
+    -fx-background-color: rgba(55, 110, 255, 0.14);
+}
+
+#game-view #messages-panel {
+    -fx-font-size: 16px;
+    -fx-alignment: center;
+    -fx-spacing: 5px;
+    -fx-min-height: 20px;
+}
+
+#game-view #messages-panel .message {
+    -fx-padding: 5px;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+}
+
+#game-view #current-champion-box {
+    -fx-min-width: 250px;
+}
+
+#game-view #abilities-box {
+    -fx-spacing: 5px;
+}
+
+#game-view #abilities-box .box {
+    -fx-min-width: 250px;
+}
+
+#game-view #left-pane {
+    -fx-spacing: 5px;
+}
+
+#game-view #players-info {
+    -fx-spacing: 5px;
+}
+
+#game-view .progress-bar-container {
+    padding: 3px;
+}
+
+#game-view .progress-bar-container .label {
+    -fx-text-fill: #fff;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.75) , 5, 0.0 , 0 , 1 );
+}
+
+#game-view .progress-bar .bar {
+    -fx-background-insets: 0;
+}
+
+#game-view .progress-bar .track {
+    -fx-background-color: #2a2a2a;
+}
+
+#game-view .hp-bar .bar {
+    -fx-background-color: #5da13a;
+}
+
+#game-view .mana-bar .bar {
+    -fx-background-color: #1d4179;
+}
+
+#game-view .action-points-bar .bar {
+    -fx-background-color: #791d46;
+}
+
+#game-view .cooldown-bar .bar {
+    -fx-background-color: #79671d;
+}
+
+#game-view #players-info .player-info-box .champions-container {
+    -fx-spacing: 2px;
+    -fx-alignment: center;
+}
+
+#game-view #players-info .player-info-box .champion {
+    -fx-spacing: 2px;
+    -fx-alignment: center;
+}

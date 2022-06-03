@@ -65,4 +65,16 @@ abstract public class Ability {
         Ability otherAbility = (Ability) o;
         return name.equals(otherAbility.getName());
     }
+
+    public String getType() {
+        if (this instanceof DamagingAbility) {
+            return "Damaging";
+        } else if (this instanceof HealingAbility) {
+            return "Healing";
+        } else if (this instanceof CrowdControlAbility) {
+            return "Crowd Control";
+        }
+
+        return "Unknown";
+    }
 }

@@ -1,5 +1,6 @@
 package model.world;
 
+import engine.Game;
 import model.abilities.Ability;
 import model.effects.*;
 import utils.Utils;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 abstract public class Champion implements Damageable, Comparable {
+    private int maxMana;
     private String name;
     private int maxHP;
     private int attackRange;
@@ -22,10 +24,13 @@ abstract public class Champion implements Damageable, Comparable {
     private Condition condition;
     private Point location;
 
+    private Listener listener;
+
     public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage) {
         this.name = name;
         this.maxHP = maxHP;
         this.currentHP = maxHP;
+        this.maxMana = mana;
         this.mana = mana;
         this.maxActionPointsPerTurn = maxActions;
         this.currentActionPoints = maxActions;
@@ -59,6 +64,8 @@ abstract public class Champion implements Damageable, Comparable {
      */
     public void setCurrentHP(int currentHP) {
         this.currentHP = Utils.boundBetween(currentHP, 0, maxHP);
+
+        listener.onChampionChange(this);
     }
 
     public int getMana() {
@@ -66,7 +73,13 @@ abstract public class Champion implements Damageable, Comparable {
     }
 
     public void setMana(int mana) {
+        if (mana > maxMana) {
+            maxMana = mana;
+        }
+
         this.mana = Utils.aboveZero(mana);
+
+        listener.onChampionChange(this);
     }
 
     public int getMaxActionPointsPerTurn() {
@@ -75,6 +88,8 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
         this.maxActionPointsPerTurn = Utils.aboveZero(maxActionPointsPerTurn);
+
+        listener.onChampionChange(this);
     }
 
     public int getCurrentActionPoints() {
@@ -87,6 +102,8 @@ abstract public class Champion implements Damageable, Comparable {
      */
     public void setCurrentActionPoints(int currentActionPoints) {
         this.currentActionPoints = Utils.boundBetween(currentActionPoints, 0, maxActionPointsPerTurn);
+
+        listener.onChampionChange(this);
     }
 
     public int getAttackRange() {
@@ -99,6 +116,8 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Utils.aboveZero(attackDamage);
+
+        listener.onChampionChange(this);
     }
 
     public int getSpeed() {
@@ -107,6 +126,8 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setSpeed(int speed) {
         this.speed = Utils.aboveZero(speed);
+
+        listener.onChampionChange(this);
     }
 
     public ArrayList<Effect> getAppliedEffects() {
@@ -119,6 +140,8 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setCondition(Condition condition) {
         this.condition = condition;
+
+        listener.onChampionChange(this);
     }
 
     public Point getLocation() {
@@ -172,6 +195,8 @@ abstract public class Champion implements Damageable, Comparable {
     public void addEffect(Effect effect) {
         appliedEffects.add(effect);
         effect.apply(this);
+
+        listener.onChampionChange(this);
     }
 
     public void removeEffect(Effect effect) {
@@ -223,5 +248,34 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void resetActionPoints() {
         setCurrentActionPoints(getMaxActionPointsPerTurn());
+    }
+
+    public void setListener(Game listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public double getHpPercent() {
+        return currentHP * 1.0 / maxHP;
+    }
+
+    public int getMaxMana() {
+        return this.maxMana;
+    }
+
+    public String getType() {
+        if (this instanceof Hero) {
+            return "Hero";
+        } else if (this instanceof Villain) {
+            return "Villain";
+        } else if (this instanceof AntiHero) {
+            return "Anti-Hero";
+        }
+
+        return "Unknown";
+    }
+
+    public interface Listener {
+        void onChampionChange(Champion champion);
     }
 }

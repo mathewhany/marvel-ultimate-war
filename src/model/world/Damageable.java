@@ -6,4 +6,6 @@ public interface Damageable {
     Point getLocation();
     int getCurrentHP();
     void setCurrentHP(int hp);
+    double getHpPercent();
+    int getMaxHP();
 }
