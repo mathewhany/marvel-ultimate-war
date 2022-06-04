@@ -63,9 +63,16 @@ abstract public class Champion implements Damageable, Comparable {
      * Note that the current HP can't be less than 0 or more than the max HP.
      */
     public void setCurrentHP(int currentHP) {
-        this.currentHP = Utils.boundBetween(currentHP, 0, maxHP);
+        int oldHp = this.currentHP;
+        int newHp = Utils.boundBetween(currentHP, 0, maxHP);
 
-        listener.onChampionChange(this);
+        this.currentHP = newHp;
+
+        if (newHp > oldHp) {
+            listener.onHeal(this);
+        } else if (newHp < oldHp) {
+            listener.onDamage(this);
+        }
     }
 
     public int getMana() {
@@ -77,9 +84,10 @@ abstract public class Champion implements Damageable, Comparable {
             maxMana = mana;
         }
 
+        int oldMana = this.mana;
+        int newMana = Utils.aboveZero(mana);
         this.mana = Utils.aboveZero(mana);
-
-        listener.onChampionChange(this);
+        listener.onManaChange(this);
     }
 
     public int getMaxActionPointsPerTurn() {
@@ -88,8 +96,6 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
         this.maxActionPointsPerTurn = Utils.aboveZero(maxActionPointsPerTurn);
-
-        listener.onChampionChange(this);
     }
 
     public int getCurrentActionPoints() {
@@ -101,9 +107,11 @@ abstract public class Champion implements Damageable, Comparable {
      * Note that the current action points can't be less than 0 or more than the max action points.
      */
     public void setCurrentActionPoints(int currentActionPoints) {
-        this.currentActionPoints = Utils.boundBetween(currentActionPoints, 0, maxActionPointsPerTurn);
+        int oldPoints = this.currentActionPoints;
+        int newPoints = Utils.boundBetween(currentActionPoints, 0, maxActionPointsPerTurn);
+        this.currentActionPoints = newPoints;
+        listener.onActionPointsChange(this);
 
-        listener.onChampionChange(this);
     }
 
     public int getAttackRange() {
@@ -116,8 +124,6 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Utils.aboveZero(attackDamage);
-
-        listener.onChampionChange(this);
     }
 
     public int getSpeed() {
@@ -126,8 +132,6 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setSpeed(int speed) {
         this.speed = Utils.aboveZero(speed);
-
-        listener.onChampionChange(this);
     }
 
     public ArrayList<Effect> getAppliedEffects() {
@@ -140,8 +144,6 @@ abstract public class Champion implements Damageable, Comparable {
 
     public void setCondition(Condition condition) {
         this.condition = condition;
-
-        listener.onChampionChange(this);
     }
 
     public Point getLocation() {
@@ -195,13 +197,13 @@ abstract public class Champion implements Damageable, Comparable {
     public void addEffect(Effect effect) {
         appliedEffects.add(effect);
         effect.apply(this);
-
-        listener.onChampionChange(this);
+        listener.onEffectApplied(this, effect);
     }
 
     public void removeEffect(Effect effect) {
         appliedEffects.remove(effect);
         effect.remove(this);
+        listener.onEffectRemoved(this, effect);
     }
 
     public boolean isDodge() {
@@ -250,13 +252,21 @@ abstract public class Champion implements Damageable, Comparable {
         setCurrentActionPoints(getMaxActionPointsPerTurn());
     }
 
-    public void setListener(Game listener) {
+    public void setListener(Champion.Listener listener) {
         this.listener = listener;
     }
 
     @Override
     public double getHpPercent() {
         return currentHP * 1.0 / maxHP;
+    }
+
+    public double getActionPointsPercent() {
+        return currentActionPoints * 1.0 / maxActionPointsPerTurn;
+    }
+
+    public double getManaPercent() {
+        return mana * 1.0 / maxMana;
     }
 
     public int getMaxMana() {
@@ -277,5 +287,11 @@ abstract public class Champion implements Damageable, Comparable {
 
     public interface Listener {
         void onChampionChange(Champion champion);
+        void onDamage(Champion champion);
+        void onHeal(Champion champion);
+        void onManaChange(Champion champion);
+        void onActionPointsChange(Champion champion);
+        void onEffectApplied(Champion champion, Effect effect);
+        void onEffectRemoved(Champion champion, Effect effect);
     }
 }

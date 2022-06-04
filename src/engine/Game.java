@@ -2,6 +2,7 @@ package engine;
 
 import engine.csv.CsvLoader;
 import exceptions.*;
+import jdk.internal.icu.text.UnicodeSet;
 import model.abilities.*;
 import model.effects.*;
 import model.world.*;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.awt.datatransfer.FlavorListener;
 import java.util.ArrayList;
 
-public class Game implements Champion.Listener {
+public class Game {
     public static final int BOARDHEIGHT = 5;
     public static final int BOARDWIDTH = 5;
 
@@ -36,6 +37,7 @@ public class Game implements Champion.Listener {
     private PriorityQueue turnOrder;
 
     private GameListener listener;
+    private ArrayList<Cover> covers = new ArrayList<>(NUM_COVERS);
 
     public Game(Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -59,9 +61,17 @@ public class Game implements Champion.Listener {
 
         this.placeChampions();
         this.placeCovers();
+    }
 
+    public void addChampionListener(Champion.Listener listener) {
         for (Champion champion : getAllChampions()) {
-            champion.setListener(this);
+            champion.setListener(listener);
+        }
+    }
+
+    public void addCoverListener(Cover.Listener listener) {
+        for (Cover cover : covers) {
+            cover.setListener(listener);
         }
     }
 
@@ -124,7 +134,9 @@ public class Game implements Champion.Listener {
     }
 
     private void addNewCoverAt(int x, int y) {
-        setCell(x, y, new Cover(x, y));
+        Cover cover = new Cover(x, y);
+        covers.add(cover);
+        setCell(x, y, cover);
     }
 
     private void addNewCoverAt(Point point) {
@@ -330,14 +342,14 @@ public class Game implements Champion.Listener {
 
         // No target was found, nothing to do, you wasted your attack
         if (targets.isEmpty()) {
-            listener.onAttack(null);
+            listener.onAttack(null, direction);
             return;
         }
 
         // Get the nearest target
         Damageable target = targets.get(0);
 
-        listener.onAttack(target);
+        listener.onAttack(target, direction);
 
         if (target instanceof Champion) {
             Champion champion = (Champion) target;
@@ -542,9 +554,9 @@ public class Game implements Champion.Listener {
 
             turnOrder.remove(champion);
             getPlayerForChampion(champion).removeChampion((Champion) target);
+        } else {
+            covers.remove(target);
         }
-
-        listener.onTargetDead(target);
     }
 
     private void removeDeadTargets(ArrayList<Damageable> targets) {
@@ -824,8 +836,6 @@ public class Game implements Champion.Listener {
                 turnOrder.insert(c);
             }
         }
-
-        getCurrentChampion().setListener(this);
     }
 
     private ArrayList<Champion> getAllChampions() {
@@ -842,10 +852,5 @@ public class Game implements Champion.Listener {
 
     public void setListener(GameListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void onChampionChange(Champion champion) {
-        listener.onGameChanged();
     }
 }

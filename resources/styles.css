@@ -303,8 +303,8 @@
 
 #game-view {
     -fx-alignment: center;
-    -fx-spacing: 20px;
-    -fx-padding: 5px;
+    -fx-spacing: 15px;
+    -fx-padding: 10px;
 }
 
 #game-view #board {
@@ -317,9 +317,9 @@
 #game-view #board .cell {
     -fx-alignment: center;
     -fx-min-width: 125px;
-    -fx-min-height: 125px;
+    -fx-min-height: 155px;
     -fx-max-width: 120px;
-    -fx-max-height: 120px;
+    -fx-max-height: 155px;
     -fx-padding: 5px;
     -fx-background-radius: 5px;
     -fx-border-width: 2px;
@@ -341,10 +341,12 @@
 }
 
 #game-view #messages-panel {
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
     -fx-alignment: center;
     -fx-spacing: 5px;
+    -fx-padding: 5px;
     -fx-min-height: 20px;
+    -fx-max-width: 250px;
 }
 
 #game-view #messages-panel .message {
@@ -354,6 +356,15 @@
 
 #game-view #current-champion-box {
     -fx-min-width: 250px;
+    -fx-font-size: 20px;
+}
+
+#game-view #current-champion-stats {
+    -fx-spacing: 2px;
+}
+
+#game-view #current-champion-box .progress-bar {
+    -fx-min-width: 200px;
 }
 
 #game-view #abilities-box {
@@ -370,6 +381,14 @@
 
 #game-view #players-info {
     -fx-spacing: 5px;
+}
+
+#game-view #players-info .current-player {
+    -fx-background-color: #FFF;
+}
+
+#game-view #players-info .current-champion {
+    -fx-border-color: #CCC;
 }
 
 #game-view .progress-bar-container {
@@ -413,4 +432,23 @@
 #game-view #players-info .player-info-box .champion {
     -fx-spacing: 2px;
     -fx-alignment: center;
+}
+
+#game-view #turn-order-container {
+    -fx-alignment: center;
+    -fx-spacing: 2px;
+}
+
+#game-view #turn-order-container .turn-order-item {
+    -fx-alignment: center-left;
+}
+
+#game-view .effects-container {
+    -fx-alignment: center;
+    -fx-spacing: 2px;
+}
+
+#game-view .effects-container .effect {
+    -fx-background-color: #ffffff;
+    -fx-font-size: 9px;
 }

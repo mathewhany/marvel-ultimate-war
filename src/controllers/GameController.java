@@ -6,12 +6,11 @@ import engine.Player;
 import exceptions.AbilityUseException;
 import exceptions.NotEnoughResourcesException;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import model.abilities.Ability;
 import model.abilities.AreaOfEffect;
 import model.abilities.DamagingAbility;
 import model.abilities.HealingAbility;
+import model.effects.Effect;
 import model.world.Champion;
 import model.world.Cover;
 import model.world.Damageable;
@@ -23,10 +22,12 @@ import views.GameView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameController extends BaseController<GameView> implements GameView.Listener, GameListener {
+public class GameController extends BaseController<GameView> implements GameView.Listener, GameListener, Champion.Listener, Cover.Listener {
     public GameController() {
         game = new Game(firstPlayer, secondPlayer);
         game.setListener(this);
+        game.addChampionListener(this);
+        game.addCoverListener(this);
     }
 
     @Override
@@ -151,13 +152,11 @@ public class GameController extends BaseController<GameView> implements GameView
         getView().setHasError(true);
 
         SoundUtils.playSound("/move.mp3");
-        getView().moveAnimation(game.getCurrentChampion(), direction, e -> {
-            getView().rerender();
-        });
+        getView().playMoveAnimation(game.getCurrentChampion(), direction);
     }
 
     @Override
-    public void onAttack(Damageable target) {
+    public void onAttack(Damageable target, Direction direction) {
         getView().clearMessages();
 
         if (target == null) {
@@ -166,10 +165,6 @@ public class GameController extends BaseController<GameView> implements GameView
             return;
         }
 
-        getView().shakeCell(target, e -> {
-            getView().rerender();
-        });
-
         SoundUtils.playSound("/attack.mp3");
 
         if (target instanceof Cover) {
@@ -177,6 +172,8 @@ public class GameController extends BaseController<GameView> implements GameView
         } else {
             getView().addMessage(game.getCurrentChampion().getName() + " attacked " + ((Champion) target).getName());
         }
+
+        getView().playAttackAnimation(target, direction);
     }
 
     @Override
@@ -194,7 +191,7 @@ public class GameController extends BaseController<GameView> implements GameView
 
         getView().addMessage(game.getCurrentChampion().getName() + " casted a " + type + " ability (" + ability.getName() + ")");
 
-        SoundUtils.playSound("/attack.mp3");
+//        SoundUtils.playSound("/attack.mp3");
 
         if (targets.isEmpty()) {
             getView().addMessage("No targets were effected.");
@@ -206,9 +203,7 @@ public class GameController extends BaseController<GameView> implements GameView
             } else {
                 getView().addMessage(((Champion) target).getName() + " was effected.");
             }
-            getView().shakeCell(target, e -> {
-                getView().rerender();
-            });
+//            getView().playAttackAnimation(target);
         }
 
         getView().rerender();
@@ -267,5 +262,51 @@ public class GameController extends BaseController<GameView> implements GameView
     public void onShieldUsed(Champion champion) {
         getView().addMessage(champion.getName() + " used his shield to block " + game.getCurrentChampion().getName() + "'s attack.");
         getView().rerender();
+    }
+
+
+    @Override
+    public void onChampionChange(Champion champion) {
+
+    }
+
+    @Override
+    public void onDamage(Champion champion) {
+        getView().animateProgressBar(champion, "hp", champion.getHpPercent());
+    }
+
+    @Override
+    public void onHeal(Champion champion) {
+        getView().animateProgressBar(champion, "hp", champion.getHpPercent());
+    }
+
+    @Override
+    public void onManaChange(Champion champion) {
+        getView().animateProgressBar(champion, "mana", champion.getManaPercent());
+    }
+
+    @Override
+    public void onActionPointsChange(Champion champion) {
+        getView().animateProgressBar(champion, "action-points", champion.getActionPointsPercent());
+    }
+
+    @Override
+    public void onEffectApplied(Champion champion, Effect effect) {
+
+    }
+
+    @Override
+    public void onEffectRemoved(Champion champion, Effect effect) {
+
+    }
+
+    @Override
+    public void onCoverDestroyed(Cover cover) {
+
+    }
+
+    @Override
+    public void onCoverDamaged(Cover cover, int oldHp, int newHp) {
+        getView().animateProgressBar(cover, "hp", cover.getHpPercent());
     }
 }

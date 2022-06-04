@@ -3,9 +3,12 @@ package views;
 import controllers.BaseController;
 import engine.Game;
 import engine.Player;
+import javafx.animation.Animation;
+import javafx.animation.ScaleTransition;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 import model.abilities.Ability;
 import model.abilities.CrowdControlAbility;
 import model.abilities.DamagingAbility;
@@ -84,6 +87,14 @@ public class ChooseChampionsView extends BaseView {
 
             if (champion.equals(selectedChampion)) {
                 button.getStyleClass().add("selected-champion");
+
+                ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(500), button);
+                scaleTransition.setToX(1.025);
+                scaleTransition.setToY(1.025);
+                scaleTransition.setCycleCount(Animation.INDEFINITE);
+                scaleTransition.setAutoReverse(true);
+                scaleTransition.setOnFinished(e -> { scaleTransition.playFromStart(); });
+                scaleTransition.play();
             }
 
             button.setOnAction(e -> {
@@ -122,6 +133,14 @@ public class ChooseChampionsView extends BaseView {
 
         if (player.equals(currentPlayer)) {
             box.getStyleClass().add("current-player");
+
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(500), box);
+            scaleTransition.setToX(1.025);
+            scaleTransition.setToY(1.025);
+            scaleTransition.setCycleCount(Animation.INDEFINITE);
+            scaleTransition.setAutoReverse(true);
+            scaleTransition.setOnFinished(e -> { scaleTransition.playFromStart(); });
+            scaleTransition.play();
         }
 
         return box;

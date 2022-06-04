@@ -12,7 +12,7 @@ public interface GameListener {
 
     void onMove(Direction direction);
 
-    void onAttack(Damageable target);
+    void onAttack(Damageable target, Direction direction);
 
     void onCastAbility(Ability ability, ArrayList<Damageable> targets);
 

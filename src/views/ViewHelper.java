@@ -16,8 +16,8 @@ public class ViewHelper {
     public static Pane boxWithIcon(String iconPath, String text, int size) {
         Label label = new Label(text);
         ImageView icon = new ImageView(iconPath);
-        icon.setPreserveRatio(true);
         icon.setFitWidth(size);
+        icon.setFitHeight(size);
 
         Pane box = new VBox(label, icon);
         box.getStyleClass().add("box-with-icon");
