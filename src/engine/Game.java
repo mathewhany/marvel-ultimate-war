@@ -221,7 +221,7 @@ public class Game {
         return availableChampions;
     }
 
-    public static ArrayList<Ability> getAvailableAbilities() {
+    public static ArrayList<Ability> etAvailableAbilities() {
         return availableAbilities;
     }
 

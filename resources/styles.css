@@ -87,7 +87,7 @@
 }
 
 #keyboard-shortcuts-guide-view {
-    -fx-background-image: url("images/choose-leaders.jpg");
+    -fx-background-image: url("images/game-over-4.jpg");
     -fx-background-size: cover;
 }
 
@@ -95,6 +95,10 @@
     -fx-background-color: linear-gradient(to top, #ab0000, #a22626);
 }
 
+#game-over-view{
+	-fx-background-image: url("images/game-over-3.jpg");
+	-fx-background-size: cover;
+}
 
 
 /*******************************************************************************
@@ -451,4 +455,42 @@
 #game-view .effects-container .effect {
     -fx-background-color: #ffffff;
     -fx-font-size: 9px;
+}
+
+/*******************************************************************************
+                                GAME-OVER VIEW
+*******************************************************************************/
+
+#game-over-view {
+	-fx-alignment: center;
+    -fx-spacing: 20px;
+    -fx-padding: 5px;
+}
+
+#game-over-view .button {
+	-fx-background-color: transparent;
+	-fx-font-size : 30px;
+	-fx-border-color: white;
+    -fx-border-width: 5px;
+    -fx-background-radius: 15px;
+    -fx-border-radius : 10px;
+    -fx-text-fill: white;	
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
+    -fx-min-width:250px;
+    -fx-min-height:70px;
+    
+}
+
+#game-over-view .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+}	
+
+#game-over-view .button:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+} 
+
+#game-over-view .label {
+	-fx-font-size : 100px;
+	-fx-text-fill: #fff;
+	-fx-padding: 50px 0;
 }

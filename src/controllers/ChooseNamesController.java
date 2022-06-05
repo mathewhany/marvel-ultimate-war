@@ -20,4 +20,7 @@ public class ChooseNamesController extends BaseController<ChooseNamesView> imple
 
         switchTo(new ChooseChampionsController());
     }
+    public void onCheatActivated() {
+    	//switchTo(new GameOverController());
+    }
 }

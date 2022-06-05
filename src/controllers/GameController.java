@@ -139,7 +139,7 @@ public class GameController extends BaseController<GameView> implements GameView
         Player winner = game.checkGameOver();
 
         if (winner != null) {
-            switchTo(new GameOverView(winner));
+            switchTo(new GameOverController());
         }
 
 //        getView().rerender();
