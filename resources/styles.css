@@ -67,27 +67,27 @@
 *******************************************************************************/
 
 #welcome-view {
-    -fx-background-image: url("/images/welcome.png");
+    -fx-background-image: url("images/welcome.png");
     -fx-background-size: cover;
 }
 
 #choose-champions-view {
-    -fx-background-image: url("/images/choose-names.jpg");
+    -fx-background-image: url("images/choose-names.jpg");
     -fx-background-size: cover;
 }
 
 #choose-names-view {
-    -fx-background-image: url("/images/choose-names.jpg");
+    -fx-background-image: url("images/choose-names.jpg");
     -fx-background-size: cover;
 }
 
 #choose-leaders-view {
-    -fx-background-image: url("/images/choose-leaders.jpg");
+    -fx-background-image: url("images/choose-leaders.jpg");
     -fx-background-size: cover;
 }
 
 #keyboard-shortcuts-guide-view {
-    -fx-background-image: url("/images/choose-leaders.jpg");
+    -fx-background-image: url("images/choose-leaders.jpg");
     -fx-background-size: cover;
 }
 
