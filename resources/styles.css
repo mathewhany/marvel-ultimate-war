@@ -517,7 +517,36 @@
 } 
 
 #game-over-view .label {
+
     -fx-font-size: 100px;
     -fx-text-fill: #fff;
     -fx-padding: 50px 0;
+}
+
+/*******************************************************************************
+                                GAME-OVER VIEW
+*******************************************************************************/
+#credits-view{
+	-fx-background-color: black;
+	-fx-alignment: center;
+}
+
+#credits-view .item{
+	-fx-font-size:20px;
+	-fx-font-family:"Arial Black";
+	-fx-font-color:white;
+}
+
+#credits-view .title{
+	-fx-font-size:40px;
+	-fx-font-family:"Times New Roman";
+	-fx-font-color:white;
+	
+}
+
+#credits-view .credits-box{
+	-fx-font-size:20px;
+	-fx-font-family:"Arial Black";
+	-fx-font-color:white;
+	-fx-alingment:center;
 }
