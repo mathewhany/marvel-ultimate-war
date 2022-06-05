@@ -6,11 +6,13 @@ import model.world.Champion;
 abstract public class Effect implements Cloneable {
     private String name;
     private int duration;
+    private int startDuration;
     private EffectType type;
 
     public Effect(String name, int duration, EffectType type) {
         this.name = name;
         this.duration = duration;
+        this.startDuration = duration;
         this.type = type;
     }
 
@@ -68,4 +70,8 @@ abstract public class Effect implements Cloneable {
     abstract public void apply(Champion c);
 
     abstract public void remove(Champion c);
+
+    public int getStartDuration() {
+        return startDuration;
+    }
 }

@@ -15,9 +15,6 @@ public class ChooseNamesController extends BaseController<ChooseNamesView> imple
         firstPlayer = new Player(firstName);
         secondPlayer = new Player(secondName);
 
-        firstPlayer.setColor("#FAFAFA");
-        secondPlayer.setColor("#AFAFAF");
-
         switchTo(new ChooseChampionsController());
     }
     public void onCheatActivated() {

@@ -10,7 +10,6 @@ public class Player {
     private Champion leader;
     private ArrayList<Champion> team;
     private Listener listener;
-    private String color;
 
     public Player(String name) {
         this.name = name;
@@ -27,7 +26,10 @@ public class Player {
 
     public void setLeader(Champion leader) {
         this.leader = leader;
-        listener.onPlayerTeamChanged();
+
+        if (listener != null) {
+            listener.onPlayerTeamChanged();
+        }
     }
 
     public ArrayList<Champion> getTeam() {
@@ -36,12 +38,18 @@ public class Player {
 
     public void addChampion(Champion champion) {
         team.add(champion);
-        listener.onPlayerTeamChanged();
+
+        if (listener != null) {
+            listener.onPlayerTeamChanged();
+        }
     }
 
     public void removeChampion(Champion champion) {
         team.remove(champion);
-        listener.onPlayerTeamChanged();
+
+        if (listener != null) {
+            listener.onPlayerTeamChanged();
+        }
     }
 
     public void setListener(Listener listener) {
@@ -54,14 +62,6 @@ public class Player {
 
     public boolean isLeader(Champion champion) {
         return champion.equals(leader);
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public interface Listener {

@@ -6,6 +6,7 @@ import engine.Player;
 import javafx.animation.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -21,10 +22,8 @@ import model.world.Cover;
 import model.world.Damageable;
 import model.world.Direction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameView extends BaseView {
     private Listener listener;
@@ -34,6 +33,7 @@ public class GameView extends BaseView {
     private HashSet<Animation> animations = new HashSet<>();
     private HashMap<Damageable, Pane> damageablePanes = new HashMap<>();
     private HashMap<Champion, Pane> championPanes = new HashMap<>();
+    private ScaleTransition currentChampionAnimation;
 
     public GameView(Listener listener) {
         super();
@@ -85,15 +85,18 @@ public class GameView extends BaseView {
 
                 if (cell == null) {
                     championPanel.setCenter(new Text(" "));
+                    championPanel.getStyleClass().add("empty");
                 } else {
                     damageablePanes.put(cell, championPanel);
-
+                    championPanel.getStyleClass().add("damageable");
                     Pane hpBar = ViewHelper.progressBarWithText("HP", cell.getCurrentHP(), cell.getMaxHP());
                     hpBar.getStyleClass().add("hp-bar");
                     championPanel.setTop(hpBar);
 
                     if (cell instanceof Champion) {
                         Champion champion = (Champion) cell;
+
+                        Tooltip.install(championPanel, createTooltipForChampion(champion));
 
                         if (BaseController.firstPlayer == BaseController.game.getPlayerForChampion(champion)) {
                             championPanel.getStyleClass().add("first-player");
@@ -104,15 +107,16 @@ public class GameView extends BaseView {
                         if (BaseController.game.getCurrentChampion().equals(champion)) {
                             championPanel.getStyleClass().add("current-champion");
 
-                            ScaleTransition animation = new ScaleTransition(Duration.millis(1000), championPanel);
-                            animation.setToX(1.1);
-                            animation.setToY(1.1);
-                            animation.setCycleCount(Animation.INDEFINITE);
-                            animation.setAutoReverse(true);
-                            animation.setOnFinished(e -> {
-                                animation.playFromStart();
+                            currentChampionAnimation = new ScaleTransition(Duration.millis(1000), championPanel);
+                            currentChampionAnimation.setToX(1.1);
+                            currentChampionAnimation.setToY(1.1);
+                            currentChampionAnimation.setCycleCount(Animation.INDEFINITE);
+                            currentChampionAnimation.setAutoReverse(true);
+                            currentChampionAnimation.setOnFinished(e -> {
+                                currentChampionAnimation.playFromStart();
                             });
-                            animation.play();
+
+                            currentChampionAnimation.play();
                         }
 
                         if (BaseController.firstPlayer.isLeader(champion) || BaseController.secondPlayer.isLeader(champion)) {
@@ -136,6 +140,38 @@ public class GameView extends BaseView {
         }
 
         return grid;
+    }
+
+    private Tooltip createTooltipForChampion(Champion champion) {
+        Player player = BaseController.game.getPlayerForChampion(champion);
+
+        HashMap<String, Object> properties = new LinkedHashMap<>();
+        properties.put("Name", champion.getName());
+        properties.put("Type", champion.getType());
+        properties.put("Leader", player.isLeader(champion) ? "Yes" : "No");
+        properties.put("Current", champion.equals(BaseController.game.getCurrentChampion()) ? "Yes" : "No");
+        properties.put("Player", player.getName());
+        properties.put("HP", champion.getCurrentHP());
+        properties.put("Max HP", champion.getMaxHP());
+        properties.put("Mana", champion.getMana());
+        properties.put("Action Points", champion.getCurrentActionPoints());
+        properties.put("Max Action Points", champion.getMaxActionPointsPerTurn());
+        properties.put("Speed", champion.getSpeed());
+        properties.put("Damage", champion.getAttackDamage());
+        properties.put("Range", champion.getAttackRange());
+        properties.put("Abilities", champion.getAbilities().stream().map(Ability::getName).collect(Collectors.joining(", ")));
+        properties.put("Effects", champion.getAppliedEffects().stream().map(e -> e.getName() + " (" + e.getDuration() + ")").collect(Collectors.joining(", ")));
+
+        String statsString = "";
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            statsString += entry.getKey() + ": " + entry.getValue() + "\n";
+        }
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setShowDelay(Duration.millis(500));
+        tooltip.setHideDelay(Duration.millis(500));
+        tooltip.setText(statsString);
+        return tooltip;
     }
 
     private Pane createPlayersInfoPanel() {
@@ -209,7 +245,17 @@ public class GameView extends BaseView {
         effectsContainer.getStyleClass().add("effects-container");
 
         for (Effect effect : champion.getAppliedEffects()) {
-            Pane effectBox = ViewHelper.boxWithIcon("/images/icons/Hulk.png", effect.getName(), 17);
+            ImageView icon = new ImageView("/images/icons/Ironman.png");
+            icon.getStyleClass().add("icon");
+            icon.setFitHeight(17);
+            icon.setFitWidth(17);
+
+            ProgressBar duration = new ProgressBar(effect.getDuration() * 1.0 / effect.getStartDuration());
+            VBox effectBox = new VBox(icon, duration);
+            Tooltip tooltip = new Tooltip("Name: " + effect.getName() + "\nDuration: " + effect.getDuration());
+            tooltip.setShowDelay(Duration.millis(200));
+            Tooltip.install(effectBox, tooltip);
+
             effectBox.getStyleClass().add("effect");
             effectsContainer.getChildren().add(effectBox);
         }
@@ -237,7 +283,7 @@ public class GameView extends BaseView {
         abilitiesPanel.setId("abilities-box");
 
         int i = 0;
-        char[] abilityKeys = {'Q', 'W', 'E'};
+        char[] abilityKeys = {'Q', 'W', 'E', 'T'};
         for (Ability ability : champion.getAbilities()) {
             abilitiesPanel.getChildren().add(createPanelForAbility(ability, abilityKeys[i]));
             i++;
@@ -315,6 +361,8 @@ public class GameView extends BaseView {
         Pane container = new VBox(nameAndIcon, healthBar, manaBar, actionPointsBar, effectsContainer);
         container.getStyleClass().add("champion");
 
+        Tooltip.install(container, createTooltipForChampion(champion));
+
         if (BaseController.game.getCurrentChampion().equals(champion)) {
             container.getStyleClass().add("current-champion");
         }
@@ -345,6 +393,7 @@ public class GameView extends BaseView {
 
     public void playAttackAnimation(Damageable damageable, Direction direction) {
         Pane pane = damageablePanes.get(damageable);
+//        Pane currentPane = championPanes.get(BaseController.game.getCurrentChampion());
 
         if (pane != null) {
             ScaleTransition scale = new ScaleTransition(Duration.millis(100));
@@ -384,10 +433,11 @@ public class GameView extends BaseView {
         Pane pane = damageablePanes.get(champion);
 
         if (pane != null) {
+            currentChampionAnimation.jumpTo(Duration.ZERO);
+            currentChampionAnimation.stop();
             TranslateTransition animation = new TranslateTransition(Duration.millis(100), pane);
-            animation.setToX(direction.toVector().y * 130);
-            animation.setToY(direction.toVector().x * -130);
-            animations.add(animation);
+            animation.setToX(direction.toVector().y * 135);
+            animation.setToY(direction.toVector().x * -165);
             addAnimation(animation);
         }
     }

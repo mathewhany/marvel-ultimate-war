@@ -331,6 +331,11 @@
     -fx-border-radius: 5px;
 }
 
+#game-view #board .cell.damageable:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+}
+
+
 #game-view #board .cell.current-champion {
     -fx-border-color: rgba(239, 210, 56, 0.35);
     -fx-border-width: 2px;
@@ -457,6 +462,12 @@
     -fx-font-size: 9px;
 }
 
+#game-view .effects-container .effect .progress-bar {
+    -fx-padding: 1px;
+}
+
+
+
 /*******************************************************************************
                                 GAME-OVER VIEW
 *******************************************************************************/
@@ -490,7 +501,7 @@
 } 
 
 #game-over-view .label {
-	-fx-font-size : 100px;
-	-fx-text-fill: #fff;
-	-fx-padding: 50px 0;
+    -fx-font-size: 100px;
+    -fx-text-fill: #fff;
+    -fx-padding: 50px 0;
 }

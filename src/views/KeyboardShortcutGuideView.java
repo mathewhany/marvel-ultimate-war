@@ -22,6 +22,7 @@ public class KeyboardShortcutGuideView extends BaseView {
         shortcuts.put("Use Ability 1", "Q");
         shortcuts.put("Use Ability 2", "W");
         shortcuts.put("Use Ability 3", "E");
+        shortcuts.put("Use Ability 4", "T");
         shortcuts.put("Directional Abilities", "Ability Key + Arrow Keys");
         shortcuts.put("Single Target Abilities", "Ability Key + Mouse Click");
         shortcuts.put("Use Leader Ability", "R");

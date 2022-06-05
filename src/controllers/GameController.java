@@ -92,6 +92,7 @@ public class GameController extends BaseController<GameView> implements GameView
         abilityKeys.put(KeyCode.Q, 0);
         abilityKeys.put(KeyCode.W, 1);
         abilityKeys.put(KeyCode.E, 2);
+        abilityKeys.put(KeyCode.T, 3);
 
         for (KeyCode key : keys) {
             if (abilityKeys.containsKey(key)) {

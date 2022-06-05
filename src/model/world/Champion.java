@@ -7,6 +7,8 @@ import utils.Utils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 abstract public class Champion implements Damageable, Comparable {
     private int maxMana;
@@ -284,7 +286,7 @@ abstract public class Champion implements Damageable, Comparable {
 
         return "Unknown";
     }
-
+    
     public interface Listener {
         void onChampionChange(Champion champion);
         void onDamage(Champion champion);
