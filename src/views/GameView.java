@@ -6,6 +6,7 @@ import engine.Player;
 import javafx.animation.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -142,38 +143,6 @@ public class GameView extends BaseView {
         return grid;
     }
 
-    private Tooltip createTooltipForChampion(Champion champion) {
-        Player player = BaseController.game.getPlayerForChampion(champion);
-
-        HashMap<String, Object> properties = new LinkedHashMap<>();
-        properties.put("Name", champion.getName());
-        properties.put("Type", champion.getType());
-        properties.put("Leader", player.isLeader(champion) ? "Yes" : "No");
-        properties.put("Current", champion.equals(BaseController.game.getCurrentChampion()) ? "Yes" : "No");
-        properties.put("Player", player.getName());
-        properties.put("HP", champion.getCurrentHP());
-        properties.put("Max HP", champion.getMaxHP());
-        properties.put("Mana", champion.getMana());
-        properties.put("Action Points", champion.getCurrentActionPoints());
-        properties.put("Max Action Points", champion.getMaxActionPointsPerTurn());
-        properties.put("Speed", champion.getSpeed());
-        properties.put("Damage", champion.getAttackDamage());
-        properties.put("Range", champion.getAttackRange());
-        properties.put("Abilities", champion.getAbilities().stream().map(Ability::getName).collect(Collectors.joining(", ")));
-        properties.put("Effects", champion.getAppliedEffects().stream().map(e -> e.getName() + " (" + e.getDuration() + ")").collect(Collectors.joining(", ")));
-
-        String statsString = "";
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            statsString += entry.getKey() + ": " + entry.getValue() + "\n";
-        }
-
-        Tooltip tooltip = new Tooltip();
-        tooltip.setShowDelay(Duration.millis(500));
-        tooltip.setHideDelay(Duration.millis(500));
-        tooltip.setText(statsString);
-        return tooltip;
-    }
-
     private Pane createPlayersInfoPanel() {
         championPanes.clear();
 
@@ -240,29 +209,6 @@ public class GameView extends BaseView {
         return championBox;
     }
 
-    private Pane createEffectsContainer(Champion champion) {
-        Pane effectsContainer = new HBox();
-        effectsContainer.getStyleClass().add("effects-container");
-
-        for (Effect effect : champion.getAppliedEffects()) {
-            ImageView icon = new ImageView("/images/icons/Ironman.png");
-            icon.getStyleClass().add("icon");
-            icon.setFitHeight(17);
-            icon.setFitWidth(17);
-
-            ProgressBar duration = new ProgressBar(effect.getDuration() * 1.0 / effect.getStartDuration());
-            VBox effectBox = new VBox(icon, duration);
-            Tooltip tooltip = new Tooltip("Name: " + effect.getName() + "\nDuration: " + effect.getDuration());
-            tooltip.setShowDelay(Duration.millis(200));
-            Tooltip.install(effectBox, tooltip);
-
-            effectBox.getStyleClass().add("effect");
-            effectsContainer.getChildren().add(effectBox);
-        }
-
-        return effectsContainer;
-    }
-
     private Pane createMessagePanel() {
         VBox messagePanel = new VBox();
         messagePanel.setId("messages-panel");
@@ -289,6 +235,61 @@ public class GameView extends BaseView {
             i++;
         }
         return abilitiesPanel;
+    }
+
+    private Tooltip createTooltipForChampion(Champion champion) {
+        Player player = BaseController.game.getPlayerForChampion(champion);
+
+        HashMap<String, Object> properties = new LinkedHashMap<>();
+        properties.put("Name", champion.getName());
+        properties.put("Type", champion.getType());
+        properties.put("Leader", player.isLeader(champion) ? "Yes" : "No");
+        properties.put("Current", champion.equals(BaseController.game.getCurrentChampion()) ? "Yes" : "No");
+        properties.put("Player", player.getName());
+        properties.put("HP", champion.getCurrentHP());
+        properties.put("Max HP", champion.getMaxHP());
+        properties.put("Mana", champion.getMana());
+        properties.put("Action Points", champion.getCurrentActionPoints());
+        properties.put("Max Action Points", champion.getMaxActionPointsPerTurn());
+        properties.put("Speed", champion.getSpeed());
+        properties.put("Damage", champion.getAttackDamage());
+        properties.put("Range", champion.getAttackRange());
+        properties.put("Abilities", champion.getAbilities().stream().map(Ability::getName).collect(Collectors.joining(", ")));
+        properties.put("Effects", champion.getAppliedEffects().stream().map(e -> e.getName() + " (" + e.getDuration() + ")").collect(Collectors.joining(", ")));
+
+        String statsString = "";
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            statsString += entry.getKey() + ": " + entry.getValue() + "\n";
+        }
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setShowDelay(Duration.millis(500));
+        tooltip.setHideDelay(Duration.millis(500));
+        tooltip.setText(statsString);
+        return tooltip;
+    }
+
+    private Pane createEffectsContainer(Champion champion) {
+        Pane effectsContainer = new HBox();
+        effectsContainer.getStyleClass().add("effects-container");
+
+        for (Effect effect : champion.getAppliedEffects()) {
+            ImageView icon = new ImageView("/images/icons/Ironman.png");
+            icon.getStyleClass().add("icon");
+            icon.setFitHeight(17);
+            icon.setFitWidth(17);
+
+            ProgressIndicator duration = new ProgressIndicator(effect.getDuration() * 1.0 / effect.getStartDuration());
+            StackPane effectBox = new StackPane(duration, icon);
+            Tooltip tooltip = new Tooltip("Name: " + effect.getName() + "\nDuration: " + effect.getDuration());
+            tooltip.setShowDelay(Duration.millis(200));
+            Tooltip.install(effectBox, tooltip);
+
+            effectBox.getStyleClass().add("effect");
+            effectsContainer.getChildren().add(effectBox);
+        }
+
+        return effectsContainer;
     }
 
     private Pane createPanelForPlayer(Player player) {

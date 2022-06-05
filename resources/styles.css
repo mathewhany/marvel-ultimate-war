@@ -458,12 +458,28 @@
 }
 
 #game-view .effects-container .effect {
-    -fx-background-color: #ffffff;
-    -fx-font-size: 9px;
+    -fx-alignment: center;
+    /*-fx-max-width: 30px;*/
+    /*-fx-max-height: 30px;*/
 }
 
-#game-view .effects-container .effect .progress-bar {
-    -fx-padding: 1px;
+#game-view .effects-container .effect .progress-indicator {
+    -fx-padding: 0 0 -16 0;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+}
+
+#game-view .effects-container .effect .progress-indicator .percentage {
+    -fx-fill: null;
+}
+
+#game-view .effects-container .effect .progress-indicator .tick {
+    -fx-shape: null;
+    -fx-background-color: rgba(0, 0, 0, 0);
+}
+
+#game-view .effects-container .effect .progress-indicator .progress {
+    -fx-background-color: rgba(0, 0, 0, 0.55);
 }
 
 
