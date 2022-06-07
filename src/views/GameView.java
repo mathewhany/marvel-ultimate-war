@@ -481,18 +481,15 @@ public class GameView extends BaseView {
     public void playFireAnimation(Champion currentChampion, Damageable target, Direction direction) {
         Pane currentChampionPane = damageablePanes.get(currentChampion);
 
-        Circle circle = new Circle();
-        circle.getStyleClass().add("circle");
-        circle.setCenterX(100f);
-        circle.setCenterY(100f);
-        circle.setRadius(5f);
-        circle.setVisible(true);
+        ImageView bomb = new ImageView("images/icons/Attack.png");
+        bomb.setFitWidth(24);
+        bomb.setPreserveRatio(true);
 
-        currentChampionPane.getChildren().add(circle);
+        currentChampionPane.getChildren().add(bomb);
 
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), circle);
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), bomb);
 
-        Bounds bounds1 = circle.localToScene(circle.getLayoutBounds());
+        Bounds bounds1 = bomb.localToScene(bomb.getLayoutBounds());
 
         if (target == null) {
             transition.setByX(direction.toVector().y * currentChampion.getAttackRange() * 135);
@@ -502,48 +499,70 @@ public class GameView extends BaseView {
             Pane targetPane = damageablePanes.get(target);
             Bounds bounds2 = targetPane.localToScene(targetPane.getBoundsInLocal());
 
-            transition.setByX(bounds2.getCenterX() - bounds1.getCenterX());
-            transition.setByY(bounds2.getCenterY() - bounds1.getCenterY());
+            transition.setByX(bounds2.getMinX() - bounds1.getMaxX());
+            transition.setByY(bounds2.getMinY() - bounds1.getMaxY());
 
-            ScaleTransition scale = new ScaleTransition(Duration.millis(100));
-            scale.setToX(1.05);
-            scale.setToY(1.05);
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200));
+            scale.setToX(1.1);
+            scale.setToY(1.1);
 
-            TranslateTransition translate = new TranslateTransition(Duration.millis(100));
-            translate.setToX(direction.toVector().y * 15);
-            translate.setToY(direction.toVector().x * -15);
+//            TranslateTransition translate = new TranslateTransition(Duration.millis(200));
+//            translate.setToX(direction.toVector().y * 15);
+//            translate.setToY(direction.toVector().x * -15);
 
-            ParallelTransition explosion = new ParallelTransition(scale, translate);
+            ScaleTransition explosion = scale;
             explosion.setNode(targetPane);
             explosion.setAutoReverse(true);
             explosion.setCycleCount(2);
 
-            addAnimation(new SequentialTransition(transition, explosion));
+            addAnimation(new SequentialTransition(transition, new PauseTransition(Duration.millis(100)), explosion));
         }
     }
 
-    public void playSurroundAnimation(Champion champion) {
-        Pane championPane = damageablePanes.get(champion);
+    public void playSurroundAnimation(Champion currentChampion, ArrayList<Damageable> targets) {
+        Pane championPane = damageablePanes.get(currentChampion);
 
         Circle circle = new Circle();
+        circle.getStyleClass().add("surround-circle");
         circle.setRadius(30);
-//        circle.setCenterX(0);
-//        circle.setCenterY(100);
 
         championPane.getChildren().add(circle);
 
-        ScaleTransition scale = new ScaleTransition(Duration.millis(350));
+        ScaleTransition scale = new ScaleTransition(Duration.millis(500));
         scale.setByX(4);
         scale.setByY(4);
 
-        FadeTransition fade = new FadeTransition(Duration.millis(350));
+        FadeTransition fade = new FadeTransition(Duration.millis(500));
         fade.setFromValue(1);
         fade.setToValue(0);
 
         ParallelTransition animation = new ParallelTransition(scale, fade);
         animation.setNode(circle);
 
+        for (Damageable target : targets) {
+            Pane targetPane = damageablePanes.get(target);
+
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(100), targetPane);
+            scaleTransition.setToX(1.1);
+            scaleTransition.setToY(1.1);
+            scaleTransition.setCycleCount(2);
+            scaleTransition.setAutoReverse(true);
+
+            addAnimation(scaleTransition);
+        }
+
         addAnimation(animation);
+    }
+
+    public void playDirectionalAnimation(Champion currentChampion, ArrayList<Damageable> targets) {
+        Pane championPane = damageablePanes.get(currentChampion);
+
+
+        for (Damageable target : targets) {
+            Pane targetPane = damageablePanes.get(target);
+
+
+        }
     }
 
     public interface Listener {

@@ -190,8 +190,6 @@ public class GameController extends BaseController<GameView> implements GameView
 
 //        SoundUtils.playSound("/attack.mp3");
 
-        getView().playSurroundAnimation(game.getCurrentChampion());
-
         if (targets.isEmpty()) {
             getView().addMessage("No targets were effected.");
         }
@@ -205,6 +203,12 @@ public class GameController extends BaseController<GameView> implements GameView
 //            getView().playAttackAnimation(target);
         }
 
+
+        if (ability.getCastArea() == AreaOfEffect.SURROUND) {
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets);
+        } else if (ability.getCastArea() == AreaOfEffect.DIRECTIONAL) {
+            getView().playDirectionalAnimation(game.getCurrentChampion(), targets);
+        }
         getView().rerender();
     }
 
