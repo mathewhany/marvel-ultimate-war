@@ -45,5 +45,12 @@ public class GameOverController extends BaseController<GameOverView> implements 
 	public void onCredits() {
 		switchTo(new CreditsController());
 	}
+	
+	public void onPlayAgain() {
+		newPlayer.stop();
+		player.play();
+		switchTo(new WelcomeController());
+	}
+	
 
 }

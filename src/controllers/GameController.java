@@ -84,6 +84,7 @@ public class GameController extends BaseController<GameView> implements GameView
         getView().clearMessages();
         getView().addMessage(message);
         getView().rerender();
+        SoundUtils.playSound("/sound-effects/Error.wav");
     }
 
     public Ability getAbility() {
@@ -167,7 +168,7 @@ public class GameController extends BaseController<GameView> implements GameView
             return;
         }
 
-        SoundUtils.playSound("/attack.mp3");
+        SoundUtils.playSound("/sound-effects/Attack.wav");
 
         if (target instanceof Cover) {
             getView().addMessage(game.getCurrentChampion().getName() + " attacked a cover.");
@@ -271,6 +272,8 @@ public class GameController extends BaseController<GameView> implements GameView
     @Override
     public void onDamage(Champion champion) {
         getView().animateProgressBar(champion, "hp", champion.getHpPercent());
+        if(champion.getCurrentHP()==0)
+        	SoundUtils.playSound("/sound-effects/Death.wav");
     }
 
     @Override
@@ -290,6 +293,7 @@ public class GameController extends BaseController<GameView> implements GameView
 
     @Override
     public void onEffectApplied(Champion champion, Effect effect) {
+    	SoundUtils.playSound("/sound-effects/" + effect.getName() + ".wav");
 
     }
 

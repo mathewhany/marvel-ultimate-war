@@ -105,7 +105,7 @@
 }
 
 #credits-view{
-	-fx-background-image: url("images/credits.jpg");
+	-fx-background-image: url("images/creditsGif.gif");
 	-fx-background-size: cover;
 }
 
@@ -500,7 +500,7 @@
 
 #game-over-view {
 	-fx-alignment: center;
-    -fx-spacing: 20px;
+    -fx-spacing: 30px;
     -fx-padding: 5px;
 }
 
@@ -538,7 +538,7 @@
 *******************************************************************************/
 #credits-view {
 	-fx-background-color: black;
-    -fx-padding: 40px;
+    -fx-padding: 0px 20px 0px 60px;
 }
 
 #credits-view .label {
@@ -561,5 +561,5 @@
 
 #credits-view #skip {
     -fx-alignment: center;
-    -fx-font-size: 17px;
+    -fx-font-size: 30px;
 }

@@ -1,13 +1,14 @@
 package controllers;
 
 import engine.Game;
+import controllers.GameOverController;
 import engine.Player;
 import javafx.scene.input.KeyCode;
 import model.world.Champion;
 import views.WelcomeView;
 
 import java.util.ArrayList;
-
+import controllers.BaseController;
 public class WelcomeController extends BaseController<WelcomeView> {
     @Override
     public WelcomeView createView() {

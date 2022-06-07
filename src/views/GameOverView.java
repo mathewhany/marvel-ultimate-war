@@ -25,14 +25,18 @@ public class GameOverView extends BaseView {
 	public Pane createContent() {
 		Button exitBtn = new Button("Exit");
 		Button credits = new Button("Credits");
+		Button playAgain = new Button("Play Again");
 		exitBtn.setOnAction((ActionEvent event) -> {
 			listener.onExit();
 		});
 		credits.setOnAction((ActionEvent event) -> {
 			listener.onCredits();
 		});
+		playAgain.setOnAction((ActionEvent event) -> {
+			listener.onPlayAgain();
+		});
 		Label gameOver = new Label(winner.getName().toUpperCase() + " WINS THE BATTLE");
-		VBox container = new VBox(gameOver, credits, exitBtn);
+		VBox container = new VBox(gameOver,playAgain, credits, exitBtn);
 		container.setId("game-over-view");
 
 		return container;
@@ -42,6 +46,8 @@ public class GameOverView extends BaseView {
 		void onExit();
 
 		void onCredits();
+		
+		void onPlayAgain();
 
 	}
 }
