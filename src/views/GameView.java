@@ -523,7 +523,27 @@ public class GameView extends BaseView {
     }
 
     public void playSurroundAnimation(Champion champion) {
-//        Pane champion = championPanes.get()
+        Pane championPane = damageablePanes.get(champion);
+
+        Circle circle = new Circle();
+        circle.setRadius(30);
+//        circle.setCenterX(0);
+//        circle.setCenterY(100);
+
+        championPane.getChildren().add(circle);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(350));
+        scale.setByX(4);
+        scale.setByY(4);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(350));
+        fade.setFromValue(1);
+        fade.setToValue(0);
+
+        ParallelTransition animation = new ParallelTransition(scale, fade);
+        animation.setNode(circle);
+
+        addAnimation(animation);
     }
 
     public interface Listener {

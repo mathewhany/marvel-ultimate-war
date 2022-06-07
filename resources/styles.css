@@ -535,32 +535,30 @@
 /*******************************************************************************
                                 CREDITS VIEW
 *******************************************************************************/
-#credits-view{
+#credits-view {
 	-fx-background-color: black;
+    -fx-padding: 40px;
+}
+
+#credits-view .label {
+	-fx-text-fill: white;
+}
+
+#credits-view .item {
+	-fx-font-size: 40px;
+	-fx-font-color: white;
 	-fx-alignment: center;
 }
 
-#credits-view .label{
-	-fx-alignment:center;
-	-fx-text-fill:white;
-	-fx-font-size: 30px;
+#credits-view .title {
+	-fx-font-size: 72px;
 }
 
-#credits-view .item{
-	-fx-font-size:40px;
-	-fx-font-color:white;
+#credits-view .credits-box {
 	-fx-alignment: center;
 }
 
-#credits-view .title{
-	-fx-font-size:60px;
-	-fx-font-color:white;
-	-fx-alignment:center;
-	
-}
-
-#credits-view .credits-box{
-	-fx-font-size:40px;
-	-fx-font-color:white;
-	-fx-alingment:center;
+#credits-view #skip {
+    -fx-alignment: center;
+    -fx-font-size: 17px;
 }

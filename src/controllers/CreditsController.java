@@ -13,10 +13,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class CreditsController extends BaseController<CreditsView> {
-	Player player = new Player("");
-	public CreditsController() {
-	}
-
 	public CreditsView createView() {
 		return new CreditsView();
 	}

@@ -183,18 +183,13 @@ public class GameController extends BaseController<GameView> implements GameView
     public void onCastAbility(Ability ability, ArrayList<Damageable> targets) {
         getView().clearMessages();
 
-        String type = "";
-        if (ability instanceof DamagingAbility) {
-            type = "damaging";
-        } else if (ability instanceof HealingAbility) {
-            type = "healing";
-        } else {
-            type = "crowd control";
-        }
+        String type = ability.getType().toLowerCase();
 
         getView().addMessage(game.getCurrentChampion().getName() + " casted a " + type + " ability (" + ability.getName() + ")");
 
 //        SoundUtils.playSound("/attack.mp3");
+
+        getView().playSurroundAnimation(game.getCurrentChampion());
 
         if (targets.isEmpty()) {
             getView().addMessage("No targets were effected.");

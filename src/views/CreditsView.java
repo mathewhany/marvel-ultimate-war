@@ -1,55 +1,75 @@
 package views;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import controllers.ChooseNamesController;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+public class CreditsView extends BaseView {
+    public Pane createContent() {
+        BorderPane container = new BorderPane();
+        container.setId("credits-view");
 
-public class CreditsView extends BaseView{
-	private Label label;
+        HashMap<String, String[]> map = new LinkedHashMap<>();
+        map.put("Developers", new String[]{"Rafeek Bassem", "Mathew Hany", "Nariman Ismail"});
+        map.put("Special Thanks", new String[]{"StackOverflow", "Photoshop", "Coffee", "StackOverflow (again)"});
 
-	public CreditsView() {
-		
-	}
-	public Pane createContent() {
-		
-		HashMap<String,String[]> map = new LinkedHashMap<>();
-		VBox container = new VBox();
-		container.setId("credits-view");
-		label = new Label("Press space to skip");
-		map.put("Developers", new String[] { "Rafeek Bassem", "Mathew Hany", "Nariman Ismail" });
-		map.put("special thanks" , new String[] {"Mathew","Rafeek","Nariman"});
-		
-		for(Map.Entry<String, String[]> entry : map.entrySet()) {
-			String title = entry.getKey();
-			String[] body = entry.getValue();
-			Label l1 = new Label(title);
-			l1.getStyleClass().add("title");
-			
-			VBox temp = new VBox(l1);
-			temp.getStyleClass().add("credits-box");
-			
-			for(String text : body) {
-				Label l2 = new Label(text);
-				l2.getStyleClass().add("item");
-				
-				temp.getChildren().add(l2);
-			}
-			
-			container.getChildren().addAll(temp);
-		}
-			container.getChildren().add(label);
-		
-		return container;
-	}
-	 
-	    }
+        int count = 0;
+
+        SequentialTransition animations = new SequentialTransition(new PauseTransition(Duration.seconds(1)));
+
+        for (Map.Entry<String, String[]> entry : map.entrySet()) {
+            String title = entry.getKey();
+            String[] body = entry.getValue();
+
+            Label titleLabel = new Label(title);
+            titleLabel.getStyleClass().add("title");
+
+            FadeTransition titleFade = new FadeTransition(Duration.seconds(2), titleLabel);
+            titleFade.setFromValue(0);
+            titleFade.setToValue(1);
+            animations.getChildren().add(titleFade);
+
+            VBox sectionBox = new VBox(titleLabel);
+            sectionBox.getStyleClass().add("credits-box");
+
+            for (String text : body) {
+                Label nameLabel = new Label(text);
+                nameLabel.getStyleClass().add("item");
+                sectionBox.getChildren().add(nameLabel);
+
+
+                FadeTransition itemFade = new FadeTransition(Duration.millis(500), nameLabel);
+                itemFade.setFromValue(0);
+                itemFade.setToValue(1);
+                animations.getChildren().add(itemFade);
+            }
+
+            if (count % 2 == 0) {
+                container.setLeft(sectionBox);
+            } else {
+                container.setRight(sectionBox);
+            }
+
+            count++;
+        }
+
+        StackPane label = new StackPane(new Label("Press space to skip ..."));
+        label.setId("skip");
+        container.setBottom(label);
+
+        animations.play();
+
+        return container;
+    }
+}
 
