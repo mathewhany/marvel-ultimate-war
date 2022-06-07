@@ -94,7 +94,7 @@
 #game-view {
     -fx-background-color: linear-gradient(to top, #ab0000, #a22626);
     
-    -fx-background-image: url("images/flying-ship.jpg");
+    -fx-background-image: url("images/Spidey.jpg");
     -fx-background-size: cover;
     
 }
@@ -338,10 +338,11 @@
     -fx-border-width: 2px;
     -fx-border-color: rgba(255, 75, 202, 0.24);
     -fx-border-radius: 5px;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
 }
 
 #game-view #board .cell.damageable:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-color: rgba(255, 255, 255, 0.7);
 }
 
 

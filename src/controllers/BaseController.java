@@ -27,10 +27,13 @@ import views.BaseView;
 
 import java.io.File;
 import java.util.HashSet;
-
+import views.GameOverView;
 public class BaseController<T extends BaseView> extends Application implements EventHandler<KeyEvent> {
-    public static final Media media = new Media(BaseController.class.getResource("/soundtrack.mp3").toExternalForm());
-    public static final MediaPlayer player = new MediaPlayer(media);
+    public static final Media mainTheme = new Media(BaseController.class.getResource("/Avengers.mp3").toExternalForm());
+    
+    
+    public static final MediaPlayer player = new MediaPlayer(mainTheme);
+    
     public static Player firstPlayer;
     public static Player secondPlayer;
     public static Game game;
@@ -51,8 +54,7 @@ public class BaseController<T extends BaseView> extends Application implements E
 
     @Override
     public void start(Stage stage) throws Exception {
-        primaryStage = stage;
-
+        primaryStage = stage; 	   
         player.play();
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
