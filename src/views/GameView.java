@@ -132,6 +132,7 @@ public class GameView extends BaseView {
 
                     } else if (cell instanceof Cover) {
                         championPanel.getStyleClass().add("cover");
+                        championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/Cover.png" , "Cover" ,110));
                     }
                 }
 

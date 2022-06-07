@@ -93,10 +93,19 @@
 
 #game-view {
     -fx-background-color: linear-gradient(to top, #ab0000, #a22626);
+    
+    -fx-background-image: url("images/flying-ship.jpg");
+    -fx-background-size: cover;
+    
 }
 
 #game-over-view{
 	-fx-background-image: url("images/game-over-3.jpg");
+	-fx-background-size: cover;
+}
+
+#credits-view{
+	-fx-background-image: url("images/credits.jpg");
 	-fx-background-size: cover;
 }
 
@@ -524,29 +533,34 @@
 }
 
 /*******************************************************************************
-                                GAME-OVER VIEW
+                                CREDITS VIEW
 *******************************************************************************/
 #credits-view{
 	-fx-background-color: black;
 	-fx-alignment: center;
 }
 
+#credits-view .label{
+	-fx-alignment:center;
+	-fx-text-fill:white;
+	-fx-font-size: 30px;
+}
+
 #credits-view .item{
-	-fx-font-size:20px;
-	-fx-font-family:"Arial Black";
+	-fx-font-size:40px;
 	-fx-font-color:white;
+	-fx-alignment: center;
 }
 
 #credits-view .title{
-	-fx-font-size:40px;
-	-fx-font-family:"Times New Roman";
+	-fx-font-size:60px;
 	-fx-font-color:white;
+	-fx-alignment:center;
 	
 }
 
 #credits-view .credits-box{
-	-fx-font-size:20px;
-	-fx-font-family:"Arial Black";
+	-fx-font-size:40px;
 	-fx-font-color:white;
 	-fx-alingment:center;
 }

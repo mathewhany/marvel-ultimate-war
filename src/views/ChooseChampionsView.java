@@ -83,7 +83,8 @@ public class ChooseChampionsView extends BaseView {
             button.getStyleClass().add("champion-btn");
 
             button.setDisable(BaseController.firstPlayer.hasChampion(champion) || BaseController.secondPlayer.hasChampion(champion));
-            button.setGraphic(new ImageView("/images/icons/" + champion.getName() + ".png"));
+            button.setGraphic(new ImageView("/images/champions/" + champion.getName() + ".png"));
+
 
             if (champion.equals(selectedChampion)) {
                 button.getStyleClass().add("selected-champion");

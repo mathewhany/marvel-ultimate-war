@@ -20,9 +20,8 @@ public class WelcomeController extends BaseController<WelcomeView> {
             switchTo(new ChooseNamesController());
         }
 
-        Player cheater = new Player("DEV");
         if (keys.contains(KeyCode.B) && keys.contains(KeyCode.C)) {
-            switchTo(new GameOverController(cheater));
+            switchTo(new GameOverController());
         }
 
         if (keys.contains(KeyCode.DIGIT1) && keys.contains(KeyCode.DIGIT3)) {

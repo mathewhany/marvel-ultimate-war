@@ -12,12 +12,12 @@ import views.WelcomeView;
 public class GameOverController extends BaseController<GameOverView> implements Listener {
 	private Player winner;
 	
-	public GameOverController(Player winner) {
-		this.winner = winner;
-	}
-	
 	public GameOverController() {
-		this(game.checkGameOver());
+		if (game == null) {
+			winner = new Player("Cheater");
+		} else {
+			winner = game.checkGameOver();
+		}
 	}
 	
 	public GameOverView createView() {
