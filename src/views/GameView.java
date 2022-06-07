@@ -4,6 +4,7 @@ import controllers.BaseController;
 import engine.Game;
 import engine.Player;
 import javafx.animation.*;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -11,6 +12,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.abilities.Ability;
@@ -79,16 +81,17 @@ public class GameView extends BaseView {
                 BorderPane championPanel = new BorderPane();
                 championPanel.getStyleClass().add("cell");
 
+                StackPane stackPane = new StackPane(championPanel);
+
                 championPanel.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                     listener.onChampionClicked(x, y);
                 });
-
 
                 if (cell == null) {
                     championPanel.setCenter(new Text(" "));
                     championPanel.getStyleClass().add("empty");
                 } else {
-                    damageablePanes.put(cell, championPanel);
+                    damageablePanes.put(cell, stackPane);
                     championPanel.getStyleClass().add("damageable");
                     Pane hpBar = ViewHelper.progressBarWithText("HP", cell.getCurrentHP(), cell.getMaxHP());
                     hpBar.getStyleClass().add("hp-bar");
@@ -136,8 +139,7 @@ public class GameView extends BaseView {
                     }
                 }
 
-
-                grid.add(championPanel, j, Game.getBoardheight() - i - 1);
+                grid.add(stackPane, j, Game.getBoardheight() - i - 1);
             }
         }
 
@@ -275,7 +277,7 @@ public class GameView extends BaseView {
         effectsContainer.getStyleClass().add("effects-container");
 
         for (Effect effect : champion.getAppliedEffects()) {
-            ImageView icon = new ImageView("/images/icons/Ironman.png");
+            ImageView icon = new ImageView("/images/effects/" + effect.getName() + ".png");
             icon.getStyleClass().add("icon");
             icon.setFitHeight(17);
             icon.setFitWidth(17);
@@ -363,7 +365,7 @@ public class GameView extends BaseView {
         Pane container = new VBox(nameAndIcon, healthBar, manaBar, actionPointsBar, effectsContainer);
         container.getStyleClass().add("champion");
 
-        Tooltip.install(container, createTooltipForChampion(champion));
+        Tooltip.install(nameAndIcon, createTooltipForChampion(champion));
 
         if (BaseController.game.getCurrentChampion().equals(champion)) {
             container.getStyleClass().add("current-champion");
@@ -394,25 +396,25 @@ public class GameView extends BaseView {
     }
 
     public void playAttackAnimation(Damageable damageable, Direction direction) {
-        Pane pane = damageablePanes.get(damageable);
-//        Pane currentPane = championPanes.get(BaseController.game.getCurrentChampion());
-
-        if (pane != null) {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(100));
-            scale.setToX(1.05);
-            scale.setToY(1.05);
-
-            TranslateTransition translate = new TranslateTransition(Duration.millis(100));
-            translate.setToX(direction.toVector().y * 15);
-            translate.setToY(direction.toVector().x * -15);
-
-            ParallelTransition animation = new ParallelTransition(scale, translate);
-            animation.setNode(pane);
-            animation.setAutoReverse(true);
-            animation.setCycleCount(2);
-
-            addAnimation(animation);
-        }
+//        Pane pane = damageablePanes.get(damageable);
+////        Pane currentPane = championPanes.get(BaseController.game.getCurrentChampion());
+//
+//        if (pane != null) {
+//            ScaleTransition scale = new ScaleTransition(Duration.millis(100));
+//            scale.setToX(1.05);
+//            scale.setToY(1.05);
+//
+//            TranslateTransition translate = new TranslateTransition(Duration.millis(100));
+//            translate.setToX(direction.toVector().y * 15);
+//            translate.setToY(direction.toVector().x * -15);
+//
+//            ParallelTransition animation = new ParallelTransition(scale, translate);
+//            animation.setNode(pane);
+//            animation.setAutoReverse(true);
+//            animation.setCycleCount(2);
+//
+//            addAnimation(animation);
+//        }
     }
 
     public void addAnimation(Animation animation) {
@@ -474,6 +476,54 @@ public class GameView extends BaseView {
 
             addAnimation(timeline);
         }
+    }
+
+    public void playFireAnimation(Champion currentChampion, Damageable target, Direction direction) {
+        Pane currentChampionPane = damageablePanes.get(currentChampion);
+
+        Circle circle = new Circle();
+        circle.getStyleClass().add("circle");
+        circle.setCenterX(100f);
+        circle.setCenterY(100f);
+        circle.setRadius(5f);
+        circle.setVisible(true);
+
+        currentChampionPane.getChildren().add(circle);
+
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), circle);
+
+        Bounds bounds1 = circle.localToScene(circle.getLayoutBounds());
+
+        if (target == null) {
+            transition.setByX(direction.toVector().y * currentChampion.getAttackRange() * 135);
+            transition.setByY(direction.toVector().x * currentChampion.getAttackRange() * -160);
+            addAnimation(transition);
+        } else {
+            Pane targetPane = damageablePanes.get(target);
+            Bounds bounds2 = targetPane.localToScene(targetPane.getBoundsInLocal());
+
+            transition.setByX(bounds2.getCenterX() - bounds1.getCenterX());
+            transition.setByY(bounds2.getCenterY() - bounds1.getCenterY());
+
+            ScaleTransition scale = new ScaleTransition(Duration.millis(100));
+            scale.setToX(1.05);
+            scale.setToY(1.05);
+
+            TranslateTransition translate = new TranslateTransition(Duration.millis(100));
+            translate.setToX(direction.toVector().y * 15);
+            translate.setToY(direction.toVector().x * -15);
+
+            ParallelTransition explosion = new ParallelTransition(scale, translate);
+            explosion.setNode(targetPane);
+            explosion.setAutoReverse(true);
+            explosion.setCycleCount(2);
+
+            addAnimation(new SequentialTransition(transition, explosion));
+        }
+    }
+
+    public void playSurroundAnimation(Champion champion) {
+//        Pane champion = championPanes.get()
     }
 
     public interface Listener {

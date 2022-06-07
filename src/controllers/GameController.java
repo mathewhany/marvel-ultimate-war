@@ -161,7 +161,8 @@ public class GameController extends BaseController<GameView> implements GameView
         getView().clearMessages();
 
         if (target == null) {
-            getView().addMessage("No one was effected, you wasn't your attack.");
+            getView().addMessage("No one was affected, you wasted your attack.");
+            getView().playFireAnimation(game.getCurrentChampion(), null, direction);
             getView().rerender();
             return;
         }
@@ -175,6 +176,7 @@ public class GameController extends BaseController<GameView> implements GameView
         }
 
         getView().playAttackAnimation(target, direction);
+        getView().playFireAnimation(game.getCurrentChampion(), target, direction);
     }
 
     @Override
