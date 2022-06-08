@@ -234,9 +234,10 @@ public class GameController extends BaseController<GameView> implements GameView
 
         if (target instanceof Champion) {
             getView().addMessage(game.getCurrentChampion().getName() + " killed " + ((Champion) target).getName());
-            SoundUtils.playSound("/sound-effects/Death.wav" , 0.9);
+            SoundUtils.playSound("/sound-effects/Death.wav" , 1);
         } else if (target instanceof Cover) {
             getView().addMessage(game.getCurrentChampion().getName() + " killed a cover.");
+            SoundUtils.playSound("/sound-effects/CoverBreaking.mp3" , 1);
         }
 
         getView().playDeathAnimation(target);
