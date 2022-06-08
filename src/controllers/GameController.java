@@ -22,6 +22,7 @@ import views.GameView;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class GameController extends BaseController<GameView> implements GameView.Listener, GameListener, Champion.Listener, Cover.Listener {
     public GameController() {
@@ -255,6 +256,10 @@ public class GameController extends BaseController<GameView> implements GameView
                 getView().addMessage(((Champion) target).getName() + " was effected.");
             }
         }
+
+        ArrayList<Damageable> damageables = new ArrayList<>();
+        damageables.addAll(targets);
+        getView().playSurroundAnimation(game.getCurrentChampion(), damageables, "leader", "leader", 20);
 
         getView().rerender();
     }

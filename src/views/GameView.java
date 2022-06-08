@@ -366,10 +366,10 @@ public class GameView extends BaseView {
 
         Pane actionPointsBar = ViewHelper.progressBarWithText("AP", champion.getCurrentActionPoints(), champion.getMaxActionPointsPerTurn());
         actionPointsBar.getStyleClass().add("action-points-bar");
+//
+//        Pane effectsContainer = createEffectsContainer(champion);
 
-        Pane effectsContainer = createEffectsContainer(champion);
-
-        Pane container = new VBox(nameAndIcon, healthBar, manaBar, actionPointsBar, effectsContainer);
+        Pane container = new VBox(nameAndIcon, healthBar, manaBar, actionPointsBar);
         container.getStyleClass().add("champion");
 
         Tooltip.install(nameAndIcon, createTooltipForChampion(champion));

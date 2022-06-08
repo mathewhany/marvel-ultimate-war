@@ -492,11 +492,11 @@
 
 #game-view #turn-order-container {
     -fx-alignment: center;
-    -fx-spacing: 5px;
+    -fx-spacing: 2px;
 }
 
 #game-view #turn-order-container .turn-order-item {
-    -fx-padding: 4px;
+    -fx-padding: 2px;
     -fx-alignment: center-left;
     -fx-spacing: 10px;
     -fx-background-color: rgba(255, 255, 255, 0.69);
