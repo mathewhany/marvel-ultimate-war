@@ -128,14 +128,14 @@ public class GameView extends BaseView {
                         }
 
                         championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/" + champion.getName() + ".png", champion.getName()));
-
+                        
                         Pane effectsContainer = createEffectsContainer(champion);
 
                         championPanel.setBottom(effectsContainer);
 
                     } else if (cell instanceof Cover) {
                         championPanel.getStyleClass().add("cover");
-                        championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/Cover.png" , "Cover" ,110));
+                        championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/Cover.png" , "Cover" , 70));
                     }
                 }
 

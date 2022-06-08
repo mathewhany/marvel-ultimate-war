@@ -17,4 +17,14 @@ public class SoundUtils {
 
         hashMap.get(soundFile).play();
     }
+    public static void playSound(String soundFile , double volume) {
+        if (!hashMap.containsKey(soundFile)) {
+        	
+            AudioClip media = new AudioClip(BaseController.class.getResource(soundFile).toExternalForm());
+            media.setVolume(0.9);
+            hashMap.put(soundFile, media);
+        }
+
+        hashMap.get(soundFile).play();
+    }
 }

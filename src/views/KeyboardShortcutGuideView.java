@@ -27,7 +27,7 @@ public class KeyboardShortcutGuideView extends BaseView {
         shortcuts.put("Single Target Abilities", "Ability Key + Mouse Click");
         shortcuts.put("Use Leader Ability", "R");
 
-        Pane guide = ViewHelper.detailsBox("Keyboard Shortcuts", shortcuts);
+        Pane guide = ViewHelper.detailsBox("Controls", shortcuts);
 
         Button nextBtn = new Button("I understand, start game!");
         nextBtn.setOnAction(e -> {
