@@ -19,6 +19,7 @@ import utils.SoundUtils;
 import views.GameOverView;
 import views.GameView;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -82,6 +83,7 @@ public class GameController extends BaseController<GameView> implements GameView
 
     private void handleException(String message) {
         getView().clearMessages();
+        getView().setHasError(true);
         getView().addMessage(message);
         getView().rerender();
         SoundUtils.playSound("/sound-effects/Error.wav");
@@ -151,7 +153,7 @@ public class GameController extends BaseController<GameView> implements GameView
     public void onMove(Direction direction) {
         getView().clearMessages();
         getView().addMessage(game.getCurrentChampion().getName() + " moved " + direction.toString().toLowerCase());
-        getView().setHasError(true);
+        getView().setHasError(false);
 
         SoundUtils.playSound("/move.mp3");
         getView().playMoveAnimation(game.getCurrentChampion(), direction);
@@ -203,12 +205,20 @@ public class GameController extends BaseController<GameView> implements GameView
 //            getView().playAttackAnimation(target);
         }
 
-
         if (ability.getCastArea() == AreaOfEffect.SURROUND) {
-            getView().playSurroundAnimation(game.getCurrentChampion(), targets);
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "surround", 4);
         } else if (ability.getCastArea() == AreaOfEffect.DIRECTIONAL) {
             getView().playDirectionalAnimation(game.getCurrentChampion(), targets);
+        } else if (ability.getCastArea() == AreaOfEffect.TEAMTARGET) {
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "team-target", 20);
+        } else if (ability.getCastArea() == AreaOfEffect.SELFTARGET) {
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "self-target", 2);
+        } else if (ability.getCastArea() == AreaOfEffect.SINGLETARGET) {
+            if (!targets.isEmpty()) {
+                getView().playFireAnimation(game.getCurrentChampion(), targets.get(0), null);
+            }
         }
+
         getView().rerender();
     }
 

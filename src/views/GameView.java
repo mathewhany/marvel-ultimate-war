@@ -150,7 +150,10 @@ public class GameView extends BaseView {
         championPanes.clear();
 
         Pane firstPlayerPane = createPanelForPlayer(BaseController.firstPlayer);
+        firstPlayerPane.getStyleClass().add("first-player");
+
         Pane secondPlayerPane = createPanelForPlayer(BaseController.secondPlayer);
+        secondPlayerPane.getStyleClass().add("second-player");
 
         Pane playersInfoPanel = new VBox(firstPlayerPane, secondPlayerPane);
         playersInfoPanel.setId("players-info");
@@ -215,6 +218,10 @@ public class GameView extends BaseView {
     private Pane createMessagePanel() {
         VBox messagePanel = new VBox();
         messagePanel.setId("messages-panel");
+
+        if (hasError) {
+            messagePanel.getStyleClass().add("error");
+        }
 
         for (String message : messages) {
             Label label = new Label(message);
@@ -357,7 +364,7 @@ public class GameView extends BaseView {
         Pane manaBar = ViewHelper.progressBarWithText("Mana", champion.getMana(), champion.getMaxMana());
         manaBar.getStyleClass().add("mana-bar");
 
-        Pane actionPointsBar = ViewHelper.progressBarWithText("Action Points", champion.getCurrentActionPoints(), champion.getMaxActionPointsPerTurn());
+        Pane actionPointsBar = ViewHelper.progressBarWithText("AP", champion.getCurrentActionPoints(), champion.getMaxActionPointsPerTurn());
         actionPointsBar.getStyleClass().add("action-points-bar");
 
         Pane effectsContainer = createEffectsContainer(champion);
@@ -519,18 +526,18 @@ public class GameView extends BaseView {
         }
     }
 
-    public void playSurroundAnimation(Champion currentChampion, ArrayList<Damageable> targets) {
+    public void playSurroundAnimation(Champion currentChampion, ArrayList<Damageable> targets, String abilityType, String className, double grow) {
         Pane championPane = damageablePanes.get(currentChampion);
 
         Circle circle = new Circle();
-        circle.getStyleClass().add("surround-circle");
+        circle.getStyleClass().addAll("surround-circle", className, abilityType);
         circle.setRadius(30);
 
         championPane.getChildren().add(circle);
 
         ScaleTransition scale = new ScaleTransition(Duration.millis(500));
-        scale.setByX(4);
-        scale.setByY(4);
+        scale.setByX(grow);
+        scale.setByY(grow);
 
         FadeTransition fade = new FadeTransition(Duration.millis(500));
         fade.setFromValue(1);
@@ -557,12 +564,38 @@ public class GameView extends BaseView {
     public void playDirectionalAnimation(Champion currentChampion, ArrayList<Damageable> targets) {
         Pane championPane = damageablePanes.get(currentChampion);
 
+        ScaleTransition rotate = new ScaleTransition(Duration.millis(200), championPane);
+        rotate.setFromX(0.9);
+        rotate.setFromY(0.9);
+        rotate.setToX(1.1);
+        rotate.setToY(1.1);
+
+        SequentialTransition animations = new SequentialTransition(rotate);
+        animations.setAutoReverse(true);
 
         for (Damageable target : targets) {
             Pane targetPane = damageablePanes.get(target);
+            ScaleTransition scale = new ScaleTransition(Duration.millis(200), targetPane);
+            scale.setToX(1.1);
+            scale.setToY(1.1);
 
+            ImageView bomb = new ImageView("images/icons/Attack.png");
+            bomb.setFitWidth(24);
+            bomb.setPreserveRatio(true);
+            championPane.getChildren().add(bomb);
 
+            Bounds bounds1 = bomb.localToScene(bomb.getLayoutBounds());
+            Bounds bounds2 = targetPane.localToScene(targetPane.getBoundsInLocal());
+
+            TranslateTransition transition = new TranslateTransition(Duration.millis(200), bomb);
+
+            transition.setByX(bounds2.getMinX() - bounds1.getMaxX());
+            transition.setByY(bounds2.getMinY() - bounds1.getMaxY());
+
+            animations.getChildren().addAll(transition, new PauseTransition(Duration.millis(50)), scale);
         }
+
+        addAnimation(animations);
     }
 
     public interface Listener {

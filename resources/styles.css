@@ -341,22 +341,40 @@
     -fx-background-color: rgba(255, 255, 255, 0.45);
 }
 
+#game-view #board .cell .label {
+    -fx-text-fill: #fff;
+}
+
 #game-view #board .cell.damageable:hover {
     -fx-background-color: rgba(255, 255, 255, 0.7);
 }
 
-
 #game-view #board .cell.current-champion {
-    -fx-border-color: rgba(239, 210, 56, 0.35);
-    -fx-border-width: 2px;
+    -fx-border-color: rgba(0, 0, 0, 0.35);
 }
 
 #game-view #board .cell.first-player {
-    -fx-background-color: rgba(169, 30, 41, 0.14);
+    -fx-background-color: rgba(206, 0, 117, 0.4);
+}
+
+#game-view #board .cell.first-player:hover {
+    -fx-background-color: rgba(206, 0, 117, 0.62);
+}
+
+#game-view .first-player {
+    -fx-background-color: rgba(206, 0, 117, 0.52);
 }
 
 #game-view #board .cell.second-player {
-    -fx-background-color: rgba(55, 110, 255, 0.14);
+    -fx-background-color: rgba(135, 237, 255, 0.33);
+}
+
+#game-view #board .cell.second-player:hover {
+    -fx-background-color: rgba(135, 237, 255, 0.56);
+}
+
+#game-view .second-player {
+    -fx-background-color: rgba(135, 237, 255, 0.59);
 }
 
 #game-view #messages-panel {
@@ -371,6 +389,12 @@
 #game-view #messages-panel .message {
     -fx-padding: 5px;
     -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-radius: 5px;
+}
+
+#game-view #messages-panel.error .message {
+    -fx-background-color: rgba(164, 37, 37, 0.68);
+    -fx-text-fill: #fff;
 }
 
 #game-view #current-champion-box {
@@ -403,11 +427,7 @@
 }
 
 #game-view #players-info .current-player {
-    -fx-background-color: #FFF;
-}
-
-#game-view #players-info .current-champion {
-    -fx-border-color: #CCC;
+    /*-fx-border-color: rgba(213, 197, 73, 0.55);*/
 }
 
 #game-view .progress-bar-container {
@@ -443,6 +463,12 @@
     -fx-background-color: #79671d;
 }
 
+#game-view #players-info .player-info-box {
+    -fx-border-radius: 2px;
+    -fx-border-width: 5px;
+    -fx-border-color: rgba(255, 255, 255, 0);
+}
+
 #game-view #players-info .player-info-box .champions-container {
     -fx-spacing: 2px;
     -fx-alignment: center;
@@ -451,15 +477,30 @@
 #game-view #players-info .player-info-box .champion {
     -fx-spacing: 2px;
     -fx-alignment: center;
+    -fx-padding: 4px;
+    -fx-background-color: rgba(255, 255, 255, 0.76);
+    -fx-background-radius: 5px;
+    -fx-border-color: rgba(0, 0, 0, 0);
+    -fx-border-width: 3px;
+    -fx-border-radius: 5px;
+}
+
+#game-view #players-info .player-info-box .champion.current-champion {
+    -fx-border-color: rgba(255, 255, 41, 0.85);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
 }
 
 #game-view #turn-order-container {
     -fx-alignment: center;
-    -fx-spacing: 2px;
+    -fx-spacing: 5px;
 }
 
 #game-view #turn-order-container .turn-order-item {
+    -fx-padding: 4px;
     -fx-alignment: center-left;
+    -fx-spacing: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.69);
+    -fx-background-radius: 5px;
 }
 
 #game-view .effects-container {
