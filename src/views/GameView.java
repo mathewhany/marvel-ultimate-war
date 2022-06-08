@@ -112,8 +112,8 @@ public class GameView extends BaseView {
                             championPanel.getStyleClass().add("current-champion");
 
                             currentChampionAnimation = new ScaleTransition(Duration.millis(1000), championPanel);
-                            currentChampionAnimation.setToX(1.1);
-                            currentChampionAnimation.setToY(1.1);
+                            currentChampionAnimation.setToX(1.15);
+                            currentChampionAnimation.setToY(1.15);
                             currentChampionAnimation.setCycleCount(Animation.INDEFINITE);
                             currentChampionAnimation.setAutoReverse(true);
                             currentChampionAnimation.setOnFinished(e -> {
@@ -125,6 +125,15 @@ public class GameView extends BaseView {
 
                         if (BaseController.firstPlayer.isLeader(champion) || BaseController.secondPlayer.isLeader(champion)) {
                             championPanel.getStyleClass().add("leader");
+
+                            ImageView leaderIcon = new ImageView("/images/icons/Leader.png");
+                            leaderIcon.getStyleClass().add("leader-icon");
+                            leaderIcon.setFitWidth(20);
+                            leaderIcon.setPreserveRatio(true);
+
+                            HBox topBar = new HBox(leaderIcon, hpBar);
+                            topBar.getStyleClass().add("top-bar");
+                            championPanel.setTop(topBar);
                         }
 
                         championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/" + champion.getName() + ".png", champion.getName()));
@@ -489,8 +498,10 @@ public class GameView extends BaseView {
         Pane currentChampionPane = damageablePanes.get(currentChampion);
 
         ImageView bomb = new ImageView("images/icons/Attack.png");
+        bomb.getStyleClass().add("bomb");
         bomb.setFitWidth(24);
         bomb.setPreserveRatio(true);
+        bomb.setViewOrder(10);
 
         currentChampionPane.getChildren().add(bomb);
 
@@ -596,6 +607,23 @@ public class GameView extends BaseView {
         }
 
         addAnimation(animations);
+    }
+
+    public void playDeathAnimation(Damageable target) {
+        Pane targetPane = damageablePanes.get(target);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(500), targetPane);
+        scale.setFromX(1.1);
+        scale.setFromY(1.1);
+        scale.setToX(0.5);
+        scale.setToY(0.5);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(500), targetPane);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+
+        ParallelTransition animation = new ParallelTransition(scale, fade);
+        addAnimation(animation);
     }
 
     public interface Listener {

@@ -335,7 +335,7 @@
     -fx-max-height: 155px;
     -fx-padding: 5px;
     -fx-background-radius: 5px;
-    -fx-border-width: 2px;
+    -fx-border-width: 3px;
     -fx-border-color: rgba(255, 75, 202, 0.24);
     -fx-border-radius: 5px;
     -fx-background-color: rgba(255, 255, 255, 0.45);
@@ -350,7 +350,7 @@
 }
 
 #game-view #board .cell.current-champion {
-    -fx-border-color: rgba(0, 0, 0, 0.35);
+    -fx-border-color: rgba(255, 167, 0, 0.69);
 }
 
 #game-view #board .cell.first-player {
@@ -510,8 +510,7 @@
 
 #game-view .effects-container .effect {
     -fx-alignment: center;
-    /*-fx-max-width: 30px;*/
-    /*-fx-max-height: 30px;*/
+    -fx-font-size: 17px;
 }
 
 #game-view .effects-container .effect .progress-indicator {
@@ -535,6 +534,30 @@
 
 #game-view .surround-circle {
     -fx-fill: #fff;
+}
+
+#game-view .surround-circle.damaging {
+    -fx-fill: #ff3c3c;
+}
+
+#game-view .surround-circle.healing {
+    -fx-fill: #3cff4c;
+}
+
+#game-view .surround-circle.crowd-control {
+    -fx-fill: #3caeff;
+}
+
+#game-view .surround-circle.leader {
+    -fx-fill: #f9ff3c;
+}
+
+#game-view .top-bar {
+    -fx-spacing: 2px;
+}
+
+#game-view .bomb {
+    -fx-view-order: -99;
 }
 
 

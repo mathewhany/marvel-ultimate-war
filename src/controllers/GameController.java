@@ -206,14 +206,17 @@ public class GameController extends BaseController<GameView> implements GameView
 //            getView().playAttackAnimation(target);
         }
 
+        String className = ability.getType().toLowerCase().replace(" ", "-");
+
+        System.out.println(className);
         if (ability.getCastArea() == AreaOfEffect.SURROUND) {
-            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "surround", 4);
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, className, "surround", 4);
         } else if (ability.getCastArea() == AreaOfEffect.DIRECTIONAL) {
             getView().playDirectionalAnimation(game.getCurrentChampion(), targets);
         } else if (ability.getCastArea() == AreaOfEffect.TEAMTARGET) {
-            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "team-target", 20);
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, className, "team-target", 20);
         } else if (ability.getCastArea() == AreaOfEffect.SELFTARGET) {
-            getView().playSurroundAnimation(game.getCurrentChampion(), targets, ability.getType(), "self-target", 2);
+            getView().playSurroundAnimation(game.getCurrentChampion(), targets, className, "self-target", 2);
         } else if (ability.getCastArea() == AreaOfEffect.SINGLETARGET) {
             if (!targets.isEmpty()) {
                 getView().playFireAnimation(game.getCurrentChampion(), targets.get(0), null);
@@ -235,6 +238,8 @@ public class GameController extends BaseController<GameView> implements GameView
         } else if (target instanceof Cover) {
             getView().addMessage(game.getCurrentChampion().getName() + " killed a cover.");
         }
+
+        getView().playDeathAnimation(target);
 
         getView().rerender();
     }

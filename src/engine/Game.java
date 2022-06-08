@@ -555,6 +555,8 @@ public class Game {
         } else {
             covers.remove(target);
         }
+
+        listener.onTargetDead(target);
     }
 
     private void removeDeadTargets(ArrayList<Damageable> targets) {
