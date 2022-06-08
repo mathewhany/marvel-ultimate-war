@@ -1,17 +1,42 @@
 package controllers;
 
+import java.util.ArrayList;
+
+import engine.Game;
+import model.*;
+import model.abilities.Ability;
+import model.abilities.AreaOfEffect;
+import model.abilities.CrowdControlAbility;
+import model.abilities.DamagingAbility;
+import model.effects.Disarm;
+import model.effects.Root;
 import engine.Player;
 import model.world.Champion;
+import model.world.Villain;
 import views.ChooseChampionsView;
 
 public class ChooseChampionsController extends controllers.BaseController<ChooseChampionsView> implements ChooseChampionsView.Listener, Player.Listener {
     private boolean isFirstPlayer;
-
+    private static final ArrayList<String> admins = new ArrayList<String>();  
     public ChooseChampionsController() {
         this.isFirstPlayer = true;
-
-        firstPlayer.setListener(this);
+        admins.add("Mathew");
+        admins.add("Rafeek");
+        firstPlayer.setListener(this);      
         secondPlayer.setListener(this);
+        Champion thanos = new Villain("Thanos" , 9999 , 9999 , 9999 , 999 , 9 , 999);
+        Ability A1 = new CrowdControlAbility("Drop your weapons",400 ,5,9,AreaOfEffect.TEAMTARGET,500,new Disarm(99));
+        Ability A2 = new CrowdControlAbility("Stay there" ,500,5,9,AreaOfEffect.TEAMTARGET,500,new Root(99));
+        Ability A3 = new DamagingAbility("Snap" , 500 , 50 , 9 , AreaOfEffect.TEAMTARGET , 9999 , 9999);
+        thanos.addAbility(A1);
+        thanos.addAbility(A2);
+        thanos.addAbility(A3);
+       
+        if(admins.contains(firstPlayer.getName()) || admins.contains(secondPlayer.getName())){
+        	Game.getAvailableChampions().add(thanos);
+        }
+        
+       
     }
 
     @Override
