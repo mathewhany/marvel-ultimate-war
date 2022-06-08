@@ -13,6 +13,7 @@ import model.effects.Root;
 import engine.Player;
 import model.world.Champion;
 import model.world.Villain;
+import utils.SoundUtils;
 import views.ChooseChampionsView;
 
 public class ChooseChampionsController extends controllers.BaseController<ChooseChampionsView> implements ChooseChampionsView.Listener, Player.Listener {
@@ -34,6 +35,7 @@ public class ChooseChampionsController extends controllers.BaseController<Choose
        
         if(admins.contains(firstPlayer.getName()) || admins.contains(secondPlayer.getName())){
         	Game.getAvailableChampions().add(thanos);
+        	SoundUtils.playSound("/sound-effects/thanos.mp3");
         }
         
        

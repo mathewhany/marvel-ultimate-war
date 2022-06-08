@@ -56,6 +56,7 @@ public class BaseController<T extends BaseView> extends Application implements E
     public void start(Stage stage) throws Exception {
         primaryStage = stage; 	   
         player.play();
+        player.setVolume(0.2);
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
             player.play();
