@@ -319,7 +319,6 @@ public class GameController extends BaseController<GameView> implements GameView
     @Override
     public void onEffectApplied(Champion champion, Effect effect) {
     	SoundUtils.playSound("/sound-effects/" + effect.getName() + ".wav");
-
     }
 
     @Override

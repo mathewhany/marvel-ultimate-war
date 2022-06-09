@@ -125,8 +125,16 @@ public class GameView extends BaseView {
 
                         if (BaseController.firstPlayer.isLeader(champion) || BaseController.secondPlayer.isLeader(champion)) {
                             championPanel.getStyleClass().add("leader");
+                            String imageType = "Leader";
 
-                            ImageView leaderIcon = new ImageView("/images/icons/Leader.png");
+                            if ((BaseController.game.isFirstLeaderAbilityUsed()
+                                    && BaseController.game.getPlayerForChampion(champion).equals(BaseController.firstPlayer))
+                                || (BaseController.game.isSecondLeaderAbilityUsed()
+                                    && BaseController.game.getPlayerForChampion(champion).equals(BaseController.secondPlayer))) {
+                                imageType = "Leader-grey";
+                            }
+
+                            ImageView leaderIcon = new ImageView("/images/icons/" + imageType + ".png");
                             leaderIcon.getStyleClass().add("leader-icon");
                             leaderIcon.setFitWidth(20);
                             leaderIcon.setPreserveRatio(true);
@@ -137,14 +145,14 @@ public class GameView extends BaseView {
                         }
 
                         championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/" + champion.getName() + ".png", champion.getName()));
-                        
+
                         Pane effectsContainer = createEffectsContainer(champion);
 
                         championPanel.setBottom(effectsContainer);
 
                     } else if (cell instanceof Cover) {
                         championPanel.getStyleClass().add("cover");
-                        championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/Cover.png" , "Cover" , 70));
+                        championPanel.setCenter(ViewHelper.boxWithIcon("/images/icons/Cover.png", "Cover", 70));
                     }
                 }
 
@@ -433,6 +441,19 @@ public class GameView extends BaseView {
 //        }
     }
 
+    public void playMoveAnimation(Champion champion, Direction direction) {
+        Pane pane = damageablePanes.get(champion);
+
+        if (pane != null) {
+            currentChampionAnimation.jumpTo(Duration.ZERO);
+            currentChampionAnimation.stop();
+            TranslateTransition animation = new TranslateTransition(Duration.millis(100), pane);
+            animation.setToX(direction.toVector().y * 135);
+            animation.setToY(direction.toVector().x * -165);
+            addAnimation(animation);
+        }
+    }
+
     public void addAnimation(Animation animation) {
         animations.add(animation);
         animation.setOnFinished(e -> {
@@ -446,19 +467,6 @@ public class GameView extends BaseView {
     public void rerender() {
         if (this.animations.isEmpty()) {
             super.rerender();
-        }
-    }
-
-    public void playMoveAnimation(Champion champion, Direction direction) {
-        Pane pane = damageablePanes.get(champion);
-
-        if (pane != null) {
-            currentChampionAnimation.jumpTo(Duration.ZERO);
-            currentChampionAnimation.stop();
-            TranslateTransition animation = new TranslateTransition(Duration.millis(100), pane);
-            animation.setToX(direction.toVector().y * 135);
-            animation.setToY(direction.toVector().x * -165);
-            addAnimation(animation);
         }
     }
 
