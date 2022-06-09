@@ -191,7 +191,7 @@ public class GameController extends BaseController<GameView> implements GameView
 
         getView().addMessage(game.getCurrentChampion().getName() + " casted a " + type + " ability (" + ability.getName() + ")");
 
-//        SoundUtils.playSound("/attack.mp3");
+        SoundUtils.playSound("/sound-effects/castAbility.wav");
 
         if (targets.isEmpty()) {
             getView().addMessage("No targets were effected.");
@@ -248,7 +248,7 @@ public class GameController extends BaseController<GameView> implements GameView
     @Override
     public void onUseLeaderAbility(Player currentPlayer, ArrayList<Champion> targets) {
         getView().clearMessages();
-
+        SoundUtils.playSound("/sound-effects/Leader.wav");
         getView().addMessage(currentPlayer.getName() + " used his leader ability.");
 
         if (targets.isEmpty()) {
