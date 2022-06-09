@@ -164,14 +164,14 @@ public class GameController extends BaseController<GameView> implements GameView
     public void onAttack(Damageable target, Direction direction) {
         getView().clearMessages();
 
+        SoundUtils.playSound("/sound-effects/Attack.wav" , 1);
+
         if (target == null) {
             getView().addMessage("No one was affected, you wasted your attack.");
             getView().playFireAnimation(game.getCurrentChampion(), null, direction);
             getView().rerender();
             return;
         }
-
-        SoundUtils.playSound("/sound-effects/Attack.wav" , 1);
 
         if (target instanceof Cover) {
             getView().addMessage(game.getCurrentChampion().getName() + " attacked a cover.");
