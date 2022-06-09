@@ -21,8 +21,8 @@ public class ChooseChampionsController extends controllers.BaseController<Choose
     private static final ArrayList<String> admins = new ArrayList<String>();  
     public ChooseChampionsController() {
         this.isFirstPlayer = true;
-        admins.add("Mathew");
-        admins.add("Rafeek");
+        admins.add("M@th3w");
+        admins.add("R@f33k");
         firstPlayer.setListener(this);      
         secondPlayer.setListener(this);
         Champion thanos = new Villain("Thanos" , 9999 , 9999 , 9999 , 999 , 9 , 999);
