@@ -36,7 +36,7 @@ public class GameOverView extends BaseView {
 			listener.onPlayAgain();
 		});
 		Label gameOver = new Label(winner.getName().toUpperCase() + " WINS THE BATTLE");
-		VBox container = new VBox(gameOver, credits, exitBtn);
+		VBox container = new VBox(gameOver, playAgain , credits, exitBtn);
 		container.setId("game-over-view");
 
 		return container;
