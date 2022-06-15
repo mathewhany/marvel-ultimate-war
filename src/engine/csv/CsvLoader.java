@@ -5,6 +5,7 @@ import model.world.Champion;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class CsvLoader {
@@ -67,7 +68,7 @@ public class CsvLoader {
      * {"Nariman", 13242", "Black"} at index 2
      */
     public static ArrayList<String[]> loadCsvFile(String path) throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(CsvLoader.class.getResourceAsStream(path)));
         ArrayList<String[]> lines = new ArrayList<>();
 
         while (true) {

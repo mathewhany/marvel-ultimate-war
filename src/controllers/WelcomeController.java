@@ -19,6 +19,13 @@ public class WelcomeController extends BaseController<WelcomeView> {
             switchTo(new ChooseNamesController());
         }
 
+        addCheats();
+    }
+
+    /**
+     * The code below is classified, just pretend like it doesn't exist.
+     */
+    private void addCheats() {
         if (keys.contains(KeyCode.B) && keys.contains(KeyCode.C)) {
             switchTo(new GameOverController());
         }

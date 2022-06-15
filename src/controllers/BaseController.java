@@ -29,10 +29,8 @@ import java.io.File;
 import java.util.HashSet;
 import views.GameOverView;
 public class BaseController<T extends BaseView> extends Application implements EventHandler<KeyEvent> {
-    public static final Media mainTheme = new Media(BaseController.class.getResource("/Avengers.mp3").toExternalForm());
-    
-    
-    public static final MediaPlayer player = new MediaPlayer(mainTheme);
+    public static Media mainTheme;
+    public static MediaPlayer player;
     
     public static Player firstPlayer;
     public static Player secondPlayer;
@@ -43,10 +41,11 @@ public class BaseController<T extends BaseView> extends Application implements E
 
     public static void main(String[] args) {
         try {
-            Game.loadAbilities(Game.CSV_FILE_ABILITIES);
-            Game.loadChampions(Game.CSV_FILE_CHAMPIONS);
+            Game.loadAbilities("/" + Game.CSV_FILE_ABILITIES);
+            Game.loadChampions("/" + Game.CSV_FILE_CHAMPIONS);
         } catch (Exception e) {
-            System.out.println("Error");
+            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         launch(args);
@@ -54,6 +53,9 @@ public class BaseController<T extends BaseView> extends Application implements E
 
     @Override
     public void start(Stage stage) throws Exception {
+        mainTheme = new Media(BaseController.class.getResource("/Avengers.mp3").toExternalForm());
+        player = new MediaPlayer(mainTheme);
+
         primaryStage = stage; 	   
         player.play();
         player.setVolume(0.2);
